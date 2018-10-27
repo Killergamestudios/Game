@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ENGINE.h"
 #include "textureHolder.h"
+#include "fstream"
 
 Engine::Engine() {
 	m_window.create(VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game Name", Style::Fullscreen);
@@ -11,7 +12,7 @@ void Engine::run() {
 	m_map = new Map(m_window);
 	mainmenu = new MainMenu(m_window);
 
-
+	int indexFileToLoad = 0;
 	m_state = State::Booting;
 
 
@@ -29,9 +30,11 @@ void Engine::run() {
 		case State::InMenu:
 			//another enum witch tells witch menu we are in (one of the main menus, one of the input menus during the fight etc)
 			//change the states to playing loading cutscene or another menu depending on last state
+			indexFileToLoad = mainmenu->menu();
+			m_state = State::Loading;
 			break;
 		case State::Loading:
-			mapIndex = 0;
+			initGameVariables(indexFileToLoad);
 
 			m_map->load(mapIndex);
 			m_state = State::Playing;
@@ -48,4 +51,16 @@ void Engine::run() {
 		//draw();
 
 	}
+}
+
+void Engine::initGameVariables(int indexFileToLoad) {
+	/*
+	string fileAddress;
+	ifstream myfile;
+
+	fileAddress = "./saves/gameFile_" + to_string(indexFileToLoad) + ".txt";
+	myfile.open(fileAddress);
+	*/
+
+	mapIndex = 0;
 }

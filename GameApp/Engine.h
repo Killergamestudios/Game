@@ -20,6 +20,7 @@ private:
 	Map *m_map;
 	MainMenu *mainmenu;
 
+	void initGameVariables(int indexFileToLoad);
 
 	void input();
 	void update(float dtAsSeconds);
