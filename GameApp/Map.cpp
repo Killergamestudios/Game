@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "Map.h"
 #include "fstream"
+#include <iostream>
 
+using namespace std;
 
-Map::Map(const RenderWindow &window, TextureHolder &textures)
+Map::Map( RenderWindow &window) //TextureHolder &textures)
 {
 	m_window = &window;
-	m_textureHolder = &textures;
+	//m_textureHolder = &textures;
 
 }
 
@@ -17,6 +19,7 @@ Map::~Map()
 
 void Map::init()
 {
+	//Deletes m_terrainProperties if it is not empty.
 	if (m_terrainProperties)
 	{
 		for (int i = 0; i < width; i++)
@@ -24,9 +27,17 @@ void Map::init()
 			if (m_terrainProperties[i] != NULL)
 			{
 				delete m_terrainProperties[i];
+				delete m_enemyCharacters[i];
+				delete m_friendlyCharacters[i];
+				delete m_misc[i];
 			}
 		}
 		delete m_terrainProperties;
+		delete m_enemyCharacters;
+		delete m_friendlyCharacters;
+		delete m_misc;
+
+
 	}
 
 	// Need to initiate the other three arrays found in the header file privates , enemy characters, characaters, misc/
@@ -43,14 +54,14 @@ void Map::load(int mapIndex)
 	//int printX; // X coordinate to print.
 	//int printY; // Y coordinate to print.
 	const int TILE_SIZE = 64;
-	string objToCreate;
-
+	
+	backgroundImageAddress = "./graphics/maps/backgrounds/map_" + to_string(mapIndex) +".png";
 	init(); //Initialises the arrays, emptying them up and creating them again.
 
 	//LOOP INITIATES!!!
 	for (int layerIndex = 0; layerIndex <= 3; layerIndex++)
 	{
-		mapAddress = "mapText_" + to_string(mapIndex) + "_L-" + to_string(layerIndex) + ".txt"; // Building the Address of the map text file to fetch.
+		mapAddress = "./graphics/maps/texts/mapText_" + to_string(mapIndex) + "_L-" + to_string(layerIndex) + ".txt"; // Building the Address of the map text file to fetch.
 		myfile.open(mapAddress);
 
 		if (layerIndex == 0)
@@ -90,21 +101,32 @@ void Map::load(int mapIndex)
 
 		}
 
+		//Copying Dummy to the appropriate array.
 		switch (layerIndex)
 		{
 		case 0:
 			m_terrainProperties = dummy;
 			break;
 		case 1:
+			m_enemyCharacters = dummy;
 			break;
 		case 2:
+			m_friendlyCharacters = dummy;
 			break;
 		case 3:
+			m_misc = dummy;
 			break;
 		}
 	}
+	m_sprite = Sprite(TextureHolder::GetTexture(backgroundImageAddress));
+	m_sprite.setPosition(0, 0);
 }
 
 void Map::draw()
 {
+	
+	
+	m_window->clear();
+	m_window->draw(m_sprite);
+	m_window->display();
 }
