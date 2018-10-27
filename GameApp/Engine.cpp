@@ -7,7 +7,6 @@ Engine::Engine() {
 
 void Engine::run() {
 	Clock clock;
-	m_textureHolder = TextureHolder(); //SEGMENTATION FAULT !!!!!!!!
 
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
