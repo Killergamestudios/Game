@@ -23,7 +23,6 @@ void MainMenu::boot()
 	
 	image.setPosition((m_window->getSize().x - image.getTexture()->getSize().x )/2,
 					  (m_window->getSize().y - image.getTexture()->getSize().y)/2);
-	Event event;
 	while (openingPlaying) {
 		//plays the opening
 		m_window->clear();//
