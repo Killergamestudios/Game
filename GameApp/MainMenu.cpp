@@ -40,41 +40,64 @@ void MainMenu::boot()
 	m_state = MainMenuState::Main;
 }
 
-void MainMenu::setText()
+void MainMenu::setMenuSprites()
 {
 	const int WIN_HEIGHT = m_window->getSize().y;
 	const int WIN_WIDTH = m_window->getSize().x;
-	const int MARGIN_LOGO = 100; // top and down margin of logo
-	const int BOTTOM_MARGIN = 200; // bottom margin
-	const int HEIGHT_LOGO = 300; // to be initialized properly
+	const int MARGIN_LOGO = 50; // top and down margin of logo
+	const int BOTTOM_MARGIN = 50; // bottom margin
+	const int HEIGHT_LOGO = 200; // to be initialized properly
 	const int HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const float MARGIN_BETWEEN_TEXT = (float) HEIGHT_CONTAINER / texts.size();
 	const int TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
-
-	for (unsigned int i = 0; i < texts.size(); i++) 
+	const int SPRITE_WIDTH = 256;
+	const int SPRITE_HEIGHT = 128;
+	const int NUMBER_OF_SPRITES = fileNamesToLoad.size();
+	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / NUMBER_OF_SPRITES);
+	
+	/*
+		Adds Sprites to vector and trims them
+		Sets Origin of sprites to center
+		Set Position of Sprites 
+	*/
+	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
-		textArray.push_back(Text(texts[i],font,40));
-		sf::FloatRect textRect = textArray[i].getLocalBounds();
-		textArray[i].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
-		textArray[i].setPosition(Vector2f((float)WIN_WIDTH / 2, (float)TOP_CONTAINER + MARGIN_BETWEEN_TEXT * (i + 1)));
+		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128))); 
+		menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
+		menuSprites[i].setPosition(Vector2f((float)WIN_WIDTH / 2,	
+			(float)TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1)));
 	}
-	textArray[0].setFillColor(Color::Cyan);
-	textArray[0].setCharacterSize(50);
+
+	menuSprites[0].setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
+}
+
+
+void MainMenu::animate(float &totaltimepassed, int optionSelected) {
+	const float ANIMATION_SPEED = 0.3f;
+	if (totaltimepassed > ANIMATION_SPEED) {
+		totaltimepassed -= ANIMATION_SPEED;
+		int left = menuSprites[optionSelected].getTextureRect().left; // get left position of previous selected texture
+		left = left == 256 ? 512 : 256;
+		menuSprites[optionSelected].setTextureRect(IntRect(left, 0, 256, 128));
+	}
+
 }
 
 int MainMenu::menu()
 {	
-	texts.push_back("New Game");
-	texts.push_back("Load Game");
-	texts.push_back("Options");
-	texts.push_back("Credits");
-	setText();
+	for (string name: mainMenu) {
+		fileNamesToLoad.push_back(name);
+	} // populate array fileNameToLoad in order to load the sprites
+	setMenuSprites();
 
 	int indexFileToLoad = 0;
 	int optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	bool keyPressed = false;
+	Clock clock;//
+	float totaltimepassed = 0;//
 	while (true)
 	{
+		Time dt = clock.restart();//
+		totaltimepassed += dt.asSeconds();//
 		Event evt;
 		while (m_window->pollEvent(evt))
 		{
@@ -85,30 +108,25 @@ int MainMenu::menu()
 		}
 		if (!keyPressed)
 		{
-		//	cout << "1st " << keyPressed << endl;
 			if (Keyboard::isKeyPressed(Keyboard::Escape))
 			{
 				keyPressed = true;
 			}
 			else if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
 			{
+				menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
 				keyPressed = true;
-				textArray[optionSelected].setFillColor(Color::White);
-				textArray[optionSelected].setCharacterSize(40);
 				optionSelected += 3;
 				optionSelected = optionSelected % 4;
-				textArray[optionSelected].setFillColor(Color::Cyan);
-				textArray[optionSelected].setCharacterSize(50);
+				menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
 			}
 			else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
 			{
+				menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
 				keyPressed = true;
-				textArray[optionSelected].setFillColor(Color::White);
-				textArray[optionSelected].setCharacterSize(40);
 				optionSelected += 5;
 				optionSelected = optionSelected % 4;
-				textArray[optionSelected].setFillColor(Color::Cyan);
-				textArray[optionSelected].setCharacterSize(50);
+				menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
 			}
 			else if (Keyboard::isKeyPressed(Keyboard::Enter))
 			{
@@ -118,8 +136,8 @@ int MainMenu::menu()
 					break;
 				}
 			}
-		//	cout << "2st " << keyPressed << endl;
 		}
+		animate(totaltimepassed, optionSelected);
 		draw();
 	}
 	return indexFileToLoad;
@@ -127,9 +145,9 @@ int MainMenu::menu()
 
 void MainMenu::draw() {
 	m_window->clear();
-	for (unsigned int i = 0; i < textArray.size(); i++)
+	for (unsigned int i = 0; i < menuSprites.size(); i++)
 	{ 
-		m_window->draw(textArray[i]);
+		m_window->draw(menuSprites[i]);
 	}
 	m_window->display();
 }

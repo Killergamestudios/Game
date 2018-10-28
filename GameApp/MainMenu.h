@@ -16,14 +16,24 @@ public:
 	
 
 private:
-	void setText();
+	void setMenuSprites();
 	void draw();
 	bool actions(int optionSelected, int &indexFileToLoad);
+	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
 
 	Font font;
 	RenderWindow* m_window;
 	MainMenuState m_state;
 	vector<Text> textArray;
-	vector<string> texts;
+	vector<Sprite> menuSprites;
+	vector<string> fileNamesToLoad; // path of sprites for to load
+	const string mainMenu[4] =
+	{
+		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
+		"./graphics/interfaces/MainMenu/LoadGameButtons-Sheet.png",
+		"./graphics/interfaces/MainMenu/OptionsButtons-Sheet.png",
+		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
+	};    // paths of mainMenuButtons
+
 };
 
