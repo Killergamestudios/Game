@@ -21,9 +21,9 @@ void MainMenu::boot()
 	Clock clock;//
 	float totaltimepassed = 0;//
 	Sprite image(TextureHolder::GetTexture("./graphics/kgs.png"));//
-	
-	image.setPosition((m_window->getSize().x - image.getTexture()->getSize().x )/2,
-					  (m_window->getSize().y - image.getTexture()->getSize().y)/2);
+
+	image.setPosition(Vector2f((float)(m_window->getSize().x - image.getTexture()->getSize().x )/2, 
+							(float)(m_window->getSize().y - image.getTexture()->getSize().y)/2));
 	while (openingPlaying) {
 		//plays the opening
 		m_window->clear();//
@@ -48,16 +48,15 @@ void MainMenu::setText()
 	const int BOTTOM_MARGIN = 200; // bottom margin
 	const int HEIGHT_LOGO = 300; // to be initialized properly
 	const int HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const float MARGIN_BETWEEN_TEXT = HEIGHT_CONTAINER / texts.size();
+	const float MARGIN_BETWEEN_TEXT = (float) HEIGHT_CONTAINER / texts.size();
 	const int TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 
-	
-	for (int i = 0; i < texts.size(); i++) 
+	for (unsigned int i = 0; i < texts.size(); i++) 
 	{
 		textArray.push_back(Text(texts[i],font,40));
 		sf::FloatRect textRect = textArray[i].getLocalBounds();
 		textArray[i].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
-		textArray[i].setPosition(Vector2f(WIN_WIDTH / 2, TOP_CONTAINER + MARGIN_BETWEEN_TEXT * (i + 1)));
+		textArray[i].setPosition(Vector2f((float)WIN_WIDTH / 2, (float)TOP_CONTAINER + MARGIN_BETWEEN_TEXT * (i + 1)));
 	}
 	textArray[0].setFillColor(Color::Cyan);
 	textArray[0].setCharacterSize(50);
@@ -65,7 +64,6 @@ void MainMenu::setText()
 
 int MainMenu::menu()
 {	
-
 	texts.push_back("New Game");
 	texts.push_back("Load Game");
 	texts.push_back("Options");
