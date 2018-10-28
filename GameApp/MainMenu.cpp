@@ -129,7 +129,7 @@ int MainMenu::menu()
 
 void MainMenu::draw() {
 	m_window->clear();
-	for (int i = 0; i < textArray.size(); i++)
+	for (unsigned int i = 0; i < textArray.size(); i++)
 	{ 
 		m_window->draw(textArray[i]);
 	}
