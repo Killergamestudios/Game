@@ -40,6 +40,22 @@ void MainMenu::boot()
 	m_state = MainMenuState::Main;
 }
 
+void MainMenu::init()
+{
+	initFileNamesToLoad(mainMenu);
+	
+}
+
+template <size_t N>
+void MainMenu::initFileNamesToLoad(const string (&fileNames)[N]) // pass array by reference
+{
+	fileNamesToLoad.clear();
+	for (string name : fileNames) {
+		fileNamesToLoad.push_back(name);
+	} // populate array fileNameToLoad in order to load the sprites
+	setMenuSprites();
+}
+
 void MainMenu::setMenuSprites()
 {
 	const int WIN_HEIGHT = m_window->getSize().y;
@@ -83,21 +99,20 @@ void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 }
 
 int MainMenu::menu()
-{	
-	for (string name: mainMenu) {
-		fileNamesToLoad.push_back(name);
-	} // populate array fileNameToLoad in order to load the sprites
-	setMenuSprites();
-
+{
+	init();
+	const float CHANGE_SELECTION_SPEED = 0.5f;
 	int indexFileToLoad = 0;
 	int optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	bool keyPressed = false;
 	Clock clock;//
 	float totaltimepassed = 0;//
+	float overwriteKeyPressed = 0;//
 	while (true)
 	{
 		Time dt = clock.restart();//
 		totaltimepassed += dt.asSeconds();//
+		overwriteKeyPressed += dt.asSeconds();//
 		Event evt;
 		while (m_window->pollEvent(evt))
 		{
@@ -106,8 +121,9 @@ int MainMenu::menu()
 				break;
 			}
 		}
-		if (!keyPressed)
+		if (!keyPressed || overwriteKeyPressed > CHANGE_SELECTION_SPEED)
 		{
+			overwriteKeyPressed = 0;
 			if (Keyboard::isKeyPressed(Keyboard::Escape))
 			{
 				keyPressed = true;

@@ -16,6 +16,11 @@ public:
 	
 
 private:
+	void init();
+
+	template <size_t N>
+	void initFileNamesToLoad(const string (&fileNames)[N]);
+	
 	void setMenuSprites();
 	void draw();
 	bool actions(int optionSelected, int &indexFileToLoad);
