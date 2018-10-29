@@ -98,9 +98,18 @@ void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 
 }
 
+void MainMenu::fadeInMusic(Music & music)
+{
+	const float FADE_IN_SPEED = 0.01f;
+	float currentVolume = music.getVolume();
+	if (currentVolume < 100.0f) {
+		music.setVolume(currentVolume + FADE_IN_SPEED);
+	}
+}
+
 int MainMenu::menu()
 {
-	init();
+	init(); // Initialize everything. Fresh start
 	const float CHANGE_SELECTION_SPEED = 0.5f;
 	int indexFileToLoad = 0;
 	int optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
@@ -108,8 +117,14 @@ int MainMenu::menu()
 	Clock clock;//
 	float totaltimepassed = 0;//
 	float overwriteKeyPressed = 0;//
+	sf::Music music;
+	music.openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
+	music.play();
+	music.setVolume(0.0f);
+	music.setLoop(true);
 	while (true)
 	{
+		fadeInMusic(music);
 		Time dt = clock.restart();//
 		totaltimepassed += dt.asSeconds();//
 		overwriteKeyPressed += dt.asSeconds();//
@@ -156,6 +171,7 @@ int MainMenu::menu()
 		animate(totaltimepassed, optionSelected);
 		draw();
 	}
+	music.stop();
 	return indexFileToLoad;
 }
 

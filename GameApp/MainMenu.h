@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "textureHolder.h"
 
 using namespace sf;
@@ -25,6 +26,7 @@ private:
 	void draw();
 	bool actions(int optionSelected, int &indexFileToLoad);
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
+	void fadeInMusic(Music &music);
 
 	Font font;
 	RenderWindow* m_window;
