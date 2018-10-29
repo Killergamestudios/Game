@@ -48,7 +48,7 @@ void Engine::run() {
 		}
 		input();
 		//update();
-		//draw();
+		draw();
 
 	}
 }

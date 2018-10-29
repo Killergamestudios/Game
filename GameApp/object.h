@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "textureHolder.h"
+#include "component.h"
 
 using namespace sf;
 
 //most of the components later will get replaced by dedicated classes than inherit the component class
-class component; // will get replaced by an include when we make the dedicated component classes
 
 struct Stats
 {
@@ -85,7 +85,7 @@ public:
 	object(RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
 	~object();
 	virtual void Draw() = 0;
-	virtual void update() = 0;
+	//virtual void update() = 0;
 
 
 protected:
@@ -101,7 +101,7 @@ public:
 	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
 	~CharacterObject();
 	void Draw() override;
-	void update() override;
+	//void update() override;
 	void spawn();
 	//rest of the funcions. whatever we will need later
 
@@ -114,7 +114,7 @@ private:
 
 	Stats m_stats;
 
-	vector<component*> m_weapons; // the weapons of each character
+	vector<WeaponComponent*> m_weapons; // the weapons of each character
 	vector<component*> m_modifiers; // buffs or debuffs that need to be removed added or aply
 	vector<component*> m_items; // items like potions etc
 	

@@ -126,7 +126,5 @@ void Map::draw()
 {
 	
 	
-	m_window->clear();
 	m_window->draw(m_sprite);
-	m_window->display();
 }
