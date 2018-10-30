@@ -2,6 +2,8 @@
 #include "MainMenu.h"
 #include <iostream>
 
+using namespace std;
+
 MainMenu::MainMenu(RenderWindow &window)
 {
 	m_window = &window;
@@ -17,23 +19,43 @@ MainMenu::~MainMenu()
 void MainMenu::boot()
 {
 	bool openingPlaying = true;
-	//WIP- Start playing a video file here <-
-	Clock clock;//
-	float totaltimepassed = 0;//
-	Sprite image(TextureHolder::GetTexture("./graphics/kgs.png"));//
+	const float FADE_IN_SPEED = 0.5f;
+	const float START_FADE_IN = 1.0f;
+	const float START_FADE_OUT = 6.0f;
+	float opacity = 0;
+	
+	Sprite image(TextureHolder::GetTexture("./graphics/kgs.png"));// load emblem
+
+	sf::Music music;
+	music.openFromFile("./music/MainMenu/KGS Intro.ogg"); // Load intro music
+	music.play(); // start playing intro music
 
 	image.setPosition(Vector2f((float)(m_window->getSize().x - image.getTexture()->getSize().x )/2, 
-							(float)(m_window->getSize().y - image.getTexture()->getSize().y)/2));
-	while (openingPlaying) {
-		//plays the opening
-		m_window->clear();//
-		m_window->draw(image);//
-		m_window->display();//
-		Time dt = clock.restart();//
-		totaltimepassed += dt.asSeconds();//
-		if (Keyboard::isKeyPressed(Keyboard::Space) || totaltimepassed > 10.0f  )
-			openingPlaying = false;
+							(float)(m_window->getSize().y - image.getTexture()->getSize().y)/2)); 
+	// set emblem in center 
 
+	while (openingPlaying) {
+
+		// Fade in and fade out code
+		if ((music.getPlayingOffset().asSeconds() < START_FADE_OUT)
+			&& (music.getPlayingOffset().asSeconds() > START_FADE_IN) && opacity < 255)
+		{
+			opacity += FADE_IN_SPEED;
+		}
+		else if ((music.getPlayingOffset().asSeconds() > START_FADE_OUT) && opacity > 0)
+		{
+			opacity -= FADE_IN_SPEED;
+		}
+
+		// Stop while if key is Pressed or music stop playing
+		if (Keyboard::isKeyPressed(Keyboard::Space) || music.getStatus() != Music::Playing)
+			openingPlaying = false;
+		
+		//plays the opening
+		image.setColor(Color(255, 255, 255, (unsigned int)opacity));
+		m_window->clear();
+		m_window->draw(image);
+		m_window->display();
 	}
 	m_window->clear();
 	m_window->display();
@@ -114,9 +136,9 @@ int MainMenu::menu()
 	int indexFileToLoad = 0;
 	int optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	bool keyPressed = false;
-	Clock clock;//
-	float totaltimepassed = 0;//
-	float overwriteKeyPressed = 0;//
+	Clock clock;
+	float totaltimepassed = 0; 
+	float overwriteKeyPressed = 0; 
 	sf::Music music;
 	music.openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
 	music.play();
@@ -125,9 +147,9 @@ int MainMenu::menu()
 	while (true)
 	{
 		fadeInMusic(music);
-		Time dt = clock.restart();//
-		totaltimepassed += dt.asSeconds();//
-		overwriteKeyPressed += dt.asSeconds();//
+		Time dt = clock.restart();
+		totaltimepassed += dt.asSeconds();
+		overwriteKeyPressed += dt.asSeconds();
 		Event evt;
 		while (m_window->pollEvent(evt))
 		{
