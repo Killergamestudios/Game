@@ -82,9 +82,9 @@ void MainMenu::setMenuSprites()
 {
 	const int WIN_HEIGHT = m_window->getSize().y;
 	const int WIN_WIDTH = m_window->getSize().x;
-	const int MARGIN_LOGO = 50; // top and down margin of logo
-	const int BOTTOM_MARGIN = 50; // bottom margin
-	const int HEIGHT_LOGO = 200; // to be initialized properly
+	const int MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const int BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
+	const int HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
 	const int HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
 	const int TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const int SPRITE_WIDTH = 256;
