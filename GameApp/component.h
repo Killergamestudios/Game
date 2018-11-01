@@ -16,8 +16,6 @@ struct Resistance
 };
 
 
-
-
 class component
 {
 public:
@@ -26,7 +24,6 @@ public:
 	virtual void update() = 0;
 
 protected:
-	bool isDead;
 	object *parent;
 	String category;
 };
@@ -62,7 +59,7 @@ public:
 	float getResistance(String type);
 	void update(); // same as before we keep it for special armor effects
 	void spawn(Resistance resistance);
-
+	void ChangeParent(CharacterObject *Parent);
 
 private:
 	CharacterObject *parent;
@@ -70,5 +67,6 @@ private:
 	String type; // chainmail, platemail etc
 	Resistance m_Resistance;
 };
+
 
 

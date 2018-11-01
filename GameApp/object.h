@@ -19,11 +19,12 @@ struct Stats
 	int MaxMovement;
 	float attackModifierRight;// starts at 1.00f and decreases or increases based on current buffs or damage at the right hand
 	float moveModifier;// starts at 1.00f and decreases or increases based on current buffs or damage at the legs
-	float attackModifier;// starts at 0.75f and decreases or increases based on current buffs or damage at the left hand
+	float attackModifierLeft;// starts at 0.75f and decreases or increases based on current buffs or damage at the left hand
+	float accuracy;//
 };
 struct Head
 {
-	component *m_headArmor;
+	ArmorComponent *m_headArmor;
 	float PhysicalResistance; // base depending on character changes with armor and buffs
 	float magicResistance;
 	float damageModifier; //base of 2.0f
@@ -32,7 +33,7 @@ struct Head
 };
 struct Body
 {
-	component *m_bodyArmor;
+	ArmorComponent *m_bodyArmor;
 	float PhysicalResistance;
 	float magicResistance;
 	float damageModifier;
@@ -41,7 +42,7 @@ struct Body
 };
 struct RightHand
 {
-	component *m_RightHandArmor;
+	ArmorComponent *m_RightHandArmor;
 	float PhysicalResistance;
 	float magicResistance;
 	float damageModifier;
@@ -55,7 +56,7 @@ struct RightHand
 };
 struct leftHand
 {
-	component *m_LeftHandArmor;
+	ArmorComponent *m_LeftHandArmor;
 	float PhysicalResistance;
 	float magicResistance;
 	float damageModifier;
@@ -68,7 +69,7 @@ struct leftHand
 };
 struct Legs
 {
-	component *m_LegArmor;
+	ArmorComponent *m_LegArmor;
 	float PhysicalResistance;
 	float magicResistance;
 	float damageModifier;
@@ -96,13 +97,27 @@ protected:
 	Vector2f m_position;
 };
 
+
+//Character Object
+
+
 class CharacterObject : public object {
 public:
 	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
 	~CharacterObject();
 	void Draw() override;
 	//void update() override;
-	void spawn();
+	//void spawn(Stats stats);
+	Stats getM_stats();
+	void LevelUp();
+	bool GiveExp(int exp); // true if the character leveled up
+	void addWeapon(WeaponComponent *weapon);
+	void equipWeapon(WeaponComponent *weapon);
+	
+	void equipArmor(String Place, ArmorComponent &armorcomponent);
+
+	int Attack(CharacterObject *target, String place); // -1 if attack dodged
+	void loseHp(int HpLoss);
 	//rest of the funcions. whatever we will need later
 
 
@@ -114,13 +129,27 @@ private:
 
 	Stats m_stats;
 
+	//the stats it upgrades every lavel up
+	int MaxHealthGain;
+	int MaxEnergyGain; // every 5 levels
+	float AttackModifierGain;
+	float MagicResistanceGain;
+	float PhysicalResistanceGain;
+	float accuracyGain;
+	int DodgechanceGain;
+
+	
+
+
 	vector<WeaponComponent*> m_weapons; // the weapons of each character
 	vector<component*> m_modifiers; // buffs or debuffs that need to be removed added or aply
 	vector<component*> m_items; // items like potions etc
 	
+	WeaponComponent* equipedWeapon; // shows what weapon from the m_weapons vector is curently equiped
+
 	component *m_ability1; // starts at null gets unlocked at some point
 	bool ability1isActive; // if it was used it gets on couldown and we use ints to know the passed time
-						   //or maybe charges and we use charges we will decide later
+						   //or maybe we use charges we will decide later
 	component *m_ability2;
 	bool ability2isActive;
 	component *m_ability3;
@@ -134,8 +163,6 @@ private:
 	Legs m_legs;
 	
 	component *m_AI; // null for playable characters .will expand later
-
-
 
 };
 

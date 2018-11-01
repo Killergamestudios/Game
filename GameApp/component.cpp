@@ -6,13 +6,13 @@ component::component(object *Parent, String Category)
 {
 	parent = Parent;
 	category = Category;
-	isDead = false;
 }
+
 
 
 component::~component()
 {
-	parent = NULL;
+	if (parent) parent = NULL;
 }
 
 
@@ -24,6 +24,7 @@ WeaponComponent::WeaponComponent(CharacterObject * Parent,String Name):component
 
 WeaponComponent::~WeaponComponent()
 {
+	if (parent) parent = NULL;
 }
 
 void WeaponComponent::update()
@@ -98,4 +99,10 @@ void ArmorComponent::spawn(Resistance resistance)
 	m_Resistance.piercingResistance = resistance.piercingResistance;
 	m_Resistance.slashingResistance = resistance.slashingResistance;
 	m_Resistance.BludgeoningResistance = resistance.BludgeoningResistance;
+}
+
+void ArmorComponent::ChangeParent(CharacterObject * Parent)
+{
+	//may cause a seg fault if used wrong. we will see
+	parent = Parent;
 }
