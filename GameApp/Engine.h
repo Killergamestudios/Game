@@ -19,13 +19,20 @@ private:
 	TextureHolder m_textureHolder;
 	Map *m_map;
 	MainMenu *mainmenu;
+	map<string, string> controlUnit;
+
+	// variables for keyPressed events (lock, override)
+	bool keyPressed; // boolean flag to indicate that a key is pressed
+	float overrideKeyPressed;  // float variable for time keeping while key is pressed
+	const float CHANGE_SELECTION_SPEED = 0.5f; // Change speed for faster or slower option transition
+	// -------------------------------------------------
 
 	void initGameVariables(int indexFileToLoad);
 
-	void input();
+	void input(float dtAsSeconds);
 	void update(float dtAsSeconds);
 	void draw();
-
+	void updateState();
 
 
 public:

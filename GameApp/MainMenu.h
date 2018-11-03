@@ -5,34 +5,49 @@
 
 using namespace sf;
 
-enum MainMenuState {opening,Main,newGame,LoadGame,Options,credits};
+//enum MainMenuState {opening,Main,newGame,LoadGame,Options,credits};
 
 class MainMenu
 {
 public:
-	MainMenu(RenderWindow &window);
+	MainMenu(RenderWindow &window, map<string, string> &controlUnit);
 	~MainMenu();
-	void boot();
-	int menu();
 	
+	void initBoot();
+	void updateBoot();
+	void drawBoot();
+
+	void initMenu();
+	void updateMenu(float);
+	void drawMenu();
+	void changeSeletedOption(int direction);
+	map<string, string> getResults();
+	void setState(string, string);
 
 private:
 	void init();
-
 	template <size_t N>
 	void initFileNamesToLoad(const string (&fileNames)[N]);
-	
 	void setMenuSprites();
-	void draw();
 	bool actions(int optionSelected, int &indexFileToLoad);
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
 	void fadeInMusic(Music &music);
 
-	Font font;
-	RenderWindow* m_window;
-	MainMenuState m_state;
-	vector<Text> textArray;
-	vector<Sprite> menuSprites;
+	// necessary globals
+	Music *backgroundMusic; // Background music for menu // doesnt get deleted
+	Sprite *title; // used for emblem and game tittle // doesnt get deleted
+	float opacity; // nedded for fade in animation
+	int optionSelected;
+	int index; // the option that was selected
+	int depth; // the depth in the main menu that you are currently
+	float totalTimePassed;
+	// ---------------
+
+	RenderWindow* m_window; // DONT DELETE
+	map<string,string> *returnState;
+	vector<Text> textArray; // doesnt get deleted
+	
+	vector<Sprite> menuSprites; // doesnt get deleted
 	vector<string> fileNamesToLoad; // path of sprites for to load
 	const string mainMenu[4] =
 	{

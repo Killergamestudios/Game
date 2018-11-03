@@ -1,14 +1,12 @@
 #include "pch.h"
 #include "MainMenu.h"
-#include <iostream>
 
 using namespace std;
 
-MainMenu::MainMenu(RenderWindow &window)
+MainMenu::MainMenu(RenderWindow &window, map<string, string> &controlUnit)
 {
 	m_window = &window;
-	m_state = MainMenuState::opening;
-	if (!font.loadFromFile("./graphics/fonts/ARCADECLASSIC.ttf")) {}
+	returnState = &controlUnit;
 }
 
 
@@ -16,56 +14,85 @@ MainMenu::~MainMenu()
 {
 }
 
-void MainMenu::boot()
+// -------------------------------
+// Begin of Boot related functions
+// -------------------------------
+
+void MainMenu::initBoot()
 {
-	bool openingPlaying = true;
+	opacity = 0;
+	title = new Sprite(TextureHolder::GetTexture("./graphics/kgs.png"));// load emblem
+	backgroundMusic = new Music();
+	backgroundMusic->openFromFile("./music/MainMenu/KGS Intro.ogg"); // Load intro music
+	backgroundMusic->play(); // start playing intro music
+	title->setPosition(Vector2f((float)(m_window->getSize().x - title->getTexture()->getSize().x) / 2,
+		(float)(m_window->getSize().y - title->getTexture()->getSize().y) / 2));
+	(*returnState)["Initialized"] = "true";
+	(*returnState)["Running"] = "true";
+	// set emblem in center 
+}
+
+void MainMenu::updateBoot()
+{
+	if ((*returnState)["Running"] == "false")
+	{
+		(*returnState)["Next State"] = "InMenu";
+		(*returnState)["Initialized"] = "";
+		backgroundMusic->stop();
+		return;
+	}
 	const float FADE_IN_SPEED = 0.5f;
 	const float START_FADE_IN = 1.0f;
 	const float START_FADE_OUT = 6.0f;
-	float opacity = 0;
-	
-	Sprite image(TextureHolder::GetTexture("./graphics/kgs.png"));// load emblem
-
-	sf::Music music;
-	music.openFromFile("./music/MainMenu/KGS Intro.ogg"); // Load intro music
-	music.play(); // start playing intro music
-
-	image.setPosition(Vector2f((float)(m_window->getSize().x - image.getTexture()->getSize().x )/2, 
-							(float)(m_window->getSize().y - image.getTexture()->getSize().y)/2)); 
-	// set emblem in center 
-
-	while (openingPlaying) {
-
-		// Fade in and fade out code
-		if ((music.getPlayingOffset().asSeconds() < START_FADE_OUT)
-			&& (music.getPlayingOffset().asSeconds() > START_FADE_IN) && opacity < 255)
-		{
-			opacity += FADE_IN_SPEED;
-		}
-		else if ((music.getPlayingOffset().asSeconds() > START_FADE_OUT) && opacity > 0)
-		{
-			opacity -= FADE_IN_SPEED;
-		}
-
-		// Stop while if key is Pressed or music stop playing
-		if (Keyboard::isKeyPressed(Keyboard::Space) || music.getStatus() != Music::Playing)
-			openingPlaying = false;
-		
-		//plays the opening
-		image.setColor(Color(255, 255, 255, (unsigned int)opacity));
-		m_window->clear();
-		m_window->draw(image);
-		m_window->display();
+	if ((backgroundMusic->getPlayingOffset().asSeconds() < START_FADE_OUT)
+		&& (backgroundMusic->getPlayingOffset().asSeconds() > START_FADE_IN) && opacity < 255)
+	{
+		opacity += FADE_IN_SPEED;
 	}
-	m_window->clear();
-	m_window->display();
-	m_state = MainMenuState::Main;
+	else if ((backgroundMusic->getPlayingOffset().asSeconds() > START_FADE_OUT) && opacity > 0)
+	{
+		opacity -= FADE_IN_SPEED;
+	}
+
+	if (backgroundMusic->getStatus() != Music::Playing)
+	{
+		(*returnState)["Running"] = "false";
+	}
+	title->setColor(Color(255, 255, 255, (unsigned int)opacity));
+}
+
+void MainMenu::drawBoot()
+{
+	m_window->draw(*title);
+}
+
+// -----------------------------
+// End of Boot related functions
+// -----------------------------
+
+// -----------------------------------
+// Begin of MainMenu related functions
+// -----------------------------------
+void MainMenu::initMenu()
+{
+	init(); // Initialize everything. Fresh start
+	(*returnState)["Initialized"] = "true";
+
+	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
+	totalTimePassed = 0;
+	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
+	backgroundMusic->play();
+	backgroundMusic->setVolume(0.0f);
+	backgroundMusic->setLoop(true);
+	(*returnState)["Running"] = "true";
 }
 
 void MainMenu::init()
 {
+	returnState->clear();
+	delete backgroundMusic;
+	backgroundMusic = new Music();
 	initFileNamesToLoad(mainMenu);
-	
 }
 
 template <size_t N>
@@ -129,81 +156,34 @@ void MainMenu::fadeInMusic(Music & music)
 	}
 }
 
-int MainMenu::menu()
+void MainMenu::updateMenu(float dtasSeconds)
 {
-	init(); // Initialize everything. Fresh start
-	const float CHANGE_SELECTION_SPEED = 0.5f;
-	int indexFileToLoad = 0;
-	int optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
-	bool keyPressed = false;
-	Clock clock;
-	float totaltimepassed = 0; 
-	float overwriteKeyPressed = 0; 
-	sf::Music music;
-	music.openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
-	music.play();
-	music.setVolume(0.0f);
-	music.setLoop(true);
-	while (true)
+	if ((*returnState)["Running"] == "false")
 	{
-		fadeInMusic(music);
-		Time dt = clock.restart();
-		totaltimepassed += dt.asSeconds();
-		overwriteKeyPressed += dt.asSeconds();
-		Event evt;
-		while (m_window->pollEvent(evt))
-		{
-			if (evt.type == Event::KeyReleased) {
-				keyPressed = false;
-				break;
-			}
-		}
-		if (!keyPressed || overwriteKeyPressed > CHANGE_SELECTION_SPEED)
-		{
-			overwriteKeyPressed = 0;
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
-			{
-				keyPressed = true;
-			}
-			else if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
-			{
-				menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
-				keyPressed = true;
-				optionSelected += 3;
-				optionSelected = optionSelected % 4;
-				menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
-			}
-			else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
-			{
-				menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
-				keyPressed = true;
-				optionSelected += 5;
-				optionSelected = optionSelected % 4;
-				menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
-			}
-			else if (Keyboard::isKeyPressed(Keyboard::Enter))
-			{
-				keyPressed = true;
-				if (!actions(optionSelected, indexFileToLoad))
-				{
-					break;
-				}
-			}
-		}
-		animate(totaltimepassed, optionSelected);
-		draw();
+		(*returnState)["Next State"] = "Loading";
+		(*returnState)["Initialized"] = "";
+		backgroundMusic->stop();
+		return;
 	}
-	music.stop();
-	return indexFileToLoad;
+
+	fadeInMusic(*backgroundMusic);
+	totalTimePassed += dtasSeconds;
+	animate(totalTimePassed, optionSelected);
+	drawMenu();
 }
 
-void MainMenu::draw() {
-	m_window->clear();
+void MainMenu::drawMenu() {
 	for (unsigned int i = 0; i < menuSprites.size(); i++)
-	{ 
+	{
 		m_window->draw(menuSprites[i]);
 	}
-	m_window->display();
+}
+
+void MainMenu::changeSeletedOption(int direction) {
+	menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
+	optionSelected += (4 + direction);
+	optionSelected = optionSelected % 4;
+	menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
 }
 
 bool MainMenu::actions(int optionSelected, int &indexFileToLoad)
@@ -228,5 +208,26 @@ bool MainMenu::actions(int optionSelected, int &indexFileToLoad)
 	return true;
 }
 
+// ---------------------------------
+// End of MainMenu related functions
+// ---------------------------------
+
+// -------------------------
+// Begin of: Getters Setters
+// -------------------------
+
+map<string, string> MainMenu::getResults()
+{
+	return (*returnState);
+}
+
+void MainMenu::setState(string key, string value)
+{
+	(*returnState)[key] = value;
+}
+
+// -------------------------
+// End of: Getters Setters
+// -------------------------
 
 
