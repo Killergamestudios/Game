@@ -89,10 +89,18 @@ void MainMenu::initMenu()
 
 void MainMenu::init()
 {
-	returnState->clear();
-	delete backgroundMusic;
+	clearData();
 	backgroundMusic = new Music();
 	initFileNamesToLoad(mainMenu);
+}
+
+void MainMenu::clearData()
+{
+	returnState->clear(); // Clears map because a new State is invoked
+	if(backgroundMusic == NULL) delete backgroundMusic;
+	backgroundMusic = NULL;
+	if (title == NULL) delete title;
+	title = NULL;
 }
 
 template <size_t N>
@@ -124,6 +132,7 @@ void MainMenu::setMenuSprites()
 		Sets Origin of sprites to center
 		Set Position of Sprites 
 	*/
+	menuSprites.clear();
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
 		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128))); 
@@ -211,23 +220,5 @@ bool MainMenu::actions(int optionSelected, int &indexFileToLoad)
 // ---------------------------------
 // End of MainMenu related functions
 // ---------------------------------
-
-// -------------------------
-// Begin of: Getters Setters
-// -------------------------
-
-map<string, string> MainMenu::getResults()
-{
-	return (*returnState);
-}
-
-void MainMenu::setState(string key, string value)
-{
-	(*returnState)[key] = value;
-}
-
-// -------------------------
-// End of: Getters Setters
-// -------------------------
 
 

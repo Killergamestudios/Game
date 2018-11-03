@@ -21,11 +21,10 @@ public:
 	void updateMenu(float);
 	void drawMenu();
 	void changeSeletedOption(int direction);
-	map<string, string> getResults();
-	void setState(string, string);
 
 private:
-	void init();
+	void init(); // Initializes everything
+	void clearData(); // Deletes everything. Called inside init()
 	template <size_t N>
 	void initFileNamesToLoad(const string (&fileNames)[N]);
 	void setMenuSprites();
@@ -34,18 +33,17 @@ private:
 	void fadeInMusic(Music &music);
 
 	// necessary globals
-	Music *backgroundMusic; // Background music for menu // doesnt get deleted
-	Sprite *title; // used for emblem and game tittle // doesnt get deleted
+	Music *backgroundMusic; // Background music for menu
+	Sprite *title; // used for emblem and game title
 	float opacity; // nedded for fade in animation
 	int optionSelected;
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
-	float totalTimePassed;
+	float totalTimePassed; // needed for animation
 	// ---------------
 
 	RenderWindow* m_window; // DONT DELETE
-	map<string,string> *returnState;
-	vector<Text> textArray; // doesnt get deleted
+	map<string,string> *returnState; // DONT DELETE 
 	
 	vector<Sprite> menuSprites; // doesnt get deleted
 	vector<string> fileNamesToLoad; // path of sprites for to load
