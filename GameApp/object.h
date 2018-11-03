@@ -6,7 +6,16 @@
 using namespace sf;
 
 //most of the components later will get replaced by dedicated classes than inherit the component class
-
+struct StatGain
+{
+	int MaxHealthGain;
+	int MaxEnergyGain; // every 5 levels
+	float AttackModifierGain;
+	float MagicResistanceGain;
+	float PhysicalResistanceGain;
+	float accuracyGain;
+	int DodgechanceGain;
+};
 struct Stats
 {
 	int level;
@@ -80,13 +89,15 @@ struct Legs
 	float MaxmovementDebuff; 
 };
 
+
+
 class object
 {
 public:
 	object(RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
 	~object();
 	virtual void Draw() = 0;
-	//virtual void update() = 0;
+	virtual void update() = 0;
 
 
 protected:
@@ -106,11 +117,15 @@ public:
 	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
 	~CharacterObject();
 	void Draw() override;
-	//void update() override;
-	//void spawn(Stats stats);
+	void update() override;
+	
 	Stats getM_stats();
 	void LevelUp();
+	//To spawn a Characetr: call the constructor, call the spawn func, add weapon and armor with those functions (we will need an "empty" armor piece so it will not remain NULL) , add an AI later
+	
 	bool GiveExp(int exp); // true if the character leveled up
+
+	void spawn(Stats &stats,Head &head, Body &body,Legs &legs, RightHand &righthand,leftHand &lefthand,StatGain &statgain);
 	void addWeapon(WeaponComponent *weapon);
 	void equipWeapon(WeaponComponent *weapon);
 	
@@ -130,13 +145,7 @@ private:
 	Stats m_stats;
 
 	//the stats it upgrades every lavel up
-	int MaxHealthGain;
-	int MaxEnergyGain; // every 5 levels
-	float AttackModifierGain;
-	float MagicResistanceGain;
-	float PhysicalResistanceGain;
-	float accuracyGain;
-	int DodgechanceGain;
+	StatGain m_statgain;
 
 	
 

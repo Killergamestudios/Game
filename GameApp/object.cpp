@@ -14,6 +14,8 @@ object::object(RenderWindow &window, String Category, String Type, Vector2f Posi
 
 object::~object()
 {
+	category.clear();
+	type.clear();
 	m_window = NULL;
 }
 
@@ -27,12 +29,49 @@ CharacterObject::CharacterObject(String Name, RenderWindow &window, String Categ
 
 CharacterObject::~CharacterObject()
 {
+	name.clear();
+	equipedWeapon = NULL;
+	for (unsigned int i = 0; i < m_weapons.size(); i++) {
+		delete m_weapons[i];
+		m_weapons[i] = NULL;
+	}
+	for (unsigned int i = 0; i < m_modifiers.size(); i++) {
+		delete m_modifiers[i];
+		m_modifiers[i] = NULL;
+	}
+	for (unsigned int i = 0; i < m_items.size(); i++) {
+		delete m_items[i];
+		m_items[i] = NULL;
+	}
+	if (m_ability1) delete m_ability1;
+	if (m_ability2) delete m_ability2;
+	if (m_ability3) delete m_ability3;
+	if (m_AI) delete m_AI;
+
+	if (m_head.m_headArmor) delete m_head.m_headArmor;
+	if (m_body.m_bodyArmor) delete m_body.m_bodyArmor;
+	if (m_righthand.m_RightHandArmor) delete m_righthand.m_RightHandArmor;
+	if (m_lefthand.m_LeftHandArmor) delete m_lefthand.m_LeftHandArmor;
+	if (m_legs.m_LegArmor) delete m_legs.m_LegArmor;
+
+
 }
 
 void CharacterObject::Draw()
 {
 	m_sprite.setPosition(m_position);
 	m_window->draw(m_sprite);
+}
+
+void CharacterObject::update()
+{
+	for (unsigned int i = 0; i < m_modifiers.size(); i++)
+	{
+		//	if (m_modifiers[i].getIsDead) {
+		//		m_modifiers.erase(m_modifiers.begin() + i);
+		//}
+		m_modifiers[i]->update();
+	}
 }
 
 Stats CharacterObject::getM_stats()
@@ -57,32 +96,32 @@ void CharacterObject::LevelUp()
 {
 	m_stats.level++;
 	
-	m_stats.MaxHealth += MaxHealthGain;
-	m_stats.MaxEnergy += m_stats.level % 5 == 0 ? MaxEnergyGain:0;
+	m_stats.MaxHealth += m_statgain.MaxHealthGain;
+	m_stats.MaxEnergy += m_stats.level % 5 == 0 ? m_statgain.MaxEnergyGain:0;
 	
-	m_stats.attackModifierLeft += AttackModifierGain;
-	m_stats.attackModifierRight += AttackModifierGain;
-	m_stats.accuracy += accuracyGain;
+	m_stats.attackModifierLeft += m_statgain.AttackModifierGain;
+	m_stats.attackModifierRight += m_statgain.AttackModifierGain;
+	m_stats.accuracy += m_statgain.accuracyGain;
 
-	m_head.magicResistance += MagicResistanceGain * 0.75f;
-	m_head.PhysicalResistance += PhysicalResistanceGain * 0.75f;
-	m_head.dodgeChance += DodgechanceGain;
+	m_head.magicResistance += m_statgain.MagicResistanceGain * 0.75f;
+	m_head.PhysicalResistance += m_statgain.PhysicalResistanceGain * 0.75f;
+	m_head.dodgeChance += m_statgain.DodgechanceGain;
 
-	m_body.magicResistance += MagicResistanceGain;
-	m_body.PhysicalResistance += PhysicalResistanceGain;
-	m_body.dodgeChance += DodgechanceGain ;
+	m_body.magicResistance += m_statgain.MagicResistanceGain;
+	m_body.PhysicalResistance += m_statgain.PhysicalResistanceGain;
+	m_body.dodgeChance += m_statgain.DodgechanceGain ;
 
-	m_legs.magicResistance += MagicResistanceGain * 0.70f;
-	m_legs.PhysicalResistance += PhysicalResistanceGain * 0.70f;
-	m_legs.dodgeChance += DodgechanceGain;
+	m_legs.magicResistance += m_statgain.MagicResistanceGain * 0.70f;
+	m_legs.PhysicalResistance += m_statgain.PhysicalResistanceGain * 0.70f;
+	m_legs.dodgeChance += m_statgain.DodgechanceGain;
 
-	m_righthand.magicResistance += MagicResistanceGain * 0.70f;
-	m_righthand.PhysicalResistance += PhysicalResistanceGain * 0.70f;
-	m_righthand.dodgeChance += DodgechanceGain;
+	m_righthand.magicResistance += m_statgain.MagicResistanceGain * 0.70f;
+	m_righthand.PhysicalResistance += m_statgain.PhysicalResistanceGain * 0.70f;
+	m_righthand.dodgeChance += m_statgain.DodgechanceGain;
 
-	m_lefthand.magicResistance += MagicResistanceGain * 0.70f;
-	m_lefthand.PhysicalResistance += PhysicalResistanceGain * 0.70f;
-	m_lefthand.dodgeChance += DodgechanceGain;
+	m_lefthand.magicResistance += m_statgain.MagicResistanceGain * 0.70f;
+	m_lefthand.PhysicalResistance += m_statgain.PhysicalResistanceGain * 0.70f;
+	m_lefthand.dodgeChance += m_statgain.DodgechanceGain;
 
 
 }
@@ -98,6 +137,28 @@ bool CharacterObject::GiveExp(int exp)
 	}
 	return hasLeveledUp; 
 }
+
+void CharacterObject::spawn(Stats & stats, Head & head, Body & body, Legs & legs, RightHand & righthand, leftHand & lefthand, StatGain &statgain)
+{
+	m_stats = {stats.level, stats.exp, stats.health, stats.MaxHealth,stats.energy,stats.MaxEnergy,
+			   stats.movement,stats.MaxMovement,stats.attackModifierRight,stats.attackModifierLeft,stats.accuracy};
+
+	m_statgain = { statgain.MaxHealthGain,statgain.MaxEnergyGain, statgain.AttackModifierGain,statgain.MagicResistanceGain,statgain.PhysicalResistanceGain,statgain.accuracyGain,statgain.DodgechanceGain };
+
+	m_head = { NULL, head.PhysicalResistance, head.magicResistance, head.damageModifier, 0, head.dodgeChance };
+
+	m_body = { NULL, body.PhysicalResistance, body.magicResistance, body.damageModifier, 0, body.dodgeChance };
+
+	m_legs = { NULL,legs.PhysicalResistance,legs.magicResistance, legs.damageModifier, 0, legs.MaxTimesAttacked, legs.dodgeChance, legs.movementDebuff, legs.MaxmovementDebuff };
+
+	m_righthand = { NULL,righthand.PhysicalResistance, righthand.magicResistance,righthand.damageModifier, 0,righthand.MaxTimesAttacked, righthand.dodgeChance, righthand.RightdamageDebuff, righthand.MaxRightdamageDebuff };
+
+	m_lefthand = { NULL,lefthand.PhysicalResistance, lefthand.magicResistance, lefthand.damageModifier, 0 , lefthand.MaxTimesAttacked, lefthand.dodgeChance, lefthand.LeftdamageDebuff, lefthand.MaxLeftdamageDebuff };
+
+
+}
+
+
 
 void CharacterObject::addWeapon(WeaponComponent * weapon)
 {
@@ -150,7 +211,7 @@ void CharacterObject::equipArmor(String Place, ArmorComponent & armorcomponent)
 
 }
 
-int CharacterObject::Attack(CharacterObject * target, String place)
+int CharacterObject::Attack(CharacterObject * target, String place) // missing the debuffs
 {
 	srand((int)time(0));
 	Stats targetStats = target->getM_stats();
@@ -240,6 +301,7 @@ int CharacterObject::Attack(CharacterObject * target, String place)
 		target->m_lefthand.timesAttacked++;
 		return DamageDealt;
 	}
+	return 0;
 }
 
 void CharacterObject::loseHp(int HpLoss)
@@ -250,9 +312,3 @@ void CharacterObject::loseHp(int HpLoss)
 		isAlive = false;
 	}
 }
-
-
-
-
-
-
