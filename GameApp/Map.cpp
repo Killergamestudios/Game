@@ -5,10 +5,9 @@
 
 using namespace std;
 
-Map::Map( RenderWindow &window) //TextureHolder &textures)
+Map::Map( RenderWindow &window)
 {
 	m_window = &window;
-	//m_textureHolder = &textures;
 
 }
 
@@ -135,4 +134,24 @@ int Map::getMapWidth()
 int Map::getMapHeight()
 {
 	return height * 64;
+}
+
+int ** Map::getTerrainMap() 
+{
+	return m_terrainProperties;
+}
+
+int ** Map::getEnemyMap()
+{
+	return m_enemyCharacters;
+}
+
+int ** Map::getFriendlyMap()
+{
+	return m_friendlyCharacters;
+}
+
+int ** Map::getMiscMap()
+{
+	return m_misc;
 }

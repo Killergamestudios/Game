@@ -13,7 +13,10 @@ public:
 	void draw(); //Draws the Map
 	int getMapWidth();
 	int getMapHeight();
-
+	int ** getTerrainMap();
+	int ** getEnemyMap();
+	int ** getFriendlyMap();
+	int ** getMiscMap();
 
 private:
 	int width, height; // Store map size (width and height)
