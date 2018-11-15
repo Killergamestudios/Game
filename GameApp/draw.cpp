@@ -17,5 +17,6 @@ void Engine::draw() {
 	case State::Incutscene:
 		break;
 	}
+	m_window.setView(camera);
 	m_window.display();
 }

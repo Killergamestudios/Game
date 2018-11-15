@@ -127,3 +127,13 @@ void Map::draw()
 {
 	m_window->draw(m_sprite);
 }
+
+int Map::getMapWidth()
+{
+	return width * 64;
+}
+
+int Map::getMapHeight()
+{
+	return height * 64;
+}
