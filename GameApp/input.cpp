@@ -34,13 +34,46 @@ void Engine::input(float dtAsSeconds) {
 					mainmenu->actions();
 				}
 			}
+
+			if (evt.type == Event::KeyPressed) {
+				keyPressed = true;
+			}
+			break;
+		case State::Playing:
+			
+			if (evt.type == Event::KeyReleased) {
+				keyPressed = false;
+			}
+
+			if (!keyPressed || overrideKeyPressed > CAMERA_UPDATE_SPEED)
+			{
+				overrideKeyPressed = 0;
+				if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
+				{
+					cameraUpdate(-1);
+				}
+				else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
+				{
+					cameraUpdate(1);
+				}
+				else if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
+				{
+					cameraUpdate(-2);
+				}
+				else if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
+				{
+					cameraUpdate(2);
+				}
+				else if (Keyboard::isKeyPressed(Keyboard::Enter))
+				{
+					//mainmenu->actions();
+				}
+			}
 			
 			if (evt.type == Event::KeyPressed) {
 				keyPressed = true;
 			}
 
-			break;
-		case State::Playing:
 			break;
 		case State::Loading:
 			break;

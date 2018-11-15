@@ -21,11 +21,24 @@ private:
 	MainMenu *mainmenu;
 	map<string, string> controlUnit;
 
+	// camera variables
+	View camera;
+	const float CAMERA_SPEED = 64.0f;
+	const float CAMERA_UPDATE_SPEED = 0.1f;
+	//--------------------------
+
 	// variables for keyPressed events (lock, override)
 	bool keyPressed; // boolean flag to indicate that a key is pressed
 	float overrideKeyPressed;  // float variable for time keeping while key is pressed
 	const float CHANGE_SELECTION_SPEED = 0.5f; // Change speed for faster or slower option transition
 	// -------------------------------------------------
+
+	// game constancts
+	float windowWidth;
+	float windowHeight;
+	float mapWidth;
+	float mapHeight;
+	// --------------------------------------------------
 
 	void initGameVariables(int indexFileToLoad);
 
@@ -34,6 +47,7 @@ private:
 	void draw();
 	void updateState();
 
+	void cameraUpdate(int direction); // handles movement of camera
 
 public:
 	Engine();

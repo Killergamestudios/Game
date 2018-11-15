@@ -26,6 +26,7 @@ public:
 private:
 	void init(); // Initializes everything
 	void clearData(); // Deletes everything. Called inside init()
+	void clearTextures(); // Clears menuTextures in menu transitions
 	void initFileNamesToLoad(vector<string> fileNames);
 	void setMenuSprites();
 	void loadTextGraphics(vector<string> textsArray);

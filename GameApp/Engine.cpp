@@ -4,7 +4,12 @@
 #include "fstream"
 
 Engine::Engine() {
-	m_window.create(VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game Name", Style::Fullscreen);
+	windowWidth = VideoMode::getDesktopMode().width;
+	windowHeight = VideoMode::getDesktopMode().height;
+	m_window.create(VideoMode(windowWidth, windowHeight), "Game Name", Style::Fullscreen);
+	camera.setCenter(Vector2f(windowWidth/2, windowHeight/2));
+	camera.setSize(Vector2f(windowWidth, windowHeight));
+	m_window.setView(camera);
 }
 
 void Engine::run() {
@@ -40,6 +45,9 @@ void Engine::run() {
 
 			m_map->load(mapIndex);
 			m_state = State::Playing;
+			controlUnit.clear();
+			mapWidth = m_map->getMapWidth();
+			mapHeight = m_map->getMapHeight();
 			break;
 		case State::Incutscene:
 			//play the cutscene

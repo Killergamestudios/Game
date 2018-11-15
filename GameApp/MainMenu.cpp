@@ -107,6 +107,12 @@ void MainMenu::clearData()
 	title = NULL;
 }
 
+void MainMenu::clearTextures()
+{
+	menuTexts.clear();
+	menuSprites.clear();
+}
+
 void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 {
 	fileNamesToLoad.clear();
@@ -165,17 +171,22 @@ void MainMenu::loadTextGraphics(vector<string> textsArray)
 		FloatRect textRect = menuTexts[i].getLocalBounds();
 		menuTexts[i].setPosition(sf::Vector2f(TEXT_LEFT_MARGIN, 
 			TOP_CONTAINER + (textRect.height + MARGIN_BETWEEN_TEXT) * i));
-	} // populate array fileNameToLoad in order to load the sprites
-	setMenuSprites();
+	} 
+	optionSelected = 0;
+	menuTexts[0].setFillColor(Color::Red); //set as default selected
 }
 
 void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 	const float ANIMATION_SPEED = 0.3f;
-	if (totaltimepassed > ANIMATION_SPEED) {
-		totaltimepassed -= ANIMATION_SPEED;
-		int left = menuSprites[optionSelected].getTextureRect().left; // get left position of previous selected texture
-		left = left == 256 ? 512 : 256;
-		menuSprites[optionSelected].setTextureRect(IntRect(left, 0, 256, 128));
+	if (menuSprites.size() != 0)
+	{
+		if (totaltimepassed > ANIMATION_SPEED) 
+		{
+			totaltimepassed -= ANIMATION_SPEED;
+			int left = menuSprites[optionSelected].getTextureRect().left; // get left position of previous selected texture
+			left = left == 256 ? 512 : 256;
+			menuSprites[optionSelected].setTextureRect(IntRect(left, 0, 256, 128));
+		}
 	}
 
 }
@@ -218,38 +229,56 @@ void MainMenu::drawMenu() {
 }
 
 void MainMenu::changeSeletedOption(int direction) {
-	menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
-	optionSelected += (4 + direction);
-	optionSelected = optionSelected % 4;
-	menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
+	if (menuSprites.size() != 0)
+	{
+		menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
+		optionSelected += (menuSprites.size() + direction);
+		optionSelected = optionSelected % menuSprites.size();
+		menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
+	}
+
+	if (menuTexts.size() != 0)
+	{
+		menuTexts[optionSelected].setFillColor(Color::White);
+		optionSelected += (menuTexts.size() + direction);
+		optionSelected = optionSelected % menuTexts.size();
+		menuTexts[optionSelected].setFillColor(Color::Red);
+	}
 }
 
 void MainMenu::actions()
-{
-	switch (optionSelected)
+{	
+	clearTextures();
+	if (index == 1 && depth == 2) 
 	{
-	case 0: // New Game
-		//Loads intro cutscene or whatever
-		(*returnState)["Running"] = "false";
-		(*returnState)["Initialized"] = "";
-		(*returnState)["Next State"] = "Loading";
-		(*returnState)["Load Game"] = "false";
-		break;
-	case 1: //Load Game
-		index = 1;
-		depth = 2;
-		loadSaveFiles();
-		
 		//(*returnState)["Running"] = "false";
 		//(*returnState)["Initialized"] = "";
 		//(*returnState)["Next State"] = "Loading";
 		//(*returnState)["Load Game"] = "true";
 		//(*returnState)["Save File"] = "..."; // TODO: fix load;
-		break;
-	case 2: //Options
-		break;
-	case 3: //Credits
-		break;
+		// TODO: load from selected file
+	} 
+	else
+	{
+		switch (optionSelected)
+		{
+		case 0: // New Game
+			//Loads intro cutscene or whatever
+			(*returnState)["Running"] = "false";
+			(*returnState)["Initialized"] = "";
+			(*returnState)["Next State"] = "Loading";
+			(*returnState)["Load Game"] = "false";
+			break;
+		case 1: //Load Game
+			index = 1;
+			depth = 2;
+			loadSaveFiles();
+			break;
+		case 2: //Options
+			break;
+		case 3: //Credits
+			break;
+		}
 	}
 }
 

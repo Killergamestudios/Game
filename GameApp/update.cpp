@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
+#include <iostream>
 void Engine::update(float dtAsSeconds) {
 	switch(m_state){
 	case State::Booting:
@@ -9,6 +10,7 @@ void Engine::update(float dtAsSeconds) {
 		mainmenu->updateMenu(dtAsSeconds);
 		break;
 	case State::Playing:
+		
 		break;
 	case State::Loading:
 		break;
