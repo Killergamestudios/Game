@@ -31,11 +31,7 @@ void Engine::input(float dtAsSeconds) {
 				}
 				else if (Keyboard::isKeyPressed(Keyboard::Enter))
 				{
-					// TODO : change state or do something
-					//if (!actions(optionSelected, indexFileToLoad))
-					//{
-					//	break;
-					//}
+					mainmenu->actions();
 				}
 			}
 			

@@ -23,20 +23,16 @@ void Engine::run() {
 		// Begin : Initialization Phase
 		switch (m_state) {
 		case State::Booting:
-			//controlUnit = mainmenu->getResults();
 			if (controlUnit["Initialized"] == "") {
 				mainmenu->initBoot();
 			}
 			break;
-			//m_state = State::InMenu;
 			
 		case State::InMenu:
 			//another enum witch tells witch menu we are in (one of the main menus, one of the input menus during the fight etc)
 			//change the states to playing loading cutscene or another menu depending on last state
-			//controlUnit = mainmenu->getResults();
 			if (controlUnit["Initialized"] == "") {
 				mainmenu->initMenu();
-				//m_state = State::Loading;
 			}
 			break;
 		case State::Loading:
@@ -74,7 +70,6 @@ void Engine::updateState()
 		} else if (newState == "Incutscene") {
 			m_state = State::Incutscene;
 		}
-		//cout << m_state << endl;
 	}
 }
 

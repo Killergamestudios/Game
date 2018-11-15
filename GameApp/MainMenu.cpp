@@ -1,12 +1,16 @@
 #include "pch.h"
 #include "MainMenu.h"
-
+#include "fstream"
+#include <iostream>
 using namespace std;
 
 MainMenu::MainMenu(RenderWindow &window, map<string, string> &controlUnit)
 {
 	m_window = &window;
 	returnState = &controlUnit;
+	index = 0;
+	depth = 1;
+	font.loadFromFile("./graphics/fonts/ARCADECLASSIC.TTF");
 }
 
 
@@ -103,12 +107,11 @@ void MainMenu::clearData()
 	title = NULL;
 }
 
-template <size_t N>
-void MainMenu::initFileNamesToLoad(const string (&fileNames)[N]) // pass array by reference
+void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 {
 	fileNamesToLoad.clear();
-	for (string name : fileNames) {
-		fileNamesToLoad.push_back(name);
+	for (int i = 0; i < fileNames.size(); i++) {
+		fileNamesToLoad.push_back(fileNames[i]);
 	} // populate array fileNameToLoad in order to load the sprites
 	setMenuSprites();
 }
@@ -144,6 +147,27 @@ void MainMenu::setMenuSprites()
 	menuSprites[0].setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
 }
 
+
+void MainMenu::loadTextGraphics(vector<string> textsArray)
+{
+	const int WIN_HEIGHT = m_window->getSize().y;
+	const int WIN_WIDTH = m_window->getSize().x;
+	const int HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const int MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const int TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
+	const int TEXT_LEFT_MARGIN = WIN_WIDTH / 10;
+	const int MARGIN_BETWEEN_TEXT = 10;
+
+	menuTexts.clear();
+	for (int i = 0; i < textsArray.size(); i++) {
+		menuTexts.push_back(Text(textsArray[i],font,24));
+		menuTexts[i].setFillColor(Color::White);
+		FloatRect textRect = menuTexts[i].getLocalBounds();
+		menuTexts[i].setPosition(sf::Vector2f(TEXT_LEFT_MARGIN, 
+			TOP_CONTAINER + (textRect.height + MARGIN_BETWEEN_TEXT) * i));
+	} // populate array fileNameToLoad in order to load the sprites
+	setMenuSprites();
+}
 
 void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 	const float ANIMATION_SPEED = 0.3f;
@@ -186,6 +210,11 @@ void MainMenu::drawMenu() {
 	{
 		m_window->draw(menuSprites[i]);
 	}
+
+	for (unsigned int i = 0; i < menuTexts.size(); i++)
+	{
+		m_window->draw(menuTexts[i]);
+	}
 }
 
 void MainMenu::changeSeletedOption(int direction) {
@@ -195,26 +224,48 @@ void MainMenu::changeSeletedOption(int direction) {
 	menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
 }
 
-bool MainMenu::actions(int optionSelected, int &indexFileToLoad)
+void MainMenu::actions()
 {
 	switch (optionSelected)
 	{
 	case 0: // New Game
 		//Loads intro cutscene or whatever
-		indexFileToLoad = 0;
-		return false;
+		(*returnState)["Running"] = "false";
+		(*returnState)["Initialized"] = "";
+		(*returnState)["Next State"] = "Loading";
+		(*returnState)["Load Game"] = "false";
 		break;
 	case 1: //Load Game
-		return false;
+		index = 1;
+		depth = 2;
+		loadSaveFiles();
+		
+		//(*returnState)["Running"] = "false";
+		//(*returnState)["Initialized"] = "";
+		//(*returnState)["Next State"] = "Loading";
+		//(*returnState)["Load Game"] = "true";
+		//(*returnState)["Save File"] = "..."; // TODO: fix load;
 		break;
 	case 2: //Options
-		return false;
 		break;
 	case 3: //Credits
-		return false;
 		break;
 	}
-	return true;
+}
+
+void MainMenu::loadSaveFiles() {
+	string lineReader;
+	const string saveFileMapDirectory = "./savefiles/saveFilesMap.txt";
+	vector<string> saveFilesArray;
+
+	saveFile.open(saveFileMapDirectory);
+	
+	while (getline(saveFile, lineReader)) {
+		saveFilesArray.push_back(lineReader);
+	}
+
+	loadTextGraphics(saveFilesArray);
+
 }
 
 // ---------------------------------

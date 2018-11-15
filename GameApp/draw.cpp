@@ -10,6 +10,7 @@ void Engine::draw() {
 		mainmenu->drawMenu();
 		break;
 	case State::Playing:
+		m_map->draw();
 		break;
 	case State::Loading:
 		break;

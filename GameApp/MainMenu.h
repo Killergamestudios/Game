@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "textureHolder.h"
-
+#include "fstream"
 using namespace sf;
 
 //enum MainMenuState {opening,Main,newGame,LoadGame,Options,credits};
@@ -21,33 +21,38 @@ public:
 	void updateMenu(float);
 	void drawMenu();
 	void changeSeletedOption(int direction);
+	void actions();
 
 private:
 	void init(); // Initializes everything
 	void clearData(); // Deletes everything. Called inside init()
-	template <size_t N>
-	void initFileNamesToLoad(const string (&fileNames)[N]);
+	void initFileNamesToLoad(vector<string> fileNames);
 	void setMenuSprites();
-	bool actions(int optionSelected, int &indexFileToLoad);
+	void loadTextGraphics(vector<string> textsArray);
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
 	void fadeInMusic(Music &music);
+	void loadSaveFiles();
 
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
 	Sprite *title; // used for emblem and game title
 	float opacity; // nedded for fade in animation
-	int optionSelected;
+	int optionSelected; // show the currently selected menu item
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
+	ifstream saveFile; // used to oped save files
+	Font font; // Font for text
 	// ---------------
 
 	RenderWindow* m_window; // DONT DELETE
 	map<string,string> *returnState; // DONT DELETE 
+
+	vector<Text> menuTexts;
 	
-	vector<Sprite> menuSprites; // doesnt get deleted
+	vector<Sprite> menuSprites; // sprites for menu items
 	vector<string> fileNamesToLoad; // path of sprites for to load
-	const string mainMenu[4] =
+	const vector<string> mainMenu =
 	{
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/LoadGameButtons-Sheet.png",
