@@ -31,17 +31,20 @@ CharacterObject::~CharacterObject()
 {
 	name.clear();
 	equipedWeapon = NULL;
-	for (unsigned int i = 0; i < m_weapons.size(); i++) {
+	for (unsigned int i = m_weapons.size()- 1; i >= 0 ; i--) {
 		delete m_weapons[i];
 		m_weapons[i] = NULL;
+		m_weapons.pop_back();
 	}
-	for (unsigned int i = 0; i < m_modifiers.size(); i++) {
+	for (unsigned int i = m_modifiers.size() - 1; i >= 0 ; i--) {
 		delete m_modifiers[i];
 		m_modifiers[i] = NULL;
+		m_modifiers.pop_back();
 	}
-	for (unsigned int i = 0; i < m_items.size(); i++) {
+	for (unsigned int i = m_items.size() - 1; i >= 0 ; i--) {
 		delete m_items[i];
 		m_items[i] = NULL;
+		m_items.pop_back();
 	}
 	if (m_ability1) delete m_ability1;
 	if (m_ability2) delete m_ability2;
@@ -211,7 +214,7 @@ void CharacterObject::equipArmor(String Place, ArmorComponent & armorcomponent)
 
 }
 
-int CharacterObject::Attack(CharacterObject * target, String place) // missing the debuffs
+int CharacterObject::Attack(CharacterObject *target, String place) // missing the debuffs
 {
 	srand((int)time(0));
 	Stats targetStats = target->getM_stats();
@@ -227,7 +230,7 @@ int CharacterObject::Attack(CharacterObject * target, String place) // missing t
 		float EnemyResistance = target->m_head.m_headArmor->getResistance(equipedWeapon->GetDamageType());
 		EnemyResistance += (equipedWeapon->GetDamageType() == "Lighting" || equipedWeapon->GetDamageType() == "Fire" || equipedWeapon->GetDamageType() == "Cold") ?
 			target->m_head.magicResistance : target->m_head.PhysicalResistance;
-		if (EnemyResistance >= 100) EnemyResistance = 0.9f; // should cap around there
+		if (EnemyResistance >= 0.9f) EnemyResistance = 0.9f; // should cap around there
 		int DamageDealt = (int)(DamageToDeal*(1 - EnemyResistance));
 		target->loseHp(DamageDealt);
 		target->m_head.timesAttacked++;
