@@ -94,7 +94,7 @@ struct Legs
 class object
 {
 public:
-	object(RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
+	object(RenderWindow &window, String Category, String Type, Vector2i Position, Sprite sprite);
 	~object();
 	virtual void Draw() = 0;
 	virtual void update() = 0;
@@ -114,7 +114,7 @@ protected:
 
 class CharacterObject : public object {
 public:
-	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite);
+	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Sprite sprite);
 	~CharacterObject();
 	void Draw() override;
 	void update() override;

@@ -2,7 +2,7 @@
 #include "object.h"
 
 
-object::object(RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite)
+object::object(RenderWindow &window, String Category, String Type, Vector2i Position, Sprite sprite)
 {
 	m_window = &window;
 	type = Type;
@@ -19,7 +19,7 @@ object::~object()
 	m_window = NULL;
 }
 
-CharacterObject::CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2f Position, Sprite sprite) :
+CharacterObject::CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Sprite sprite) :
 	object(window,Category,Type,Position,sprite)
 {
 	name = Name;

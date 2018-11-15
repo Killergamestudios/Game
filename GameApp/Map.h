@@ -11,7 +11,7 @@ public:
 	void init();
 	void load(int mapIndex); //Loads the information in the object.
 	void draw(); //Draws the Map
-
+	
 
 
 private:

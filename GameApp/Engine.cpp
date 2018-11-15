@@ -15,7 +15,7 @@ void Engine::run() {
 
 	int indexFileToLoad = 0;
 	m_state = State::Booting;
-
+	SpawnWarrior(Vector2i(0, 0));
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
 		GameTimeTotal = dt;

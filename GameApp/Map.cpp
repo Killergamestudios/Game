@@ -61,7 +61,7 @@ void Map::load(int mapIndex)
 	//LOOP INITIATES!!!
 	for (int layerIndex = 0; layerIndex <= 3; layerIndex++)
 	{
-		mapAddress = "./graphics/maps/texts/mapText_" + to_string(mapIndex) + "_L-" + to_string(layerIndex) + ".txt"; // Building the Address of the map text file to fetch.
+		mapAddress = "./graphics/mfaps/texts/mapText_" + to_string(mapIndex) + "_L-" + to_string(layerIndex) + ".txt"; // Building the Address of the map text file to fetch.
 		myfile.open(mapAddress);
 
 		if (layerIndex == 0)
@@ -117,6 +117,7 @@ void Map::load(int mapIndex)
 			m_misc = dummy;
 			break;
 		}
+		myfile.close();
 	}
 	m_sprite = Sprite(TextureHolder::GetTexture(backgroundImageAddress));
 	m_sprite.setPosition(0, 0);

@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Map.h"
 #include "MainMenu.h"
-
+#include "object.h"
 
 using namespace sf;
 enum State{Booting,Playing, Loading, InMenu, Incutscene};
@@ -34,6 +34,8 @@ private:
 	void draw();
 	void updateState();
 
+
+	CharacterObject* SpawnWarrior(Vector2i position);
 
 public:
 	Engine();
