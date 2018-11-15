@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ENGINE.h"
+#include "Engine.h"
 #include "textureHolder.h"
 #include "fstream"
 
@@ -10,28 +10,30 @@ Engine::Engine() {
 void Engine::run() {
 	Clock clock;
 	m_map = new Map(m_window);
-	mainmenu = new MainMenu(m_window);
+	mainmenu = new MainMenu(m_window,controlUnit);
+	keyPressed = false;
 
 	int indexFileToLoad = 0;
 	m_state = State::Booting;
-
 
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
 		GameTimeTotal = dt;
 		float dtAsSeconds = dt.asSeconds();
+		// Begin : Initialization Phase
 		switch (m_state) {
 		case State::Booting:
-
-			mainmenu->boot();
-
-			m_state = State::InMenu;
+			if (controlUnit["Initialized"] == "") {
+				mainmenu->initBoot();
+			}
+			break;
 			
 		case State::InMenu:
 			//another enum witch tells witch menu we are in (one of the main menus, one of the input menus during the fight etc)
 			//change the states to playing loading cutscene or another menu depending on last state
-			indexFileToLoad = mainmenu->menu();
-			m_state = State::Loading;
+			if (controlUnit["Initialized"] == "") {
+				mainmenu->initMenu();
+			}
 			break;
 		case State::Loading:
 			initGameVariables(indexFileToLoad);
@@ -44,12 +46,30 @@ void Engine::run() {
 			//check a flag to see if you switch to playing or loading (oppening cutscene or ending cutscene)
 			//change the state
 			break;
-		
 		}
-		input();
-		//update();
-		draw();
+		// End : Initialization Phase
 
+		input(dtAsSeconds); // handles all the input
+		update(dtAsSeconds); // handles updates - animation etc
+		draw(); // handles drawing 
+		updateState(); // hanldes the change of State
+	}
+}
+
+void Engine::updateState() 
+{
+	string newState = controlUnit["Next State"];
+	if (newState != "")
+	{
+		if (newState == "InMenu") {
+			m_state = State::InMenu;
+		} else if (newState == "Loading") {
+			m_state = State::Loading;
+		} else if (newState == "Playing") {
+			m_state = State::Playing;
+		} else if (newState == "Incutscene") {
+			m_state = State::Incutscene;
+		}
 	}
 }
 

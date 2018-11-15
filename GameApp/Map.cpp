@@ -124,7 +124,5 @@ void Map::load(int mapIndex)
 
 void Map::draw()
 {
-	
-	
 	m_window->draw(m_sprite);
 }

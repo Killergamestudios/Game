@@ -1,20 +1,56 @@
 #include "pch.h"
-#include "ENGINE.h"
+#include "Engine.h"
 
-void Engine::input() {
-	Event event;
-	while (m_window.pollEvent(event)) {
-		if (m_state == State::Playing) {
+void Engine::input(float dtAsSeconds) {
+	Event evt;
+	overrideKeyPressed += dtAsSeconds;
+	while (m_window.pollEvent(evt)) {
+		switch (m_state) {
+		case State::Booting:
+			if (Keyboard::isKeyPressed(Keyboard::Space))
+			{
+				controlUnit["Running"] = "false";
+			}
+			break;
+		case State::InMenu:
+			
+			if (evt.type == Event::KeyReleased) {
+				keyPressed = false;
+			}
 
+			if (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED)
+			{
+				overrideKeyPressed = 0;
+				if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
+				{
+					mainmenu->changeSeletedOption(-1);
+				}
+				else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
+				{
+					mainmenu->changeSeletedOption(1);
+				}
+				else if (Keyboard::isKeyPressed(Keyboard::Enter))
+				{
+					mainmenu->actions();
+				}
+			}
+			
+			if (evt.type == Event::KeyPressed) {
+				keyPressed = true;
+			}
+
+			break;
+		case State::Playing:
+			break;
+		case State::Loading:
+			break;
+		case State::Incutscene:
+			break;
 		}
-		else if (m_state == State::InMenu) {
-
-		}
-
 
 
 		//to close the window (for now)
-		if (event.type == Event::KeyPressed)
+		if (evt.type == Event::KeyPressed)
 		
 			if (Keyboard::isKeyPressed(Keyboard::Escape)) 
 				m_window.close();
