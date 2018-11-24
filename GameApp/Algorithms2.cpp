@@ -59,7 +59,18 @@ int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY
 	return abs(startPosX - endPosX) + abs(startPosY - endPosY);
 }
 
+
 // function to get the optimal path between (startX, startY) and (endX, endY)
+//
+// Parameters:
+// int startPosX, int startPosY : coordinates of starting point
+// int endPosX, int endPosY : coordinates of end point
+// Map currentMap : currently active Map instance
+//
+// Returns :
+// vector<Vector2i> : contains the optimal path form(startPosX, startPosY) to
+//                    (endPosX, endPosY).First element is the last position of hero
+//
 vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, Map currentMap)
 {
 	pPair start = make_pair(heuristicCostEstimate(startPosX, startPosY, endPosX, endPosY), make_pair(startPosX, startPosY));
@@ -132,6 +143,14 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 }
 
 // function to find all the tiles you can access given a starting point and a range 
+// Parameters:
+// int startPosX, int startPosY : coordinates of starting point
+// int range : the total movement distance the hero can travel
+// Map currentMap : currently active Map instance
+//
+// Returns :
+// vector<Vector2i>: contains all the available tiles sorted by X value
+//
 vector<Vector2i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map currentMap)
 {
 	pPair start = make_pair(0, make_pair(startPosX, startPosY)); //the starting point and its distance from the beginning = 0
@@ -197,5 +216,3 @@ vector<Vector2i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	}
 	return finalTilesSet;
 }
-
-
