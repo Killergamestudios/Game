@@ -65,13 +65,14 @@ int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY
 // Parameters:
 // int startPosX, int startPosY : coordinates of starting point
 // int endPosX, int endPosY : coordinates of end point
+// int &energy : pass by reference the variable of the heroe's energy
 // Map currentMap : currently active Map instance
 //
 // Returns :
 // vector<Vector2i> : contains the optimal path form(startPosX, startPosY) to
 //                    (endPosX, endPosY).First element is the last position of hero
 //
-vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, Map currentMap)
+vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, int &energy,Map currentMap)
 {
 	pPair start = make_pair(heuristicCostEstimate(startPosX, startPosY, endPosX, endPosY), make_pair(startPosX, startPosY));
 	set<pPair> openSet; // tiles that are to be processed
@@ -100,7 +101,9 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 		pPair p = *openSet.begin(); // pop first item from openSet (this with the least weight)
 		int x = p.second.first;     //
 		int y = p.second.second;    // get its coordinates
-		if (x == endPosX && y == endPosY) { // check if we found the end
+		if (x == endPosX && y == endPosY)  // check if we found the end
+		{
+			energy -= gScore[endPosX][endPosY];
 			return reconstructPath(cameFrom,endPosX,endPosY);
 		}
 		openSet.erase(openSet.begin()); // erase first item from openSet (this with the least weight)
@@ -109,10 +112,10 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 		// create the abjucent tiles (x+1,y) (x-1,y) (x,y+1) (x,y-1) 
 		for (int i = x - 1; i <= x + 1; i+=2)
 		{
-			if (i < 0 || i > mapWidth || closedSet[make_pair(i, y)] == true || totalMap[i][y] == -1) // blocked or already "closed" tiles
+			if (i < 0 || i > mapWidth - 1 || closedSet[make_pair(i, y)] == true || totalMap[i][y] == -1) // blocked or already "closed" tiles
 				continue;
 
-			int score = gScore[x][y] + totalMap[i][y]; //calculate new score = estimation + weight of tile
+			int score = gScore[x][y] + totalMap[i][y]; //calculate new score = distance to parent + weight of tile
 
 			if (gScore[i][y] == INT32_MAX) // if never visited before add it to openSet
 				openSet.insert(make_pair(score + heuristicCostEstimate(i, y, endPosX, endPosY), make_pair(i, y)));
@@ -126,9 +129,9 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 
 		for (int j = y - 1; j <= y + 1; j += 2)
 		{
-			if (j < 0 || j > mapHeight || closedSet[make_pair(x, j)] == true || totalMap[x][j] == -1) // blocked or already "closed" tiles
+			if (j < 0 || j > mapHeight - 1 || closedSet[make_pair(x, j)] == true || totalMap[x][j] == -1) // blocked or already "closed" tiles
 				continue;
-			int score = gScore[x][y] + totalMap[x][j]; //calculate new score = estimation + weight of tile
+			int score = gScore[x][y] + totalMap[x][j]; //calculate new score = distance to parent + weight of tile
 
 			if (gScore[x][j] == INT32_MAX) // if never visited before add it to openSet
 				openSet.insert(make_pair(score + heuristicCostEstimate(x, j, endPosX, endPosY), make_pair(x, j)));
@@ -149,18 +152,30 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 // Map currentMap : currently active Map instance
 //
 // Returns :
-// vector<Vector2i>: contains all the available tiles sorted by X value
+// vector<Vector3i>: contains all the available tiles sorted by X value and their respective distance
 //
-vector<Vector2i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map currentMap)
+vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map currentMap)
 {
 	pPair start = make_pair(0, make_pair(startPosX, startPosY)); //the starting point and its distance from the beginning = 0
 	Pair startW = make_pair(startPosX, startPosY); // the starting point without weight
 	map<pair<int, int>, bool> closedSet; // tiles that have already been processed
 	vector<pPair> openSet; // tiles that are to be processed
-	vector<Vector2i> finalTilesSet; // the final set of tiles to return
+	vector<Vector3i> finalTilesSet; // the final set of tiles to return
 	set<pair<int, int>> tiles; // array keeping track of tiles. Needs to be set in order not to accept duplicates
 	int mapWidth = currentMap.getMapWidth(); // width of map array
 	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int ** energyCost;
+	
+	energyCost = new int *[mapWidth];
+	for (int i = 0; i < mapWidth; i++)
+	{
+		energyCost[i] = new int[mapHeight];
+		for (int j = 0; j < mapHeight; j++)
+		{
+			energyCost[i][j] = 0;
+		}
+	}
+
 
 	closedSet[startW] = false;
 	openSet.push_back(start);
@@ -186,6 +201,10 @@ vector<Vector2i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 			if (closedSet[make_pair(i, y)] || newWeight > range) // if outOfRange ignore
 				continue;
 			tiles.insert(make_pair(i, y)); // insert the tile because it is in range
+			
+			if (energyCost[i][y] == 0 || energyCost[i][y] > newWeight)
+				energyCost[i][y] = newWeight; // track energy cost
+			 
 			if (newWeight < range) // if we can go further than that add it to the openSet
 			{
 				openSet.push_back(make_pair(newWeight, make_pair(i, y)));
@@ -201,6 +220,10 @@ vector<Vector2i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 			if (closedSet[make_pair(x, j)] || newWeight > range) // if outOfRange ignore
 				continue;
 			tiles.insert(make_pair(x, j)); // insert the tile because it is in range
+
+			if (energyCost[x][j] == 0 || energyCost[x][j] > newWeight) 
+				energyCost[x][j] = newWeight;  // track energy cost
+
 			if (newWeight < range) // if we can go further than that add it to the openSet
 			{
 				openSet.push_back(make_pair(newWeight, make_pair(x, j)));
@@ -212,7 +235,7 @@ vector<Vector2i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	// create finalTilesSet in order to return a vector and not a set
 	for (Pair p : tiles)
 	{
-		finalTilesSet.push_back(Vector2i(p.first,p.second));
+		finalTilesSet.push_back(Vector3i(p.first,p.second, energyCost[p.first][p.second]));
 	}
 	return finalTilesSet;
 }
