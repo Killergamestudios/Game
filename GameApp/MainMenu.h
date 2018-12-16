@@ -42,14 +42,17 @@ private:
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
-	ifstream saveFile; // used to oped save files
 	Font font; // Font for text
 	// ---------------
+
+	// variables for loading games
+	ifstream saveFile; // used to oped save files
+	vector<string> loadFilePath; // path for load game files
 
 	RenderWindow* m_window; // DONT DELETE
 	map<string,string> *returnState; // DONT DELETE 
 
-	vector<Text> menuTexts;
+	vector<Text> menuTexts; // text for menu entries (load game files)
 	
 	vector<Sprite> menuSprites; // sprites for menu items
 	vector<string> fileNamesToLoad; // path of sprites for to load
@@ -59,7 +62,7 @@ private:
 		"./graphics/interfaces/MainMenu/LoadGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/OptionsButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
-	};    // paths of mainMenuButtons
+	};    // paths of mainMenuButtons (depth = 0)
 
 };
 

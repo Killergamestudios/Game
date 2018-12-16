@@ -116,7 +116,7 @@ void MainMenu::clearTextures()
 void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 {
 	fileNamesToLoad.clear();
-	for (int i = 0; i < fileNames.size(); i++) {
+	for (unsigned int i = 0; i < fileNames.size(); i++) {
 		fileNamesToLoad.push_back(fileNames[i]);
 	} // populate array fileNameToLoad in order to load the sprites
 	setMenuSprites();
@@ -126,14 +126,14 @@ void MainMenu::setMenuSprites()
 {
 	const int WIN_HEIGHT = m_window->getSize().y;
 	const int WIN_WIDTH = m_window->getSize().x;
-	const int MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const int BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
-	const int HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const int HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const int TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
+	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
+	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const int SPRITE_WIDTH = 256;
 	const int SPRITE_HEIGHT = 128;
-	const int NUMBER_OF_SPRITES = fileNamesToLoad.size();
+	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
 	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / NUMBER_OF_SPRITES);
 	
 	/*
@@ -158,14 +158,14 @@ void MainMenu::loadTextGraphics(vector<string> textsArray)
 {
 	const int WIN_HEIGHT = m_window->getSize().y;
 	const int WIN_WIDTH = m_window->getSize().x;
-	const int HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const int MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const int TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
-	const int TEXT_LEFT_MARGIN = WIN_WIDTH / 10;
+	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
+	const float TEXT_LEFT_MARGIN = (float)(WIN_WIDTH / 10);
 	const int MARGIN_BETWEEN_TEXT = 10;
 
 	menuTexts.clear();
-	for (int i = 0; i < textsArray.size(); i++) {
+	for (unsigned int i = 0; i < textsArray.size(); i++) {
 		menuTexts.push_back(Text(textsArray[i],font,24));
 		menuTexts[i].setFillColor(Color::White);
 		FloatRect textRect = menuTexts[i].getLocalBounds();
@@ -251,12 +251,11 @@ void MainMenu::actions()
 	clearTextures();
 	if (index == 1 && depth == 2) 
 	{
-		//(*returnState)["Running"] = "false";
-		//(*returnState)["Initialized"] = "";
-		//(*returnState)["Next State"] = "Loading";
-		//(*returnState)["Load Game"] = "true";
-		//(*returnState)["Save File"] = "..."; // TODO: fix load;
-		// TODO: load from selected file
+		(*returnState)["Running"] = "false";
+		(*returnState)["Initialized"] = "";
+		(*returnState)["Next State"] = "Loading";
+		(*returnState)["Load Game"] = "true";
+		(*returnState)["Save File"] = loadFilePath[optionSelected];
 	} 
 	else
 	{
@@ -290,7 +289,10 @@ void MainMenu::loadSaveFiles() {
 	saveFile.open(saveFileMapDirectory);
 	
 	while (getline(saveFile, lineReader)) {
-		saveFilesArray.push_back(lineReader);
+		string nameOfSaveFile = lineReader.substr(0,lineReader.find("|"));
+		saveFilesArray.push_back(nameOfSaveFile);
+		string pathOfSaveFile = lineReader.substr(lineReader.find("|") + 1);
+		loadFilePath.push_back(pathOfSaveFile);
 	}
 
 	loadTextGraphics(saveFilesArray);
