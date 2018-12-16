@@ -1,6 +1,7 @@
+#pragma once
 #include "pch.h"
 #include <vector>
-#include "Map.cpp"
+#include "Map.h"
 #include <map>
 #include <set>
 
@@ -56,7 +57,7 @@ int ** getTotalMap(Map currentMap) {
 // function that estimates the distance between two tiles (can be optimised)
 int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY)
 {
-	return abs(startPosX - endPosX) + abs(startPosY - endPosY);
+	return abs((double)(startPosX - endPosX)) + abs((double)(startPosY - endPosY));
 }
 
 
