@@ -169,9 +169,6 @@ CharacterObject Map::getenemy(Vector2i position)
 	throw std::exception("Invalid Search");
 }
 
-
-
-
 int ** Map::getTerrainMap() 
 {
 	return m_terrainProperties;
