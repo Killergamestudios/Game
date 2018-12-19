@@ -60,7 +60,6 @@ int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY
 	return abs((double)(startPosX - endPosX)) + abs((double)(startPosY - endPosY));
 }
 
-
 // function to get the optimal path between (startX, startY) and (endX, endY)
 //
 // Parameters:
@@ -70,7 +69,7 @@ int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY
 // Map currentMap : currently active Map instance
 //
 // Returns :
-// vector<Vector2i> : contains the optimal path form(startPosX, startPosY) to
+// vector<Vector2i> : contains the optimal path from(startPosX, startPosY) to
 //                    (endPosX, endPosY).First element is the last position of hero
 //
 vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, int &energy,Map currentMap)
