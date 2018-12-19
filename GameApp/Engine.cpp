@@ -50,7 +50,7 @@ void Engine::run() {
 			m_map->loadParty(m_map, controlUnit["Save File"]);
 			party = m_map->getparty();
 			m_state = State::Playing;
-			controlUnit.clear();
+			clearControlUnit(false);
 			mapWidth = (float)m_map->getMapWidth();
 			mapHeight = (float)m_map->getMapHeight();
 			break;
