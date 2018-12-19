@@ -1,15 +1,14 @@
+#pragma once
 #include "pch.h"
 #include "Map.h"
 #include "fstream"
 #include <iostream>
-#include <sstream>
 
 using namespace std;
 
-Map::Map( RenderWindow &window) //TextureHolder &textures)
+Map::Map( RenderWindow &window)
 {
 	m_window = &window;
-	//m_textureHolder = &textures;
 
 }
 
@@ -40,7 +39,6 @@ void Map::init()
 
 
 	}
-	
 
 	// Need to initiate the other three arrays found in the header file privates , enemy characters, characaters, misc/
 	height = 0;
@@ -59,6 +57,7 @@ void Map::load(int mapIndex)
 	
 	backgroundImageAddress = "./graphics/maps/backgrounds/map_" + to_string(mapIndex) +".png";
 	init(); //Initialises the arrays, emptying them up and creating them again.
+
 	//LOOP INITIATES!!!
 	for (int layerIndex = 0; layerIndex <= 3; layerIndex++)
 	{
@@ -78,8 +77,7 @@ void Map::load(int mapIndex)
 			myfile.seekg(0, ios::beg);
 		}
 
-		 // Creates dummy array to prevent code repeticion
-		int** dummy;
+		int** dummy; // Creates dummy array to prevent code repeticion
 		dummy = new int*[width];
 		for (int i = 0; i < width; i++) {
 			dummy[i] = new int[height];
@@ -96,12 +94,13 @@ void Map::load(int mapIndex)
 				}
 				else
 				{
-					dummy[x][y] = (int)(lineReader[x]) - 48;
+					dummy[x][y] = (int)(lineReader[x]);
 				}
 			}
-			y++; // Going to the next Row.
+			y++; // Going to the next Row. 
 
 		}
+
 		//Copying Dummy to the appropriate array.
 		switch (layerIndex)
 		{
@@ -118,9 +117,7 @@ void Map::load(int mapIndex)
 			m_misc = dummy;
 			break;
 		}
-		myfile.close();
 	}
-
 	m_sprite = Sprite(TextureHolder::GetTexture(backgroundImageAddress));
 	m_sprite.setPosition(0, 0);
 }
@@ -140,34 +137,22 @@ int Map::getMapHeight()
 	return height * 64;
 }
 
-int Map::getTerainPropertiesinPosition(Vector2i position)
+int ** Map::getTerrainMap() 
 {
-	return m_terrainProperties[position.x][position.y];
+	return m_terrainProperties;
 }
 
-int Map::getEnemyinPosition(Vector2i position)
+int ** Map::getEnemyMap()
 {
-	
-	return m_enemyCharacters[position.x][position.y];
+	return m_enemyCharacters;
 }
 
-int Map::getFriendlyinPosition(Vector2i position)
+int ** Map::getFriendlyMap()
 {
-	return m_friendlyCharacters[position.x][position.y];
+	return m_friendlyCharacters;
 }
 
-int Map::getMiscinPosition(Vector2i position)
+int ** Map::getMiscMap()
 {
-	return m_misc[position.x][position.y];
+	return m_misc;
 }
-
-CharacterObject Map::getenemy(Vector2i position)
-{
-	for (unsigned int i = 0; i < m_enemys.size(); i++) {
-		if (position.x == m_enemys[i].getMyPosition().x &&position.y == m_enemys[i].getMyPosition().y) return m_enemys[i];
-	}
-	throw std::exception("Invalid Search");
-}
-
-
-
