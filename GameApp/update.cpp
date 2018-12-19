@@ -12,6 +12,9 @@ void Engine::update(float dtAsSeconds) {
 	case State::Playing:
 		if(controlUnit["InGameMenu"] == "True")
 			mainmenu->updateMenu(dtAsSeconds);
+		for (unsigned int i = 0; i < party.size(); i++) {
+			party[i].update(dtAsSeconds);
+		}
 		break;
 	case State::Loading:
 		break;

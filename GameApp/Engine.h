@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Map.h"
 #include "MainMenu.h"
-
+#include "object.h"
 
 using namespace sf;
 enum State{Booting,Playing, Loading, InMenu, Incutscene};
@@ -50,6 +50,11 @@ private:
 	void clearControlUnit(bool); // clears controlUnit false = soft flush, true = hard flush
 	void cameraUpdate(int direction); // handles movement of camera
 
+	//CharacterObject *SpawnCharacter(Vector2i position, Map *map,string savefilename,string Name,string Class);
+	//vector<CharacterObject*> *loadParty(Map *map, string savefilename, vector<Vector3i> pos);
+	//CharacterObject *Warrior;//temp
+	//CharacterObject *mage;
+	vector<CharacterObject> party;
 public:
 	Engine();
 	void run();

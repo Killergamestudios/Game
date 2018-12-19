@@ -4,9 +4,9 @@
 #include "fstream"
 
 Engine::Engine() {
-	windowWidth = VideoMode::getDesktopMode().width;
-	windowHeight = VideoMode::getDesktopMode().height;
-	m_window.create(VideoMode(windowWidth, windowHeight), "Game Name", Style::Fullscreen);
+	windowWidth = (float)VideoMode::getDesktopMode().width;
+	windowHeight = (float)VideoMode::getDesktopMode().height;
+	m_window.create(VideoMode((unsigned int)windowWidth,(unsigned int)windowHeight), "Game Name", Style::Fullscreen);
 	camera.setCenter(Vector2f(windowWidth/2, windowHeight/2));
 	camera.setSize(Vector2f(windowWidth, windowHeight));
 	m_window.setView(camera);
@@ -47,10 +47,12 @@ void Engine::run() {
 			initGameVariables(indexFileToLoad); // Needs to be replaced!!!!
 
 			m_map->load(mapIndex);
+			m_map->loadParty(m_map, controlUnit["Save File"]);
+			party = m_map->getparty();
 			m_state = State::Playing;
 			clearControlUnit(false);
-			mapWidth = m_map->getMapWidth();
-			mapHeight = m_map->getMapHeight();
+			mapWidth = (float)m_map->getMapWidth();
+			mapHeight = (float)m_map->getMapHeight();
 			break;
 		case State::Incutscene:
 			//play the cutscene
