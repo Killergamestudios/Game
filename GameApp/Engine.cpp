@@ -37,15 +37,18 @@ void Engine::run() {
 			//another enum witch tells witch menu we are in (one of the main menus, one of the input menus during the fight etc)
 			//change the states to playing loading cutscene or another menu depending on last state
 			if (controlUnit["Initialized"] == "") {
+				clearControlUnit(false);
+				mainmenu->changeState(false);
 				mainmenu->initMenu();
 			}
 			break;
 		case State::Loading:
-			initGameVariables(indexFileToLoad);
+			mainmenu->changeState(true);
+			initGameVariables(indexFileToLoad); // Needs to be replaced!!!!
 
 			m_map->load(mapIndex);
 			m_state = State::Playing;
-			controlUnit.clear();
+			clearControlUnit(false);
 			mapWidth = m_map->getMapWidth();
 			mapHeight = m_map->getMapHeight();
 			break;
@@ -81,6 +84,18 @@ void Engine::updateState()
 	}
 }
 
+void Engine::clearControlUnit(bool hardFlush)
+{
+	if (hardFlush) 
+		controlUnit.clear();
+	else {
+		controlUnit["Initialized"] = "";
+		controlUnit["Running"] = "";
+		controlUnit["Next State"] = "";
+	}
+}
+
+// TODO: changes this logic!
 void Engine::initGameVariables(int indexFileToLoad) {
 	/*
 	string fileAddress;

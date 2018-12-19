@@ -23,16 +23,18 @@ public:
 	void changeSeletedOption(int direction);
 	void actions();
 
+	void changeState(bool);
+
 private:
 	void init(); // Initializes everything
 	void clearData(); // Deletes everything. Called inside init()
 	void clearTextures(); // Clears menuTextures in menu transitions
-	void initFileNamesToLoad(vector<string> fileNames);
-	void setMenuSprites();
-	void loadTextGraphics(vector<string> textsArray);
+	void initFileNamesToLoad(vector<string> fileNames); // get the files names for sprites
+	void setMenuSprites(); // set the sprites for main menu textures
+	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
-	void fadeInMusic(Music &music);
-	void loadSaveFiles();
+	void fadeInMusic(Music &music); // Animation: fade in Music
+	void loadSaveFiles(); // handles the loading of all save files
 
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
@@ -43,6 +45,7 @@ private:
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
 	Font font; // Font for text
+	bool popup; // boolean variable that determines if mainMenu is in popup mode or not. Popup Mode: in game mainmenu
 	// ---------------
 
 	// variables for loading games
@@ -56,6 +59,8 @@ private:
 	
 	vector<Sprite> menuSprites; // sprites for menu items
 	vector<string> fileNamesToLoad; // path of sprites for to load
+
+	vector<Sprite> backgroundSprites; // sprites for background images 
 	const vector<string> mainMenu =
 	{
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",

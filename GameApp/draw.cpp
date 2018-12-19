@@ -11,6 +11,8 @@ void Engine::draw() {
 		break;
 	case State::Playing:
 		m_map->draw();
+		if (controlUnit["InGameMenu"] == "True")
+			mainmenu->drawMenu();
 		break;
 	case State::Loading:
 		break;

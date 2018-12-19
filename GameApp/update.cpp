@@ -10,7 +10,8 @@ void Engine::update(float dtAsSeconds) {
 		mainmenu->updateMenu(dtAsSeconds);
 		break;
 	case State::Playing:
-		
+		if(controlUnit["InGameMenu"] == "True")
+			mainmenu->updateMenu(dtAsSeconds);
 		break;
 	case State::Loading:
 		break;

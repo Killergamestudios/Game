@@ -11,6 +11,7 @@ MainMenu::MainMenu(RenderWindow &window, map<string, string> &controlUnit)
 	index = 0;
 	depth = 1;
 	font.loadFromFile("./graphics/fonts/ARCADECLASSIC.TTF");
+	popup = false;
 }
 
 
@@ -31,14 +32,14 @@ void MainMenu::initBoot()
 	backgroundMusic->play(); // start playing intro music
 	title->setPosition(Vector2f((float)(m_window->getSize().x - title->getTexture()->getSize().x) / 2,
 		(float)(m_window->getSize().y - title->getTexture()->getSize().y) / 2));
-	(*returnState)["Initialized"] = "true";
-	(*returnState)["Running"] = "true";
+	(*returnState)["Initialized"] = "True";
+	(*returnState)["Running"] = "True";
 	// set emblem in center 
 }
 
 void MainMenu::updateBoot()
 {
-	if ((*returnState)["Running"] == "false")
+	if ((*returnState)["Running"] == "False")
 	{
 		(*returnState)["Next State"] = "InMenu";
 		(*returnState)["Initialized"] = "";
@@ -60,7 +61,7 @@ void MainMenu::updateBoot()
 
 	if (backgroundMusic->getStatus() != Music::Playing)
 	{
-		(*returnState)["Running"] = "false";
+		(*returnState)["Running"] = "False";
 	}
 	title->setColor(Color(255, 255, 255, (unsigned int)opacity));
 }
@@ -80,21 +81,24 @@ void MainMenu::drawBoot()
 void MainMenu::initMenu()
 {
 	init(); // Initialize everything. Fresh start
-	(*returnState)["Initialized"] = "true";
+	if (!popup) (*returnState)["Initialized"] = "True";
 
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	totalTimePassed = 0;
-	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
-	backgroundMusic->play();
-	backgroundMusic->setVolume(0.0f);
-	backgroundMusic->setLoop(true);
-	(*returnState)["Running"] = "true";
+	if (!popup)
+	{
+		backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
+		backgroundMusic->play();
+		backgroundMusic->setVolume(0.0f);
+		backgroundMusic->setLoop(true);
+	}
+	if (!popup) (*returnState)["Running"] = "True";
 }
 
 void MainMenu::init()
 {
 	clearData();
-	backgroundMusic = new Music();
+	if (!popup) backgroundMusic = new Music();
 	initFileNamesToLoad(mainMenu);
 }
 
@@ -116,39 +120,56 @@ void MainMenu::clearTextures()
 void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 {
 	fileNamesToLoad.clear();
-	for (unsigned int i = 0; i < fileNames.size(); i++) {
+	for (unsigned int i = 0; i < (popup ? 3 : fileNames.size()); i++) {
 		fileNamesToLoad.push_back(fileNames[i]);
 	} // populate array fileNameToLoad in order to load the sprites
+
 	setMenuSprites();
 }
 
 void MainMenu::setMenuSprites()
 {
-	const int WIN_HEIGHT = m_window->getSize().y;
-	const int WIN_WIDTH = m_window->getSize().x;
-	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
-	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const int SPRITE_WIDTH = 256;
 	const int SPRITE_HEIGHT = 128;
 	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
+	const int WIN_HEIGHT = popup ? NUMBER_OF_SPRITES * SPRITE_HEIGHT : m_window->getSize().y;
+	const int WIN_WIDTH = popup ? SPRITE_WIDTH : m_window->getSize().x;
+	const int X_START_POS = 0; // used for offsetting everything in the x axis without too much effort
+	const int Y_START_POS = popup ? m_window->getSize().y - WIN_HEIGHT : 0; // used for offsetting everything in the y axis without too much effort
+	const float MARGIN_LOGO = popup ? 0 : WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float BOTTOM_MARGIN = popup ? 0 : WIN_HEIGHT * 0.05f; // bottom margin
+	const float HEIGHT_LOGO = popup ? 0 : WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / NUMBER_OF_SPRITES);
-	
+
 	/*
 		Adds Sprites to vector and trims them
 		Sets Origin of sprites to center
 		Set Position of Sprites 
 	*/
 	menuSprites.clear();
+	backgroundSprites.clear();
+
+	if (popup)
+	{
+		backgroundSprites.push_back(Sprite(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/PopupMainMenuBackground.png")));
+		backgroundSprites[0].setPosition(Vector2f(X_START_POS, Y_START_POS));
+		backgroundSprites[0].setScale(1, 1.5);
+		backgroundSprites.push_back(Sprite(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/PopupMainMenuBackgroundBorder.png")));
+		backgroundSprites[1].setPosition(Vector2f(X_START_POS, Y_START_POS));
+		backgroundSprites[1].setScale(1, 1.5);
+	}
+
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
 		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128))); 
 		menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
-		menuSprites[i].setPosition(Vector2f((float)WIN_WIDTH / 2,	
-			(float)TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1)));
+		menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2) + X_START_POS),	
+			(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1))) + Y_START_POS));
 	}
+
+	
 
 	menuSprites[0].setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
 }
@@ -202,7 +223,7 @@ void MainMenu::fadeInMusic(Music & music)
 
 void MainMenu::updateMenu(float dtasSeconds)
 {
-	if ((*returnState)["Running"] == "false")
+	if ((*returnState)["Running"] == "False" && (*returnState)["InGameMenu"] != "True")
 	{
 		(*returnState)["Next State"] = "Loading";
 		(*returnState)["Initialized"] = "";
@@ -210,13 +231,18 @@ void MainMenu::updateMenu(float dtasSeconds)
 		return;
 	}
 
-	fadeInMusic(*backgroundMusic);
+	if(!popup) fadeInMusic(*backgroundMusic);
 	totalTimePassed += dtasSeconds;
 	animate(totalTimePassed, optionSelected);
 	drawMenu();
 }
 
 void MainMenu::drawMenu() {
+	for (unsigned int i = 0; i < backgroundSprites.size(); i++)
+	{
+		m_window->draw(backgroundSprites[i]);
+	}
+
 	for (unsigned int i = 0; i < menuSprites.size(); i++)
 	{
 		m_window->draw(menuSprites[i]);
@@ -251,10 +277,10 @@ void MainMenu::actions()
 	clearTextures();
 	if (index == 1 && depth == 2) 
 	{
-		(*returnState)["Running"] = "false";
+		(*returnState)["Running"] = "False";
 		(*returnState)["Initialized"] = "";
 		(*returnState)["Next State"] = "Loading";
-		(*returnState)["Load Game"] = "true";
+		(*returnState)["Load Game"] = "True";
 		(*returnState)["Save File"] = loadFilePath[optionSelected];
 	} 
 	else
@@ -263,10 +289,10 @@ void MainMenu::actions()
 		{
 		case 0: // New Game
 			//Loads intro cutscene or whatever
-			(*returnState)["Running"] = "false";
+			(*returnState)["Running"] = "False";
 			(*returnState)["Initialized"] = "";
 			(*returnState)["Next State"] = "Loading";
-			(*returnState)["Load Game"] = "false";
+			(*returnState)["Load Game"] = "False";
 			break;
 		case 1: //Load Game
 			index = 1;
@@ -279,6 +305,11 @@ void MainMenu::actions()
 			break;
 		}
 	}
+}
+
+void MainMenu::changeState(bool isPopup)
+{
+	popup = isPopup;
 }
 
 void MainMenu::loadSaveFiles() {
@@ -302,5 +333,6 @@ void MainMenu::loadSaveFiles() {
 // ---------------------------------
 // End of MainMenu related functions
 // ---------------------------------
+
 
 
