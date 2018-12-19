@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "fstream"
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -39,6 +40,7 @@ void Map::init()
 
 
 	}
+	
 
 	// Need to initiate the other three arrays found in the header file privates , enemy characters, characaters, misc/
 	height = 0;
@@ -57,7 +59,6 @@ void Map::load(int mapIndex)
 	
 	backgroundImageAddress = "./graphics/maps/backgrounds/map_" + to_string(mapIndex) +".png";
 	init(); //Initialises the arrays, emptying them up and creating them again.
-
 	//LOOP INITIATES!!!
 	for (int layerIndex = 0; layerIndex <= 3; layerIndex++)
 	{
@@ -77,7 +78,8 @@ void Map::load(int mapIndex)
 			myfile.seekg(0, ios::beg);
 		}
 
-		int** dummy; // Creates dummy array to prevent code repeticion
+		 // Creates dummy array to prevent code repeticion
+		int** dummy;
 		dummy = new int*[width];
 		for (int i = 0; i < width; i++) {
 			dummy[i] = new int[height];
@@ -94,13 +96,12 @@ void Map::load(int mapIndex)
 				}
 				else
 				{
-					dummy[x][y] = (int)(lineReader[x]);
+					dummy[x][y] = (int)(lineReader[x]) - 48;
 				}
 			}
-			y++; // Going to the next Row. 
+			y++; // Going to the next Row.
 
 		}
-
 		//Copying Dummy to the appropriate array.
 		switch (layerIndex)
 		{
@@ -117,7 +118,9 @@ void Map::load(int mapIndex)
 			m_misc = dummy;
 			break;
 		}
+		myfile.close();
 	}
+
 	m_sprite = Sprite(TextureHolder::GetTexture(backgroundImageAddress));
 	m_sprite.setPosition(0, 0);
 }
@@ -165,9 +168,6 @@ CharacterObject Map::getenemy(Vector2i position)
 	}
 	throw std::exception("Invalid Search");
 }
-
-
-
 
 int ** Map::getTerrainMap() 
 {

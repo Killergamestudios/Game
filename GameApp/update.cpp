@@ -15,7 +15,6 @@ void Engine::update(float dtAsSeconds) {
 		for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].update(dtAsSeconds);
 		}
->>>>>>>>> Temporary merge branch 2
 		break;
 	case State::Loading:
 		break;
