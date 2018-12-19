@@ -1,8 +1,8 @@
-saveFile 1
-saveFile 2
-saveFile 1
-saveFile 2
-saveFile 1
-saveFile 2
-saveFile 1
-saveFile 2
+saveFile 1|./savefiles/saveFile 1/
+saveFile 2|./savefiles/saveFile 2/
+saveFile 3|./savefiles/saveFile 3/
+saveFile 4|./savefiles/saveFile 4/
+saveFile 5|./savefiles/saveFile 5/
+saveFile 6|./savefiles/saveFile 6/
+saveFile 7|./savefiles/saveFile 7/
+saveFile 8|./savefiles/saveFile 8/

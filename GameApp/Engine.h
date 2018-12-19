@@ -47,6 +47,7 @@ private:
 	void draw();
 	void updateState();
 
+	void clearControlUnit(bool); // clears controlUnit false = soft flush, true = hard flush
 	void cameraUpdate(int direction); // handles movement of camera
 
 	//CharacterObject *SpawnCharacter(Vector2i position, Map *map,string savefilename,string Name,string Class);

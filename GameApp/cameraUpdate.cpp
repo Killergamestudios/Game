@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "Engine.h"
 
-void Engine::cameraUpdate(int direction) 
+
+void Engine::cameraUpdate(int direction)
 {	
 	camera.move(Vector2f((direction/2)*CAMERA_SPEED, (direction%2)*CAMERA_SPEED)); // movement of camera
 

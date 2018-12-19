@@ -9,7 +9,7 @@ void Engine::input(float dtAsSeconds) {
 		case State::Booting:
 			if (Keyboard::isKeyPressed(Keyboard::Space))
 			{
-				controlUnit["Running"] = "false";
+				controlUnit["Running"] = "False";
 			}
 			break;
 		case State::InMenu:
@@ -64,9 +64,18 @@ void Engine::input(float dtAsSeconds) {
 				{
 					cameraUpdate(2);
 				}
-				else if (Keyboard::isKeyPressed(Keyboard::Enter))
-				{
-					//mainmenu->actions();
+				else if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{	
+					if (controlUnit["InGameMenu"] == "")
+					{
+						mainmenu->initMenu();
+						controlUnit["InGameMenu"] = "True";
+					} 
+					else 
+					{
+						controlUnit["InGameMenu"] = "";
+						controlUnit["Running"] = "False";
+					}
 				}
 			}
 			
@@ -85,8 +94,7 @@ void Engine::input(float dtAsSeconds) {
 
 		//to close the window (for now)
 		if (evt.type == Event::KeyPressed)
-		
-			if (Keyboard::isKeyPressed(Keyboard::Escape)) 
+			if (Keyboard::isKeyPressed(Keyboard::BackSpace)) 
 				m_window.close();
 	
 	}
