@@ -71,6 +71,7 @@ void Engine::input(float dtAsSeconds) {
 			}
 			
 			if (evt.type == Event::KeyPressed) {
+
 				keyPressed = true;
 			}
 

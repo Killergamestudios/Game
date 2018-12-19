@@ -10,7 +10,9 @@ void Engine::update(float dtAsSeconds) {
 		mainmenu->updateMenu(dtAsSeconds);
 		break;
 	case State::Playing:
-		
+		for (unsigned int i = 0; i < party.size(); i++) {
+			party[i].update(dtAsSeconds);
+		}
 		break;
 	case State::Loading:
 		break;

@@ -1,177 +1,179 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "textureHolder.h"
-#include "component.h"
+#include "Map.h"
+#include "AbilityComponent.h"
+
 
 using namespace sf;
+using namespace std;
 
+class Map;
+class AbilityComponent;
+enum Move {standing,left,right,up,down,};
+enum FacingDirection{front,back,fleft,fright};
 //most of the components later will get replaced by dedicated classes than inherit the component class
 struct StatGain
 {
 	int MaxHealthGain;
-	int MaxEnergyGain; // every 5 levels
-	float AttackModifierGain;
-	float MagicResistanceGain;
-	float PhysicalResistanceGain;
-	float accuracyGain;
-	int DodgechanceGain;
+	int AgilityGain;  // every 5 levels
+	int PrecisionGain;
+	int MagicResistanceGain;
+	int ArmorGain;
 };
 struct Stats
 {
+	// The constant stats
 	int level;
 	int exp;
-	int health;
 	int MaxHealth;
-	int energy;
+	int Agility;
+	int Precision;
 	int MaxEnergy;
-	int movement;
-	int MaxMovement;
-	float attackModifierRight;// starts at 1.00f and decreases or increases based on current buffs or damage at the right hand
-	float moveModifier;// starts at 1.00f and decreases or increases based on current buffs or damage at the legs
-	float attackModifierLeft;// starts at 0.75f and decreases or increases based on current buffs or damage at the left hand
-	float accuracy;//
-};
-struct Head
-{
-	ArmorComponent *m_headArmor;
-	float PhysicalResistance; // base depending on character changes with armor and buffs
-	float magicResistance;
-	float damageModifier; //base of 2.0f
-	int timesAttacked;
-	int dodgeChance; // 0 - 100 
-};
-struct Body
-{
-	ArmorComponent *m_bodyArmor;
-	float PhysicalResistance;
-	float magicResistance;
-	float damageModifier;
-	int timesAttacked;
-	int dodgeChance;
-};
-struct RightHand
-{
-	ArmorComponent *m_RightHandArmor;
-	float PhysicalResistance;
-	float magicResistance;
-	float damageModifier;
-	int timesAttacked;
-	int MaxTimesAttacked;// if you attack it for the max times it gets cut
-	int dodgeChance;
-	float RightdamageDebuff; // every time you attack it increases. starts from .0f
-	float MaxRightdamageDebuff; // you cant give him more debuff than the max.
-	//if you continue to hit him after the max untill the max times attacked he will lose his right hand
+	int MagicResistance;
+	int Armor;
+	int Mastery;
+	int actions;
 
-};
-struct leftHand
-{
-	ArmorComponent *m_LeftHandArmor;
-	float PhysicalResistance;
-	float magicResistance;
-	float damageModifier;
-	int timesAttacked;
-	int MaxTimesAttacked;
-	int dodgeChance;
-	float LeftdamageDebuff;
-	float MaxLeftdamageDebuff;
-
-};
-struct Legs
-{
-	ArmorComponent *m_LegArmor;
-	float PhysicalResistance;
-	float magicResistance;
-	float damageModifier;
-	int timesAttacked;
-	int MaxTimesAttacked; // when legs are choped
-	int dodgeChance;
-	float movementDebuff; // as you hit the legs he can move less
-	float MaxmovementDebuff; 
+	// The temp
+	int Health;
+	int Energy;
+	int actionsremaining;
 };
 
 
+
+/****************************************************************************************************************************************/
+//                                                   The Object Class                                                                   //
+/****************************************************************************************************************************************/
 
 class object
 {
 public:
-	object(RenderWindow &window, String Category, String Type, Vector2i Position, Sprite sprite);
+	object(RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture,Map *map);
 	~object();
 	virtual void Draw() = 0;
-	virtual void update() = 0;
-
+	virtual void update(float dtAsseconds) = 0;
+	Map * getmap();
 
 protected:
 	String category;//friendly enemy misc
 	String type; //the obj type: scout warrior etc(for enemys) , ballistra chest etc(for misc)
-	Sprite m_sprite;
+	Texture* m_texture;
+	VertexArray vertarr;
 	RenderWindow *m_window;
-	Vector2f m_position;
+	Vector2i m_position;
+	Map *m_map;
 };
 
 
-//Character Object
-
+/****************************************************************************************************************************************/
+//                                                   The CharacterObject Class                                                          //
+/****************************************************************************************************************************************/
 
 class CharacterObject : public object {
 public:
-	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Sprite sprite);
+	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture,Map *map);
 	~CharacterObject();
+
+	//Draw and Update Functions
 	void Draw() override;
-	void update() override;
+	void update(float dtAsseconds) override;
 	
-	Stats getM_stats();
-	void LevelUp();
-	//To spawn a Characetr: call the constructor, call the spawn func, add weapon and armor with those functions (we will need an "empty" armor piece so it will not remain NULL) , add an AI later
+	//Move Functions
+	void MoveAdj(Vector2i newPos);
+	void MoveToPosition(vector<Vector2i> &path);
 	
+	//Getters
+	const Stats & getM_stats();
+	Vector2i getMyPosition();
+	int getActionsRemaining();
+
+	//Leveling up
+	void LevelUp();	
 	bool GiveExp(int exp); // true if the character leveled up
 
-	void spawn(Stats &stats,Head &head, Body &body,Legs &legs, RightHand &righthand,leftHand &lefthand,StatGain &statgain);
-	void addWeapon(WeaponComponent *weapon);
+	//To spawn a Characetr: call the constructor, call the spawn func, add weapon and armor with those functions 
+	//Spawn functions
+	void spawn(Stats &stats, StatGain &statgain);
 	void equipWeapon(WeaponComponent *weapon);
+	void equipArmor(ArmorComponent *armorcomponent);
 	
-	void equipArmor(String Place, ArmorComponent &armorcomponent);
-
-	int Attack(CharacterObject *target, String place); // -1 if attack dodged
+	//combat related functions
+	int Attack(CharacterObject *target, String place); // return the damage, -1 if attack dodged. place is body,head etc
+	int isAttacked(string place, int damage, string damageType, int Penetration);
 	void loseHp(int HpLoss);
+	bool AttackRegisters(string place,CharacterObject *target);
+	void usedAction(int used);
+	
 	//rest of the funcions. whatever we will need later
-
-
+	//Abilitys
+	void UseAblity1(Vector2i &position,CharacterObject *target);
+	
 
 private:
+	Move move;
 	bool isAlive;
 	bool hasMoved;
 	String name; //the objects name
 
-	Stats m_stats;
 
-	//the stats it upgrades every lavel up
-	StatGain m_statgain;
-
+	//Variables for the movement
+	int pixelscrossed = 0;
+	float lastupdated = 0.0f;
+	int movingquad = 0;
+	FacingDirection facingdir = FacingDirection::front;
+	bool isMoving = false;
+	vector<Vector2i> m_path;
+	void moveupdate(float dtAsSeconds);
+	//end of movement variables
 	
+	//items weapons and armor
+	//vector<component> m_items; // items like potions etc
+	WeaponComponent* m_weapon; // shows what weapon from the m_weapons vector is curently equiped
+	ArmorComponent* m_Armor;
+	//end
 
+	// buffs or debuffs that need to be removed added or aply
+	//vector<component> m_modifiers; 
 
-	vector<WeaponComponent*> m_weapons; // the weapons of each character
-	vector<component*> m_modifiers; // buffs or debuffs that need to be removed added or aply
-	vector<component*> m_items; // items like potions etc
+	//abilities
+	AbilityComponent *m_ability1; // starts at null gets unlocked at some point
+
+	AbilityComponent* m_ability2;
+
+	AbilityComponent* m_ability3;
+
+	AbilityComponent* m_passiveAbility;
+
+	// end of abilities
+
+	//NEEDS WORK
+	//Head m_head;
+	//Body m_body;
+	//RightHand m_righthand;
+	//leftHand m_lefthand;
+	//Legs m_legs;
 	
-	WeaponComponent* equipedWeapon; // shows what weapon from the m_weapons vector is curently equiped
-
-	component *m_ability1; // starts at null gets unlocked at some point
-	bool ability1isActive; // if it was used it gets on couldown and we use ints to know the passed time
-						   //or maybe we use charges we will decide later
-	component *m_ability2;
-	bool ability2isActive;
-	component *m_ability3;
-	bool ability3isActive;
-
-
-	Head m_head;
-	Body m_body;
-	RightHand m_righthand;
-	leftHand m_lefthand;
-	Legs m_legs;
-	
+	//The Ai
 	component *m_AI; // null for playable characters .will expand later
 
+
+	//The Stats
+	Stats m_stats;
+	StatGain m_statGain; // at every level
+
+	int HeadTimesHit = 0;
+	int BodyTimesHit = 0;
+	int RightHandTimesHit = 0;
+	int LeftHandTimesHit = 0;
+	int LegsTimeHit = 0;
+	int MaxRightHandTimesHit = 3;
+	int MaxLeftHandTimesHit = 3;
+	int MaxLegsTimesHit = 3;
+
+
+	//the stats it upgrades every lavel up
+	//StatGain m_statgain;
 };
 

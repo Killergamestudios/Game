@@ -49,8 +49,11 @@ private:
 
 	void cameraUpdate(int direction); // handles movement of camera
 
-	CharacterObject* SpawnWarrior(Vector2i position);
-
+	//CharacterObject *SpawnCharacter(Vector2i position, Map *map,string savefilename,string Name,string Class);
+	//vector<CharacterObject*> *loadParty(Map *map, string savefilename, vector<Vector3i> pos);
+	//CharacterObject *Warrior;//temp
+	//CharacterObject *mage;
+	vector<CharacterObject> party;
 public:
 	Engine();
 	void run();

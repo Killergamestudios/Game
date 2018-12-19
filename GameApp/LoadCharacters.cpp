@@ -6,123 +6,109 @@
 #include "Engine.h"
 #include "fstream"
 #include <iostream>
+#include <sstream>
+
 
 using namespace sf;
 using namespace std;
+// this func gets a string like: "name = int" and returns the int
+int getStringNumber(string &s) {
+	string tmps;
+	char tmpc;
+	int ret;
+	std::stringstream ss;
+	ss << s;
+	ss >> tmps >> tmpc >> ret;
+	return ret;
+}
 
-CharacterObject* Engine::SpawnWarrior(Vector2i position) {
+CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefilename,string Name, string Class) {
 
-	Sprite sprite(TextureHolder::GetTexture("./graphics/Sprites/warrior.png"));
-	CharacterObject* warrior = new CharacterObject("Nathan", m_window, "friendly", "warrior", position, sprite);
-	
+	string texture = "./graphics/Sprites/" + Class + ".png";
+	CharacterObject *Character = new CharacterObject(Name, *m_window, "friendly", "warrior", position, TextureHolder::GetTexture(texture), map);
+	string filename;
 	ifstream myfile;
-	myfile.open("./graphics/Characters/warrior.txt");
+	filename = savefilename + "Characters/" + Name + ".txt";
+	myfile.open(filename);
 	
-	int *a;
-	a = new int[8];
-	float *b;
-	b = new float[4];
-	for (int i = 0; i < 8; i++) {
-		myfile >> a[i];
+	// read the stats and call the spawn func
+	int *filereadints;
+	string line;
+	filereadints = new int[12];
+	char tempc;
+	getline(myfile, line);
+	for (int i = 0; i < 10; i++) {
+		getline(myfile, line);
+		filereadints[i] = getStringNumber(line);
 	}
-	for (int i = 0; i < 4; i++) {
-		myfile >> b[i];
+	Stats stats = {filereadints[0],filereadints[1] ,filereadints[2] ,filereadints[3] ,filereadints[4] ,filereadints[5] 
+					,filereadints[6] ,filereadints[7],filereadints[8],filereadints[9],filereadints[2],filereadints[5],filereadints[9] };
+	delete filereadints;
+	getline(myfile, line);
+	filereadints = new int[5];
+	for (int i = 0; i < 5; i++) {
+		getline(myfile, line);
+		filereadints[i] = getStringNumber(line);
 	}
-	Stats stats = {a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],b[0],b[1],b[2],b[3] };
-	delete a;
-	delete b;
+	myfile >> tempc;
+	StatGain statgain = { filereadints[0],filereadints[1],filereadints[2],filereadints[3],filereadints[4]};
+	delete filereadints;
+	myfile >> tempc;
 
-	//Loading Head Parameters
-	a = new int[2];
-	b = new float[3];
+	Character->spawn(stats, statgain);
 	
-	for (int i = 0; i < 3; i++) {
-		myfile >> b[i];
-	}
-	for (int i = 0; i < 2; i++) {
-		myfile >> a[i];
-	}
-	Head head = {NULL, b[0],b[1],b[2],a[1],a[2]};
-	delete a;
-	delete b;
+	//The Weapon
 
-	// Loading Body Parameters
-	a = new int[2];
-	b = new float[3];
+	// The Armor
 
+	//The abilities
 	
-	for (int i = 0; i < 3; i++) {
-		myfile >> b[i];
-	}
-	for (int i = 0; i < 2; i++) {
-		myfile >> a[i];
-	}
-	Body body = { NULL, b[0],b[1],b[2],a[0],a[1]};
-	delete a;
-	delete b;
+	// The items
 
-	//Loading Legs
-	b = new float[5];
-	a = new int[3];
-	for (int i = 0; i < 3; i++) {
-		myfile >> b[i];
-	}
-	for (int i = 0; i < 3; i++) {
-		myfile >> a[i];
-	}
-	for (int i = 3; i < 5; i++) {
-		myfile >> b[i];
-	}
-	Legs legs{ NULL, b[0],b[1],b[2],a[0],a[1],a[2],b[3],b[4]};
-	delete a;
-	delete b;
-
-	//load Right Hand
-	b = new float[5];
-	a = new int[3];
-	for (int i = 0; i < 3; i++) {
-		myfile >> b[i];
-	}
-	for (int i = 0; i < 3; i++) {
-		myfile >> a[i];
-	}
-	for (int i = 3; i < 5; i++) {
-		myfile >> b[i];
-	}
-	RightHand righthand{ NULL, b[0],b[1],b[2],a[0],a[1],a[2],b[3],b[4] };
-	delete a;
-	delete b;
-
-	//load Left Hand
-	b = new float[5];
-	a = new int[3];
-	for (int i = 0; i < 3; i++) {
-		myfile >> b[i];
-	}
-	for (int i = 0; i < 3; i++) {
-		myfile >> a[i];
-	}
-	for (int i = 3; i < 5; i++) {
-		myfile >> b[i];
-	}
-	leftHand lefthand{ NULL, b[0],b[1],b[2],a[0],a[1],a[2],b[3],b[4] };
-	delete a;
-	delete b;
-
-	//load statgain
-	b = new float[4];
-	a = new int[3];
-
-	for (int i = 0; i < 2; i++) {
-		myfile >> a[i];
-	}
-	for (int i = 0; i < 4; i++) {
-		myfile >> b[i];
-	}
-	myfile >> a[2];
-
-	StatGain statgain{ a[0],a[1],b[0],b[1],b[2],b[3],a[2] };
-	warrior->spawn(stats, head, body, legs, righthand, lefthand, statgain);
 	myfile.close();
-	return warrior;
+	return Character;
+}
+
+
+//warrior = 1. healer = 2. archer = 3. tank = 4. ranger = 5. mage = 6. doctor = 7.
+//load the whole party
+void Map::loadParty(Map *map, string savefilename){
+	//get the position of every character.
+    vector<Vector3i> pos;
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			//cout << m_friendlyCharacters[i][j];
+			if (m_friendlyCharacters[i][j] != 0) {
+				switch (m_friendlyCharacters[i][j]) {
+				case 1:
+					party.push_back(*SpawnCharacter(Vector2i(i,j), map, savefilename, "nathan", "warrior"));
+					break;
+				case 2:
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name2", "healer"));
+					break;
+				case 3:
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name3", "archer"));
+					break;
+				case 4:
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name4", "tank"));
+					break;
+				case 5:
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name5", "ranger"));
+					break;
+				case 6:
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name 6", "mage"));
+					break;
+				case 7:
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name 7", "doctor"));
+					break;
+				}
+			}
+		}
+
+	}
+
+}
+
+vector<CharacterObject> & Map::getparty() {
+	return party;
 }

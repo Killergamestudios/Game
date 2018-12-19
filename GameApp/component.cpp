@@ -15,6 +15,18 @@ component::~component()
 	if (parent) parent = NULL;
 }
 
+String component::getCategory()
+{
+	return category;
+}
+
+
+/****************************************************************************************************************************************/
+//                                                   The Weapon Class                                                                    //
+/****************************************************************************************************************************************/
+
+
+
 
 WeaponComponent::WeaponComponent(CharacterObject * Parent,String Name):component(NULL,"Weapon")
 {
@@ -51,22 +63,31 @@ int WeaponComponent::GetattackRange()
 	return attackRange;
 }
 
-float WeaponComponent::getDamage()
+int WeaponComponent::getDamage()
 {
 	return Damage;
 }
 
-void WeaponComponent::spawn(float damage, int attackrange, String damagetype)
+int WeaponComponent::getPenetration()
 {
-	Damage = damage;
-	attackRange = attackrange;
-	DamageType = damagetype;
+	return penetration;
 }
+
+void WeaponComponent::spawn()
+{
+}
+
+/****************************************************************************************************************************************/
+//                                                   The Armor Class                                                                    //
+/****************************************************************************************************************************************/
+
+
+
+
 
 ArmorComponent::ArmorComponent(CharacterObject * Parent, String Type, String Place) :component(NULL, "Weapon")
 {	
 	type = Type;
-	place = Place;
 
 	parent = Parent;
 }
@@ -78,27 +99,15 @@ ArmorComponent::~ArmorComponent()
 
 float ArmorComponent::getResistance(String type)
 {
-	if (type == "FireResistance") return m_Resistance.FireResistance;
-	else if (type == "lightingResistance") return m_Resistance.lightingResistance;
-	else if (type == "coldResistance") return m_Resistance.coldResistance;
-	else if (type == "piercing") return m_Resistance.piercingResistance;
-	else if (type == "slashing") return m_Resistance.slashingResistance;
-	else if (type == "Bludgeoning") return m_Resistance.BludgeoningResistance;
-	else return 0.0f;
+	return 0;
 }
 
 void ArmorComponent::update() // needs work
 {
 }
 
-void ArmorComponent::spawn(Resistance resistance)
+void ArmorComponent::spawn(std::vector<int> resistances, std::vector<int> modifiers)
 {
-	m_Resistance.lightingResistance = resistance.lightingResistance;
-	m_Resistance.FireResistance = resistance.FireResistance;
-	m_Resistance.coldResistance = resistance.coldResistance;
-	m_Resistance.piercingResistance = resistance.piercingResistance;
-	m_Resistance.slashingResistance = resistance.slashingResistance;
-	m_Resistance.BludgeoningResistance = resistance.BludgeoningResistance;
 }
 
 void ArmorComponent::ChangeParent(CharacterObject * Parent)
@@ -106,3 +115,4 @@ void ArmorComponent::ChangeParent(CharacterObject * Parent)
 	//may cause a seg fault if used wrong. we will see
 	parent = Parent;
 }
+
