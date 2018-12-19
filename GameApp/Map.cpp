@@ -137,6 +137,38 @@ int Map::getMapHeight()
 	return height * 64;
 }
 
+int Map::getTerainPropertiesinPosition(Vector2i position)
+{
+	return m_terrainProperties[position.x][position.y];
+}
+
+int Map::getEnemyinPosition(Vector2i position)
+{
+	
+	return m_enemyCharacters[position.x][position.y];
+}
+
+int Map::getFriendlyinPosition(Vector2i position)
+{
+	return m_friendlyCharacters[position.x][position.y];
+}
+
+int Map::getMiscinPosition(Vector2i position)
+{
+	return m_misc[position.x][position.y];
+}
+
+CharacterObject Map::getenemy(Vector2i position)
+{
+	for (unsigned int i = 0; i < m_enemys.size(); i++) {
+		if (position.x == m_enemys[i].getMyPosition().x &&position.y == m_enemys[i].getMyPosition().y) return m_enemys[i];
+	}
+	throw std::exception("Invalid Search");
+}
+
+
+
+
 int ** Map::getTerrainMap() 
 {
 	return m_terrainProperties;
