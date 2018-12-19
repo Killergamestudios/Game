@@ -14,6 +14,8 @@ void Engine::draw() {
 		for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].Draw();
 		}
+		if (controlUnit["InGameMenu"] == "True")
+			mainmenu->drawMenu();
 		break;
 	case State::Loading:
 		break;
