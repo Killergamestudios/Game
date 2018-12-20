@@ -1,24 +1,28 @@
+#pragma once
 #include "pch.h"
 #include "Engine.h"
 #include <iostream>
 void Engine::update(float dtAsSeconds) {
-	switch(m_state){
-	case State::Booting:
-		mainmenu->updateBoot();
+	switch(Controller::getState()){
+	case Controller::BOOTING:
+		mainmenu->update(dtAsSeconds);
 		break;
-	case State::InMenu:
-		mainmenu->updateMenu(dtAsSeconds);
+	case Controller::IN_MENU:
+		mainmenu->update(dtAsSeconds);
 		break;
-	case State::Playing:
-		if(controlUnit["InGameMenu"] == "True")
-			mainmenu->updateMenu(dtAsSeconds);
+	case Controller::PLAYING:
 		for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].update(dtAsSeconds);
 		}
 		break;
-	case State::Loading:
+	case Controller::LOADING:
 		break;
-	case State::Incutscene:
+	case Controller::IN_CUT_SCENE:
 		break;
+	}
+
+	if (Controller::isSecondaryInitialized(Controller::IN_GAME_MAIN_MENU))
+	{
+		mainmenu->update(dtAsSeconds);
 	}
 }

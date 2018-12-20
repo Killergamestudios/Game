@@ -1,29 +1,31 @@
+#pragma once
 #include "pch.h"
 #include "Engine.h"
 void Engine::draw() {
 	m_window.clear();
-	switch (m_state) {
-	case State::Booting:
-		mainmenu->drawBoot();
+	switch (Controller::getState()) {
+	case Controller::BOOTING:
+		mainmenu->draw();
 		break;
-	case State::InMenu:
-		mainmenu->drawMenu();
+	case Controller::IN_MENU:
+		mainmenu->draw();
 		break;
-	case State::Playing:
+	case Controller::PLAYING:
 		m_map->draw();
 		for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].Draw();
 		}
-		if (controlUnit["InGameMenu"] == "True")
-			mainmenu->drawMenu();
 		break;
-	case State::Loading:
+	case Controller::LOADING:
 		break;
-	case State::Incutscene:
+	case Controller::IN_CUT_SCENE:
 		break;
 	}
 	m_window.setView(camera);
 	m_window.display();
 
-	
+	if (Controller::isSecondaryInitialized(Controller::IN_GAME_MAIN_MENU))
+	{
+		mainmenu->draw();
+	}
 }

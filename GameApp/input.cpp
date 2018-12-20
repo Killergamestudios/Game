@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 #include "Engine.h"
 
@@ -5,14 +6,11 @@ void Engine::input(float dtAsSeconds) {
 	Event evt;
 	overrideKeyPressed += dtAsSeconds;
 	while (m_window.pollEvent(evt)) {
-		switch (m_state) {
-		case State::Booting:
-			if (Keyboard::isKeyPressed(Keyboard::Space))
-			{
-				controlUnit["Running"] = "False";
-			}
+		switch (Controller::getState()) {
+		case Controller::BOOTING:
+			mainmenu->input();
 			break;
-		case State::InMenu:
+		case Controller::IN_MENU:
 			
 			if (evt.type == Event::KeyReleased) {
 				keyPressed = false;
@@ -21,25 +19,14 @@ void Engine::input(float dtAsSeconds) {
 			if (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED)
 			{
 				overrideKeyPressed = 0;
-				if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
-				{
-					mainmenu->changeSeletedOption(-1);
-				}
-				else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
-				{
-					mainmenu->changeSeletedOption(1);
-				}
-				else if (Keyboard::isKeyPressed(Keyboard::Enter))
-				{
-					mainmenu->actions();
-				}
+				mainmenu->input();
 			}
 
 			if (evt.type == Event::KeyPressed) {
 				keyPressed = true;
 			}
 			break;
-		case State::Playing:
+		case Controller::PLAYING:
 			
 			if (evt.type == Event::KeyReleased) {
 				keyPressed = false;
@@ -66,15 +53,13 @@ void Engine::input(float dtAsSeconds) {
 				}
 				else if (Keyboard::isKeyPressed(Keyboard::Escape))
 				{	
-					if (controlUnit["InGameMenu"] == "")
+					if(Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU))
 					{
-						mainmenu->initMenu();
-						controlUnit["InGameMenu"] = "True";
-					} 
+						Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
+					}
 					else 
 					{
-						controlUnit["InGameMenu"] = "";
-						controlUnit["Running"] = "False";
+						Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, true);
 					}
 				}
 			}
@@ -85,9 +70,9 @@ void Engine::input(float dtAsSeconds) {
 			}
 
 			break;
-		case State::Loading:
+		case Controller::LOADING:
 			break;
-		case State::Incutscene:
+		case Controller::IN_CUT_SCENE:
 			break;
 		}
 

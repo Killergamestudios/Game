@@ -2,11 +2,15 @@
 #include "textureHolder.h"
 #include <SFML/Graphics.hpp>
 #include "Map.h"
+#include "GameMenu.h"
 #include "MainMenu.h"
+#include "BootMenu.h"
+#include "InGameMainMenu.h"
 #include "object.h"
+#include "Controller.h"
 
 using namespace sf;
-enum State{Booting,Playing, Loading, InMenu, Incutscene};
+//enum State{Booting,Playing, Loading, InMenu, Incutscene};
 //enum InputState {}; // needs work later
 class Engine {
 private:
@@ -15,11 +19,12 @@ private:
 	int mapIndex;
 	RenderWindow m_window;
 	Time GameTimeTotal;
-	State m_state;
+	//State m_state;
 	TextureHolder m_textureHolder;
+	Controller m_controller;
 	Map *m_map;
-	MainMenu *mainmenu;
-	map<string, string> controlUnit;
+	GameMenu *mainmenu;
+	//map<string, string> controlUnit;
 
 	// camera variables
 	View camera;
@@ -45,9 +50,9 @@ private:
 	void input(float dtAsSeconds);
 	void update(float dtAsSeconds);
 	void draw();
+	void init();
 	void updateState();
 
-	void clearControlUnit(bool); // clears controlUnit false = soft flush, true = hard flush
 	void cameraUpdate(int direction); // handles movement of camera
 
 	//CharacterObject *SpawnCharacter(Vector2i position, Map *map,string savefilename,string Name,string Class);
