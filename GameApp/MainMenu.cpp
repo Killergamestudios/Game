@@ -17,6 +17,9 @@ MainMenu::~MainMenu()
 	backgroundMusic = NULL;
 	if (title == NULL) delete title;
 	title = NULL;
+	menuTexts.clear();
+	menuSprites.clear();
+	backgroundSprites.clear();
 }
 
 void MainMenu::init() 
@@ -64,12 +67,10 @@ void MainMenu::update(float dtasSeconds) {
 	fadeInMusic(*backgroundMusic);
 	totalTimePassed += dtasSeconds;
 	animate(totalTimePassed, optionSelected);
-	draw();
 }
 
 void MainMenu::actions()
 {
-	clearTextures();
 	if (index == 1 && depth == 2)
 	{
 		Controller::setRunning(false);
@@ -119,12 +120,6 @@ void MainMenu::initData()
 	initFileNamesToLoad(mainMenu);
 }
 
-void MainMenu::clearTextures()
-{
-	menuTexts.clear();
-	menuSprites.clear();
-}
-
 void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 {
 	fileNamesToLoad.clear();
@@ -149,7 +144,7 @@ void MainMenu::setMenuSprites()
 	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
 	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
 	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
-	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / NUMBER_OF_SPRITES);
+	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / (NUMBER_OF_SPRITES-1));
 
 	/*
 		Adds Sprites to vector and trims them
@@ -157,7 +152,6 @@ void MainMenu::setMenuSprites()
 		Set Position of Sprites 
 	*/
 	menuSprites.clear();
-	backgroundSprites.clear();
 
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{

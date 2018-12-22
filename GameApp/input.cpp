@@ -6,13 +6,10 @@ void Engine::input(float dtAsSeconds) {
 	Event evt;
 	overrideKeyPressed += dtAsSeconds;
 	while (m_window.pollEvent(evt)) {
-		switch (Controller::getState()) {
-		case Controller::BOOTING:
-			mainmenu->input();
-			break;
-		case Controller::IN_MENU:
-			
-			if (evt.type == Event::KeyReleased) {
+		if (Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU)) 
+		{
+			if (evt.type == Event::KeyReleased) 
+			{
 				keyPressed = false;
 			}
 
@@ -20,60 +17,82 @@ void Engine::input(float dtAsSeconds) {
 			{
 				overrideKeyPressed = 0;
 				mainmenu->input();
+				if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
+				}
 			}
 
-			if (evt.type == Event::KeyPressed) {
+			if (evt.type == Event::KeyPressed) 
+			{
 				keyPressed = true;
 			}
-			break;
-		case Controller::PLAYING:
-			
-			if (evt.type == Event::KeyReleased) {
-				keyPressed = false;
-			}
-
-			if (!keyPressed || overrideKeyPressed > CAMERA_UPDATE_SPEED)
+		}
+		else 
+		{
+			switch (Controller::getState()) 
 			{
-				overrideKeyPressed = 0;
-				if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
-				{
-					cameraUpdate(-1);
+			case Controller::BOOTING:
+				mainmenu->input();
+				break;
+			case Controller::IN_MENU:
+
+				if (evt.type == Event::KeyReleased) {
+					keyPressed = false;
 				}
-				else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
+
+				if (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED)
 				{
-					cameraUpdate(1);
+					overrideKeyPressed = 0;
+					mainmenu->input();
 				}
-				else if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
+
+				if (evt.type == Event::KeyPressed) {
+					keyPressed = true;
+				}
+				break;
+			case Controller::PLAYING:
+
+				if (evt.type == Event::KeyReleased) {
+					keyPressed = false;
+				}
+
+				if (!keyPressed || overrideKeyPressed > CAMERA_UPDATE_SPEED)
 				{
-					cameraUpdate(-2);
-				}
-				else if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
-				{
-					cameraUpdate(2);
-				}
-				else if (Keyboard::isKeyPressed(Keyboard::Escape))
-				{	
-					if(Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU))
+					overrideKeyPressed = 0;
+					if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
 					{
-						Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
+						cameraUpdate(-1);
 					}
-					else 
+					else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
+					{
+						cameraUpdate(1);
+					}
+					else if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
+					{
+						cameraUpdate(-2);
+					}
+					else if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
+					{
+						cameraUpdate(2);
+					}
+					else if (Keyboard::isKeyPressed(Keyboard::Escape))
 					{
 						Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, true);
 					}
 				}
-			}
-			
-			if (evt.type == Event::KeyPressed) {
 
-				keyPressed = true;
-			}
+				if (evt.type == Event::KeyPressed) {
 
-			break;
-		case Controller::LOADING:
-			break;
-		case Controller::IN_CUT_SCENE:
-			break;
+					keyPressed = true;
+				}
+
+				break;
+			case Controller::LOADING:
+				break;
+			case Controller::IN_CUT_SCENE:
+				break;
+			}
 		}
 
 

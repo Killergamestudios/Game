@@ -45,7 +45,6 @@ void Engine::init() {
 	if (!Controller::isSecondaryInitialized(Controller::IN_GAME_MAIN_MENU) && Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU))
 	{
 		delete mainmenu; // delete previous instance
-		Controller::clearState(false,true,Controller::IN_GAME_MAIN_MENU);
 		mainmenu = new InGameMainMenu(m_window);
 		mainmenu->init();
 		Controller::setSecondaryInitialized(Controller::IN_GAME_MAIN_MENU, true);

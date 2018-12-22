@@ -20,15 +20,15 @@ public:
 
 private: 
 	void initData(); // Initializes everything
-	void clearTextures(); // Clears menuTextures in menu transitions
-	void initMenuEnrties(vector<string> fileNames); // get the files names for sprites
-	void setMenuSprites(); // set the sprites for main menu textures
-	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts
+	void initMenuEnrties(vector<string> fileNames); // get the files names for sprite
 	void loadSaveFiles(); // handles the loading of all save files
 	void changeSeletedOption(int direction); // changes selected option
+	void setBackgroundSprites(vector<string> backgroundSpritesPath);
 
 	int optionSelected; // show the currently selected menu item
 	float totalTimePassed; // needed for animation
+	int index; // the option that was selected
+	int depth; // the depth in the main menu that you are currently
 
 
 	// variables for loading games
@@ -38,16 +38,20 @@ private:
 	vector<Text> menuTexts; // text for menu entries (load game files)
 
 	vector<Sprite> menuSprites; // sprites for menu items
-	vector<string> fileNamesToLoad; // path of sprites for to load
+	RectangleShape backgroundFillColor;
 
 	vector<Sprite> backgroundSprites; // sprites for background images 
 	const vector<string> mainMenu =
 	{
-		"Resume Game",
-		"Load Game",
-		"Options",
-		"Quit Game"
+		"RESUME  GAME",
+		"LOAD  GAME",
+		"GAME  OPTIONS",
+		"QUIT  GAME"
 	};    // names of in game main menu entries (depth = 0)
 
+	const vector<string> backgroundSpritesPath =
+	{
+		"./graphics/interfaces/MainMenu/PopupMainMenuBackgroundBorder.png"
+	};
 };
 

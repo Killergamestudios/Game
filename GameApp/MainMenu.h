@@ -20,7 +20,6 @@ public:
 
 private:
 	void initData(); // Initializes everything
-	void clearTextures(); // Clears menuTextures in menu transitions
 	void initFileNamesToLoad(vector<string> fileNames); // get the files names for sprites
 	void setMenuSprites(); // set the sprites for main menu textures
 	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts

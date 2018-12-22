@@ -21,11 +21,13 @@ void Engine::draw() {
 	case Controller::IN_CUT_SCENE:
 		break;
 	}
-	m_window.setView(camera);
-	m_window.display();
 
 	if (Controller::isSecondaryInitialized(Controller::IN_GAME_MAIN_MENU))
 	{
 		mainmenu->draw();
 	}
+
+	m_window.setView(camera);
+	m_window.display();
+
 }
