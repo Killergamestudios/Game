@@ -89,9 +89,6 @@
     <ClCompile Include="input.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
