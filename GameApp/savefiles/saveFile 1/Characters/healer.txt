@@ -1,0 +1,17 @@
+Stats:
+Level = 1
+exp = 0
+MaxHealth = 15
+Agility = 10
+Precision = 15
+MaxEnergy = 10
+MagicResistance = 3
+Armor = 0
+Mastery = 1
+actions = 3
+StatGain:
+MaxHealthGain = 1
+AgilityGain = 1
+PrecisionGain = 1
+MagicResistanceGain = 2
+ArmorGain = 1

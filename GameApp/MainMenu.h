@@ -1,44 +1,73 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "textureHolder.h"
-
+#include "fstream"
 using namespace sf;
 
-enum MainMenuState {opening,Main,newGame,LoadGame,Options,credits};
+//enum MainMenuState {opening,Main,newGame,LoadGame,Options,credits};
 
 class MainMenu
 {
 public:
-	MainMenu(RenderWindow &window);
+	MainMenu(RenderWindow &window, map<string, string> &controlUnit);
 	~MainMenu();
-	void boot();
-	int menu();
 	
+	void initBoot();
+	void updateBoot();
+	void drawBoot();
+
+	void initMenu();
+	void updateMenu(float);
+	void drawMenu();
+	void changeSeletedOption(int direction);
+	void actions();
+
+	void changeState(bool);
 
 private:
-	void init();
-
-	template <size_t N>
-	void initFileNamesToLoad(const string (&fileNames)[N]);
-	
-	void setMenuSprites();
-	void draw();
-	bool actions(int optionSelected, int &indexFileToLoad);
+	void init(); // Initializes everything
+	void clearData(); // Deletes everything. Called inside init()
+	void clearTextures(); // Clears menuTextures in menu transitions
+	void initFileNamesToLoad(vector<string> fileNames); // get the files names for sprites
+	void setMenuSprites(); // set the sprites for main menu textures
+	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
+	void fadeInMusic(Music &music); // Animation: fade in Music
+	void loadSaveFiles(); // handles the loading of all save files
 
-	Font font;
-	RenderWindow* m_window;
-	MainMenuState m_state;
-	vector<Text> textArray;
-	vector<Sprite> menuSprites;
+	// necessary globals
+	Music *backgroundMusic; // Background music for menu
+	Sprite *title; // used for emblem and game title
+	float opacity; // nedded for fade in animation
+	int optionSelected; // show the currently selected menu item
+	int index; // the option that was selected
+	int depth; // the depth in the main menu that you are currently
+	float totalTimePassed; // needed for animation
+	Font font; // Font for text
+	bool popup; // boolean variable that determines if mainMenu is in popup mode or not. Popup Mode: in game mainmenu
+	// ---------------
+
+	// variables for loading games
+	ifstream saveFile; // used to oped save files
+	vector<string> loadFilePath; // path for load game files
+
+	RenderWindow* m_window; // DONT DELETE
+	map<string,string> *returnState; // DONT DELETE 
+
+	vector<Text> menuTexts; // text for menu entries (load game files)
+	
+	vector<Sprite> menuSprites; // sprites for menu items
 	vector<string> fileNamesToLoad; // path of sprites for to load
-	const string mainMenu[4] =
+
+	vector<Sprite> backgroundSprites; // sprites for background images 
+	const vector<string> mainMenu =
 	{
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/LoadGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/OptionsButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
-	};    // paths of mainMenuButtons
+	};    // paths of mainMenuButtons (depth = 0)
 
 };
 
