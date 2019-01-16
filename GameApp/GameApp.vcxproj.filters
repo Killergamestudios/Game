@@ -45,6 +45,12 @@
     <ClInclude Include="textureHolder.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="AbilityComponent.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
@@ -57,12 +63,6 @@
     <ClInclude Include="object.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Header Files\Windows</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -71,19 +71,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="update.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadCharacters.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameApp.cpp">
@@ -91,9 +82,6 @@
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="cameraUpdate.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="textureHolder.cpp">
       <Filter>Source Files\Core</Filter>
@@ -112,6 +100,18 @@
     </ClCompile>
     <ClCompile Include="Algorithms2.cpp">
       <Filter>Source Files\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraUpdate.cpp">
+      <Filter>Source Files\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadCharacters.cpp">
+      <Filter>Source Files\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="update.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="draw.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
