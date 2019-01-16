@@ -3,8 +3,9 @@
 
 # Custom ignores
 *.sln
-GameApp/GameApp.vcxproj.filters
 GameApp/GameApp.vcxproj
+GameApp/SFML-2.5.1
+GameApp/SFML-2.5.0
  
 # User-specific files
 *.suo
