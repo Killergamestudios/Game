@@ -6,6 +6,7 @@ void Engine::init() {
 	switch (Controller::getState()) {
 	case Controller::BOOTING:
 		if (!Controller::isInitialized()) {
+			cameraReset();
 			delete mainmenu; // delete previous instance
 			mainmenu = new BootMenu(m_window);
 			Controller::clearState();
@@ -17,6 +18,7 @@ void Engine::init() {
 		//another enum witch tells witch menu we are in (one of the main menus, one of the input menus during the fight etc)
 		//change the states to playing loading cutscene or another menu depending on last state
 		if (!Controller::isInitialized()) {
+			cameraReset();
 			delete mainmenu; // delete previous instance
 			mainmenu = new MainMenu(m_window);
 			Controller::clearState();
@@ -25,7 +27,7 @@ void Engine::init() {
 		break;
 	case Controller::LOADING:
 		initGameVariables(0); // Needs to be replaced!!!!
-
+		cameraReset();
 		m_map->load(mapIndex);
 		m_map->loadParty(m_map, Controller::getSaveFileDirectory());
 		party = m_map->getparty();

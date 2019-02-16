@@ -140,9 +140,6 @@
     <ClCompile Include="draw.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="cameraUpdate.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
@@ -153,6 +150,9 @@
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
     <ClCompile Include="update.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
   </ItemGroup>
