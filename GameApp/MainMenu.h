@@ -4,6 +4,8 @@
 #include "textureHolder.h"
 #include "fstream"
 #include "GameMenu.h"
+#include "ValueBar.h"
+#include "OptionBox.h"
 using namespace sf;
 
 class MainMenu : public GameMenu
@@ -24,9 +26,10 @@ private:
 	void setMenuSprites(); // set the sprites for main menu textures
 	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
-	void fadeInMusic(Music &music); // Animation: fade in Music
 	void loadSaveFiles(); // handles the loading of all save files
+	void initOptions(); // initializes options menu
 	void changeSeletedOption(int direction); // changes selected option
+	void clearTextures();
 
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
@@ -36,6 +39,7 @@ private:
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
+	unsigned int buttonsCounter;
 	// ---------------
 
 	// variables for loading games
@@ -48,6 +52,8 @@ private:
 	vector<string> fileNamesToLoad; // path of sprites for to load
 
 	vector<Sprite> backgroundSprites; // sprites for background images 
+	vector<GuiController*> guiElements;
+
 	const vector<string> mainMenu =
 	{
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
@@ -56,5 +62,20 @@ private:
 		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
 	};    // paths of mainMenuButtons (depth = 0)
 
+	const vector<string> optionsMenu =
+	{
+		"Resolution",
+		"Music Volume",
+		"Sound Volume"
+	};		// options menu
+
+
+	// general purpose constants 
+	const int WIN_HEIGHT = m_window->getSize().y;
+	const int WIN_WIDTH = m_window->getSize().x;
+	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
+	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 };
 

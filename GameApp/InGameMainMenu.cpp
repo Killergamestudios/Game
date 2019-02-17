@@ -65,9 +65,7 @@ void InGameMainMenu::actions()
 	{
 		switch (optionSelected)
 		{
-		case 0: // New Game
-			//Loads intro cutscene or whatever
-			Controller::setLoadFile(false);
+		case 0: // Resume Game
 			Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
 			break;
 		case 1: //Load Game
@@ -77,7 +75,11 @@ void InGameMainMenu::actions()
 			break;
 		case 2: //Options
 			break;
-		case 3: //Credits
+		case 3: //Quit Game
+			Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
+			Controller::setState(Controller::IN_MENU);
+			Controller::setRunning(false);
+			Controller::setInitialized(false);
 			break;
 		}
 	}

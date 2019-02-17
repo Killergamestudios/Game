@@ -3,17 +3,12 @@
 #include "Engine.h"
 #include "textureHolder.h"
 #include "fstream"
-#include "IniReader.h"
-#include "IniWriter.h"
-#include <Windows.h>
 
 Engine::Engine() {
-	IniReader iniReader("D:\\Projects\\GameApp\\GameApp\\options.ini");
-	string resolutionWidth = iniReader.ReadVar("Display", "width", "");
-	string resolutionHeight = iniReader.ReadVar("Display", "height", "");
-	
-	windowWidth = stoi(resolutionWidth); 
-	windowHeight = stoi(resolutionHeight); 
+
+	// get resolution from ini file. Need casting to int
+	windowWidth = (float) Controller::getResolutionWidth(); // casting string to int 
+	windowHeight = (float) Controller::getResolitionHeight(); // casting string to int  
 	m_window.create(VideoMode((unsigned int)windowWidth,(unsigned int)windowHeight), "Game Name", Style::Fullscreen);
 	camera.setCenter(Vector2f(windowWidth/2, windowHeight/2));
 	camera.setSize(Vector2f(windowWidth, windowHeight));

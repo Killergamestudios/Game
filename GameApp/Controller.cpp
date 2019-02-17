@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Controller.h"
 #include <assert.h>
+#include <windows.h>
 
 Controller* Controller::m_s_Instance = nullptr;
 Controller::Controller()
@@ -10,6 +11,12 @@ Controller::Controller()
 	m_s_Instance = this;
 	tmpCurrentState = State::Booting;
 	saveFileDirectory = "";
+
+	char full_path[MAX_PATH];
+	GetFullPathNameA("options.ini", MAX_PATH, full_path, NULL);
+	iniReader = new IniReader(full_path);
+	iniWriter = new IniWriter(full_path);
+	loadVars();
 }
 
 // switch to new State
@@ -142,3 +149,63 @@ void Controller::clearState(bool hardFlush, bool secondary, SecondaryState state
 	m_s_Instance->running = m_s_Instance->tmpRunning = false;
 
 }
+
+void Controller::setResolutionID(int value)
+{
+	m_s_Instance->resolutionID = value;
+}
+
+int Controller::getResolutionID()
+{
+	return m_s_Instance->resolutionID;
+}
+
+int Controller::getResolutionWidth()
+{
+	return m_s_Instance->availableResolutions[m_s_Instance->resolutionID].x;
+}
+
+int Controller::getResolitionHeight()
+{
+	return m_s_Instance->availableResolutions[m_s_Instance->resolutionID].y;
+}
+
+void Controller::setMusicVolume(int value)
+{
+	m_s_Instance->musicVolume = value;
+}
+
+int Controller::getMusicVolume()
+{
+	return m_s_Instance->musicVolume;
+}
+
+void Controller::setSoundVolume(int value)
+{
+	m_s_Instance->soundVolume = value;
+}
+
+int Controller::getSoundVolume()
+{
+	return m_s_Instance->soundVolume;
+}
+
+vector<Vector2i> Controller::getAvailableResolutions()
+{
+	return m_s_Instance->availableResolutions;
+}
+
+void Controller::loadVars()
+{
+	m_s_Instance->resolutionID = stoi(m_s_Instance->iniReader->ReadVar("Display", "resolutionID", ""));
+	m_s_Instance->musicVolume = stoi(m_s_Instance->iniReader->ReadVar("Audio", "musicVolume", ""));
+	m_s_Instance->soundVolume = stoi(m_s_Instance->iniReader->ReadVar("Audio", "soundVolume", ""));
+}
+
+void Controller::saveVars()
+{
+	m_s_Instance->iniWriter->WriteVar("Display", "resolutionID", "" + m_s_Instance->resolutionID);
+	m_s_Instance->iniWriter->WriteVar("Audio", "musicVolume", "" + m_s_Instance->musicVolume);
+	m_s_Instance->iniWriter->WriteVar("Audio", "soundVolume", "" + m_s_Instance->soundVolume);
+}
+

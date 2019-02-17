@@ -1,7 +1,12 @@
 #pragma once
 #include <iostream>
+#include <SFML/Graphics.hpp>
+#include "IniReader.h"
+#include "IniWriter.h"
 
+using namespace sf;
 using namespace std;
+
 class Controller
 {
 private:
@@ -18,6 +23,25 @@ private:
 
 	bool executeSecondary[1], tmpExecuteSecondary[1];
 	bool secondaryInitialized[1], tmpSecondaryInitialized[1];
+	
+	int resolutionID;
+	int musicVolume;
+	int soundVolume;
+	IniReader* iniReader;
+	IniWriter* iniWriter;
+
+	vector<Vector2i> availableResolutions =
+	{
+		Vector2i(800,600),
+		Vector2i(1024,768),
+		Vector2i(1280,1024),
+		Vector2i(1366,768),
+		Vector2i(1600,900),
+		Vector2i(1600,1200),
+		Vector2i(1680,1050),
+		Vector2i(1920,1080),
+		Vector2i(1920,1200)
+	};
 
 public: 
 	Controller();
@@ -39,6 +63,18 @@ public:
 	static void applyChanges();
 	static void clearState(bool hardFlush = false, bool secondary = false, SecondaryState state = SecondaryState::None);
 
+	static void setResolutionID(int);
+	static int getResolutionID();
+	static int getResolutionWidth();
+	static int getResolitionHeight();
+	static void setMusicVolume(int);
+	static int getMusicVolume();
+	static void setSoundVolume(int);
+	static int getSoundVolume();
+	static vector<Vector2i> getAvailableResolutions();
+
+	static void loadVars();
+	static void saveVars();
 
 	static const State BOOTING = State::Booting;
 	static const State IN_MENU = State::InMenu;
@@ -47,5 +83,6 @@ public:
 	static const State IN_CUT_SCENE = State::Incutscene;
 	static const SecondaryState IN_GAME_MAIN_MENU = SecondaryState::InGameMainMenu;
 	static const SecondaryState NONE = SecondaryState::None;
+
 };
 

@@ -29,7 +29,7 @@ private:
 	float totalTimePassed; // needed for animation
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
-
+	unsigned const int NUMBER_OF_ENTRIES_PER_PAGE = 4; // TODO
 
 	// variables for loading games
 	ifstream saveFile; // used to oped save files

@@ -16,9 +16,11 @@ public:
 	virtual void draw() = 0;
 	virtual void input() = 0;
 	virtual void actions() = 0;
-
+	
 	Font font; // Global font for main menu text
 	RenderWindow* m_window; // DONT DELETE
-	//map<string, string> *controlUnit; // DONT DELETE 
+
+	float MUSIC_VOLUME = (float) Controller::getMusicVolume();
+
 };
 

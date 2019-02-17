@@ -31,7 +31,7 @@ void MainMenu::init()
 	totalTimePassed = 0;
 	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
 	backgroundMusic->play();
-	backgroundMusic->setVolume(0.0f);
+	backgroundMusic->setVolume(100.0f);
 	backgroundMusic->setLoop(true);
 
 	Controller::setRunning(true);
@@ -53,6 +53,11 @@ void MainMenu::draw()
 	{
 		m_window->draw(menuTexts[i]);
 	}
+
+	for (unsigned int i = 0; i < guiElements.size(); i++)
+	{
+		guiElements[i]->draw();
+	}
 }
 
 void MainMenu::update(float dtasSeconds) {
@@ -64,9 +69,20 @@ void MainMenu::update(float dtasSeconds) {
 		return;
 	}
 
-	fadeInMusic(*backgroundMusic);
 	totalTimePassed += dtasSeconds;
 	animate(totalTimePassed, optionSelected);
+	MUSIC_VOLUME = (float)Controller::getMusicVolume();
+	backgroundMusic->setVolume(MUSIC_VOLUME);
+	if (guiElements.size() != 0)
+	{
+		for (unsigned int i = 0; i < guiElements.size(); i++) 
+		{
+			if (guiElements[i]->label.getString() == "Music Volume")
+			{	
+				Controller::setMusicVolume(guiElements[i]->getValue());
+			}
+		}
+	}
 }
 
 void MainMenu::actions()
@@ -89,12 +105,23 @@ void MainMenu::actions()
 		case 1: //Load Game
 			index = 1;
 			depth = 2;
+			clearTextures();
 			loadSaveFiles();
 			break;
 		case 2: //Options
+			index = 2;
+			depth = 2;
+			clearTextures();
+			initOptions();
 			break;
 		case 3: //Credits
 			break;
+		}
+	}
+
+	if (optionSelected == buttonsCounter - 1) {
+		if (depth == 1) {
+			m_window->close();
 		}
 	}
 }
@@ -111,6 +138,14 @@ void MainMenu::input() {
 	else if (Keyboard::isKeyPressed(Keyboard::Enter))
 	{
 		actions();
+	}
+	else if (guiElements.size()!=0 && (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))) 
+	{
+		guiElements[optionSelected]->update(1);
+	}
+	else if (guiElements.size() != 0 && (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)))
+	{
+		guiElements[optionSelected]->update(-1);
 	}
 }
 
@@ -135,15 +170,7 @@ void MainMenu::setMenuSprites()
 	const int SPRITE_WIDTH = 256;
 	const int SPRITE_HEIGHT = 128;
 	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
-	const int WIN_HEIGHT = m_window->getSize().y;
-	const int WIN_WIDTH = m_window->getSize().x;
-	const int X_START_POS = 0; // used for offsetting everything in the x axis without too much effort
-	const int Y_START_POS = 0; // used for offsetting everything in the y axis without too much effort
-	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
-	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
 	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / (NUMBER_OF_SPRITES-1));
 
 	/*
@@ -157,8 +184,8 @@ void MainMenu::setMenuSprites()
 	{
 		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128))); 
 		menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
-		menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2) + X_START_POS),	
-			(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1))) + Y_START_POS));
+		menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2)),	
+			(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1)))));
 	}
 
 	
@@ -169,21 +196,16 @@ void MainMenu::setMenuSprites()
 
 void MainMenu::loadTextGraphics(vector<string> textsArray)
 {
-	const int WIN_HEIGHT = m_window->getSize().y;
-	const int WIN_WIDTH = m_window->getSize().x;
-	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const float TEXT_LEFT_MARGIN = (float)(WIN_WIDTH / 10);
 	const int MARGIN_BETWEEN_TEXT = 10;
 
 	menuTexts.clear();
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
 		menuTexts.push_back(Text(textsArray[i],font,24));
-		menuTexts[i].setFillColor(Color::White);
 		FloatRect textRect = menuTexts[i].getLocalBounds();
-		menuTexts[i].setPosition(sf::Vector2f(TEXT_LEFT_MARGIN, 
+		menuTexts[i].setPosition(sf::Vector2f(TEXT_LEFT_MARGIN,
 			TOP_CONTAINER + (textRect.height + MARGIN_BETWEEN_TEXT) * i));
+		menuTexts[i].setFillColor(Color::White);
 	} 
 	optionSelected = 0;
 	menuTexts[0].setFillColor(Color::Red); //set as default selected
@@ -204,31 +226,36 @@ void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 
 }
 
-void MainMenu::fadeInMusic(Music & music)
-{
-	const float FADE_IN_SPEED = 0.01f;
-	float currentVolume = music.getVolume();
-	if (currentVolume < 100.0f) {
-		music.setVolume(currentVolume + FADE_IN_SPEED);
-	}
-}
+void MainMenu::changeSeletedOption(int direction) 
+{	
+	unsigned int oldOptionSelected = optionSelected;
+	buttonsCounter = menuSprites.size() + menuTexts.size() + guiElements.size();
+	optionSelected += (buttonsCounter + direction);
+	optionSelected = optionSelected % buttonsCounter;
 
-void MainMenu::changeSeletedOption(int direction) {
 	if (menuSprites.size() != 0)
 	{
-		menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
-		optionSelected += (menuSprites.size() + direction);
-		optionSelected = optionSelected % menuSprites.size();
+		menuSprites[oldOptionSelected].setTextureRect(IntRect(0, 0, 256, 128));
 		menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
 	}
 
 	if (menuTexts.size() != 0)
 	{
-		menuTexts[optionSelected].setFillColor(Color::White);
-		optionSelected += (menuTexts.size() + direction);
-		optionSelected = optionSelected % menuTexts.size();
+		menuTexts[oldOptionSelected].setFillColor(Color::White);
 		menuTexts[optionSelected].setFillColor(Color::Red);
 	}
+
+	if (guiElements.size() != 0) 
+	{
+		guiElements[oldOptionSelected]->unSelect();
+		guiElements[optionSelected]->setSelected();
+	}
+}
+
+void MainMenu::clearTextures()
+{
+	menuTexts.clear();
+	menuSprites.clear();
 }
 
 void MainMenu::loadSaveFiles() {
@@ -247,6 +274,29 @@ void MainMenu::loadSaveFiles() {
 
 	loadTextGraphics(saveFilesArray);
 
+}
+
+void MainMenu::initOptions()
+{
+	const int WIN_HEIGHT = m_window->getSize().y;
+	const int WIN_WIDTH = m_window->getSize().x;
+	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
+	const float MARGIN_X = 0.05f*WIN_WIDTH;
+	const float MARGIN_Y = 0.02f*WIN_HEIGHT;
+	const float DISTANCE_BETWEEN = 30 + MARGIN_Y *2;
+	
+	guiElements.push_back(new ValueBar(m_window,Vector2f(MARGIN_X, TOP_CONTAINER),Text("Music Volume",font,30),font, MUSIC_VOLUME));
+	vector<pair<string, string>> resolutions; 
+	for (Vector2i res : Controller::getAvailableResolutions()) 
+	{
+		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
+	}
+	guiElements.push_back(new OptionBox(m_window, Vector2f(MARGIN_X, TOP_CONTAINER + DISTANCE_BETWEEN), Text("Resolution", font, 30), font, Controller::getResolutionID(), resolutions));
+	
+	optionSelected = 0;
+	guiElements[0]->setSelected();
 }
 
 

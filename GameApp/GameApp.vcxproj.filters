@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Core\Engine">
       <UniqueIdentifier>{9f70f3fe-e8a5-480c-a086-a5372929bfec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Windows\Gui">
+      <UniqueIdentifier>{a2c55674-b4b5-4d28-b2ce-d1b71226d72d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Windows\Gui">
+      <UniqueIdentifier>{10e197bd-86e4-4d66-b997-348c430baf4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -83,6 +89,21 @@
     </ClInclude>
     <ClInclude Include="IniWriter.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueBar.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckBox.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionBox.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiController.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Theme.h">
+      <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +175,21 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckBox.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionBox.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="ValueBar.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiController.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Theme.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -20,6 +20,7 @@ void BootMenu::init()
 	backgroundMusic = new Music();
 	backgroundMusic->openFromFile("./music/MainMenu/KGS Intro.ogg"); // Load intro music
 	backgroundMusic->play(); // start playing intro music
+	backgroundMusic->setVolume(MUSIC_VOLUME); // set volume of music
 	title->setPosition(Vector2f((float)(m_window->getSize().x - title->getTexture()->getSize().x) / 2,
 		(float)(m_window->getSize().y - title->getTexture()->getSize().y) / 2));
 	// set emblem in the center
