@@ -3,7 +3,7 @@
 
 
 OptionBox::OptionBox(RenderWindow *window, Vector2f position, Text label, Font font, int currentValue, vector<pair<string,string>> options)
-	:GuiController(window, position, label, font)
+	:GuiElement(window, position, label, font)
 {
 	this->currentValue = (float)currentValue;
 	this->options = options;
@@ -26,10 +26,10 @@ void OptionBox::init()
 	selected.setPosition(Vector2f(WIN_WIDTH - padding.x - offset.x - width, offset.y + padding.y));
 }
 
-void OptionBox::draw()
+void OptionBox::draw(RenderTarget& target, RenderStates states) const
 {
-	m_window->draw(selected);
-	m_window->draw(label);
+	target.draw(selected, states);
+	target.draw(label, states);
 }
 
 void OptionBox::update(int direction)

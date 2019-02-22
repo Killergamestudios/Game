@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "GuiController.h"
+#include "GuiElement.h"
 
 
-GuiController::GuiController(RenderWindow *window, Vector2f position, Text label, Font font)
+GuiElement::GuiElement(RenderWindow *window, Vector2f position, Text label, Font font)
 {
 	m_window = window;
 	offset = position;
@@ -13,7 +13,7 @@ GuiController::GuiController(RenderWindow *window, Vector2f position, Text label
 }
 
 
-GuiController::~GuiController()
+GuiElement::~GuiElement()
 {
 	
 }

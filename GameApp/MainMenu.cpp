@@ -56,7 +56,7 @@ void MainMenu::draw()
 
 	for (unsigned int i = 0; i < guiElements.size(); i++)
 	{
-		guiElements[i]->draw();
+		m_window->draw(*guiElements[i]);
 	}
 }
 
@@ -71,15 +71,15 @@ void MainMenu::update(float dtasSeconds) {
 
 	totalTimePassed += dtasSeconds;
 	animate(totalTimePassed, optionSelected);
-	MUSIC_VOLUME = (float)Controller::getMusicVolume();
-	backgroundMusic->setVolume(MUSIC_VOLUME);
-	if (guiElements.size() != 0)
+	backgroundMusic->setVolume(Controller::getMusicVolume());
+	
+	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
 	{
 		for (unsigned int i = 0; i < guiElements.size(); i++) 
 		{
 			if (guiElements[i]->label.getString() == "Music Volume")
 			{	
-				Controller::setMusicVolume(guiElements[i]->getValue());
+				Controller::setMusicVolume((int)guiElements[i]->getValue());
 			}
 		}
 	}
@@ -106,6 +106,7 @@ void MainMenu::actions()
 			index = 1;
 			depth = 2;
 			clearTextures();
+			Theme::clearRegion(Theme::MAINMENU);
 			loadSaveFiles();
 			break;
 		case 2: //Options
@@ -178,18 +179,21 @@ void MainMenu::setMenuSprites()
 		Sets Origin of sprites to center
 		Set Position of Sprites 
 	*/
-	menuSprites.clear();
+	vector<FloatRect> dimensions; // vector with dimensions of elements
 
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
-		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128))); 
-		menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
-		menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2)),	
-			(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1)))));
+		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128)));
+		dimensions.push_back(menuSprites[i].getLocalBounds());  // populate vector
+	//	menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
+	//	menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2)),	
+	//		(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1)))));
+		drawStack.insert(make_pair(i,&menuSprites[i]));
 	}
-
-	
-
+	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions); // render elements in region. FloatRect is used as a wrapper
+	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		menuSprites[i].setPosition(newPositions[i]);
+	}
 	menuSprites[0].setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
 }
 
@@ -199,15 +203,17 @@ void MainMenu::loadTextGraphics(vector<string> textsArray)
 	const float TEXT_LEFT_MARGIN = (float)(WIN_WIDTH / 10);
 	const int MARGIN_BETWEEN_TEXT = 10;
 
-	menuTexts.clear();
+	vector<FloatRect> dimensions; // vector with dimensions of elements
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
 		menuTexts.push_back(Text(textsArray[i],font,24));
-		FloatRect textRect = menuTexts[i].getLocalBounds();
-		menuTexts[i].setPosition(sf::Vector2f(TEXT_LEFT_MARGIN,
-			TOP_CONTAINER + (textRect.height + MARGIN_BETWEEN_TEXT) * i));
+		dimensions.push_back(menuTexts[i].getLocalBounds());
+		drawStack.insert(make_pair(2,&menuTexts[i]));
 		menuTexts[i].setFillColor(Color::White);
 	} 
-	optionSelected = 0;
+	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions);
+	for (unsigned int i = 0; i < menuTexts.size(); i++) {
+		menuTexts[i].setPosition(newPositions[i]);
+	}
 	menuTexts[0].setFillColor(Color::Red); //set as default selected
 }
 
@@ -256,6 +262,7 @@ void MainMenu::clearTextures()
 {
 	menuTexts.clear();
 	menuSprites.clear();
+	optionSelected = 0;
 }
 
 void MainMenu::loadSaveFiles() {
@@ -287,7 +294,7 @@ void MainMenu::initOptions()
 	const float MARGIN_Y = 0.02f*WIN_HEIGHT;
 	const float DISTANCE_BETWEEN = 30 + MARGIN_Y *2;
 	
-	guiElements.push_back(new ValueBar(m_window,Vector2f(MARGIN_X, TOP_CONTAINER),Text("Music Volume",font,30),font, MUSIC_VOLUME));
+	guiElements.push_back(new ValueBar(m_window,Vector2f(MARGIN_X, TOP_CONTAINER),Text("Music Volume",font,30),font, Controller::getMusicVolume()));
 	vector<pair<string, string>> resolutions; 
 	for (Vector2i res : Controller::getAvailableResolutions()) 
 	{

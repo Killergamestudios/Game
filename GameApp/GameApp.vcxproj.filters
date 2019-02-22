@@ -99,10 +99,10 @@
     <ClInclude Include="OptionBox.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="GuiController.h">
+    <ClInclude Include="Theme.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="Theme.h">
+    <ClInclude Include="GuiElement.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -185,10 +185,10 @@
     <ClCompile Include="ValueBar.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="GuiController.cpp">
+    <ClCompile Include="Theme.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="Theme.cpp">
+    <ClCompile Include="GuiElement.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
   </ItemGroup>

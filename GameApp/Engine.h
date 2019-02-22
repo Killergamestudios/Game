@@ -8,6 +8,7 @@
 #include "InGameMainMenu.h"
 #include "object.h"
 #include "Controller.h"
+#include "Theme.h"
 
 using namespace sf;
 //enum State{Booting,Playing, Loading, InMenu, Incutscene};
@@ -24,6 +25,7 @@ private:
 	Controller m_controller;
 	Map *m_map;
 	GameMenu *mainmenu;
+	Theme *m_theme;
 	//map<string, string> controlUnit;
 
 	// camera variables

@@ -3,7 +3,7 @@
 
 
 CheckBox::CheckBox(RenderWindow *window, Vector2f position, Text label, Font font)
-	:GuiController(window, position, label, font)
+	:GuiElement(window, position, label, font)
 {
 }
 

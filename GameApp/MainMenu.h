@@ -6,6 +6,7 @@
 #include "GameMenu.h"
 #include "ValueBar.h"
 #include "OptionBox.h"
+
 using namespace sf;
 
 class MainMenu : public GameMenu
@@ -30,7 +31,9 @@ private:
 	void initOptions(); // initializes options menu
 	void changeSeletedOption(int direction); // changes selected option
 	void clearTextures();
-
+	
+	
+	
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
 	Sprite *title; // used for emblem and game title
@@ -52,7 +55,9 @@ private:
 	vector<string> fileNamesToLoad; // path of sprites for to load
 
 	vector<Sprite> backgroundSprites; // sprites for background images 
-	vector<GuiController*> guiElements;
+	vector<GuiElement*> guiElements; // gui elements for forms (options menu)
+
+
 
 	const vector<string> mainMenu =
 	{

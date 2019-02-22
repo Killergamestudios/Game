@@ -13,6 +13,7 @@ Engine::Engine() {
 	camera.setCenter(Vector2f(windowWidth/2, windowHeight/2));
 	camera.setSize(Vector2f(windowWidth, windowHeight));
 	m_window.setView(camera);
+	m_theme = new Theme(m_window);
 }
 
 void Engine::run() {

@@ -3,7 +3,7 @@
 
 ValueBar::ValueBar(RenderWindow *window, Vector2f position, Text label, Font font, float currentValue,
 					float max, float min, float step)
-	:GuiController(window,position,label,font)
+	:GuiElement(window,position,label,font)
 {
 	this->currentValue = currentValue;
 	this->maxValue = max;
@@ -31,11 +31,11 @@ void ValueBar::init()
 										offset.y + padding.y + valueBarDim.height/2 - valuePointDim.height/2));
 }
 
-void ValueBar::draw()
+void ValueBar::draw(RenderTarget& target, RenderStates states) const
 {
-	m_window->draw(valueBar);
-	m_window->draw(valuePoint);
-	m_window->draw(label);
+	target.draw(valueBar, states);
+	target.draw(valuePoint, states);
+	target.draw(label, states);
 }
 
 void ValueBar::update(int direction)

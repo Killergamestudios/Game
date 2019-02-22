@@ -1,13 +1,13 @@
 #pragma once
-#include "GuiController.h"
-class ValueBar : public GuiController
+#include "GuiElement.h"
+class ValueBar : public GuiElement
 {
 public:
 	ValueBar(RenderWindow *window, Vector2f position, Text label, Font font, float currentValue, float max=100.0f, float min=0.0f, float step=10.0f);
 	~ValueBar();
 
 	void init() override;
-	void draw() override;
+	void draw(RenderTarget& target, RenderStates states) const override;
 	void update(int) override;
 	void setSelected() override;
 	void unSelect() override;

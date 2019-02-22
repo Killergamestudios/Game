@@ -4,7 +4,7 @@
 #include "textureHolder.h"
 #include "fstream"
 #include "Controller.h"
-
+#include "Theme.h"
 class GameMenu
 {
 public:
@@ -17,10 +17,17 @@ public:
 	virtual void input() = 0;
 	virtual void actions() = 0;
 	
+	struct CustomCompare
+	{
+		bool operator()(const pair<int, Drawable*> left, const pair<int, Drawable*> right)
+		{
+			return (left.first < right.first);
+		}
+	};
 	Font font; // Global font for main menu text
 	RenderWindow* m_window; // DONT DELETE
 
-	float MUSIC_VOLUME = (float) Controller::getMusicVolume();
+	set<pair<int, Drawable*>, CustomCompare> drawStack; // a set with the order in which graphics render
 
 };
 

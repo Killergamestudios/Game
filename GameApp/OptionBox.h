@@ -1,6 +1,6 @@
 #pragma once
-#include "GuiController.h"
-class OptionBox : public GuiController
+#include "GuiElement.h"
+class OptionBox : public GuiElement
 {
 public:
 	OptionBox(RenderWindow *window, Vector2f position, Text label, Font font, int currentValue, vector<pair<string,string>>);
@@ -8,7 +8,7 @@ public:
 
 
 	void init() override;
-	void draw() override;
+	void draw(RenderTarget& target, RenderStates states) const override;
 	void update(int) override;
 	void setSelected() override;
 	void unSelect() override;
