@@ -39,25 +39,8 @@ void MainMenu::init()
 
 void MainMenu::draw() 
 {
-	for (unsigned int i = 0; i < backgroundSprites.size(); i++)
-	{
-		m_window->draw(backgroundSprites[i]);
-	}
-
-	for (unsigned int i = 0; i < menuSprites.size(); i++)
-	{
-		m_window->draw(menuSprites[i]);
-	}
-
-	for (unsigned int i = 0; i < menuTexts.size(); i++)
-	{
-		m_window->draw(menuTexts[i]);
-	}
-
-	for (unsigned int i = 0; i < guiElements.size(); i++)
-	{
-		m_window->draw(*guiElements[i]);
-	}
+	for (pair<int ,Drawable*> dr :  drawStack)
+		m_window->draw(*dr.second);
 }
 
 void MainMenu::update(float dtasSeconds) {
@@ -71,7 +54,7 @@ void MainMenu::update(float dtasSeconds) {
 
 	totalTimePassed += dtasSeconds;
 	animate(totalTimePassed, optionSelected);
-	backgroundMusic->setVolume(Controller::getMusicVolume());
+	backgroundMusic->setVolume((float)Controller::getMusicVolume());
 	
 	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
 	{
@@ -168,33 +151,30 @@ void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 
 void MainMenu::setMenuSprites()
 {
-	const int SPRITE_WIDTH = 256;
-	const int SPRITE_HEIGHT = 128;
 	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
-	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / (NUMBER_OF_SPRITES-1));
-
+	
 	/*
 		Adds Sprites to vector and trims them
-		Sets Origin of sprites to center
+		Render region in which they will be placed
 		Set Position of Sprites 
+		Add Sprites into drawStack and tabOrder sets
 	*/
 	vector<FloatRect> dimensions; // vector with dimensions of elements
 
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
-		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128)));
-		dimensions.push_back(menuSprites[i].getLocalBounds());  // populate vector
-	//	menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
-	//	menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2)),	
-	//		(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1)))));
-		drawStack.insert(make_pair(i,&menuSprites[i]));
+		Sprite* buffer = new Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128));
+		dimensions.push_back(buffer->getLocalBounds());  // get dimensions of Sprites needed by the region
+		drawStack[drawStack.size() + 2] = buffer;  // add items to the draw stack (details for ordering in GameMenu.h)
+		tabOrder[tabOrder.size()] = make_pair("SP",buffer); // add items to the tabOrder
+		menuSprites.push_back(buffer); // add Sprites to the menuSprites
 	}
+
 	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions); // render elements in region. FloatRect is used as a wrapper
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++) {
-		menuSprites[i].setPosition(newPositions[i]);
+		menuSprites[i]->setPosition(newPositions[i]);
 	}
-	menuSprites[0].setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
+	menuSprites[0]->setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
 }
 
 
@@ -205,16 +185,18 @@ void MainMenu::loadTextGraphics(vector<string> textsArray)
 
 	vector<FloatRect> dimensions; // vector with dimensions of elements
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
-		menuTexts.push_back(Text(textsArray[i],font,24));
-		dimensions.push_back(menuTexts[i].getLocalBounds());
-		drawStack.insert(make_pair(2,&menuTexts[i]));
-		menuTexts[i].setFillColor(Color::White);
+		Text* buffer = new Text(textsArray[i], font, 24);
+		menuTexts.push_back(buffer);
+		dimensions.push_back(buffer->getLocalBounds());
+		drawStack[drawStack.size() + 2] = buffer;
+		tabOrder[tabOrder.size()] = make_pair("TXT", buffer);
+		buffer->setFillColor(Color::White);
 	} 
 	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions);
 	for (unsigned int i = 0; i < menuTexts.size(); i++) {
-		menuTexts[i].setPosition(newPositions[i]);
+		menuTexts[i]->setPosition(newPositions[i]);
 	}
-	menuTexts[0].setFillColor(Color::Red); //set as default selected
+	menuTexts[0]->setFillColor(Color::Red); //set as default selected
 }
 
 void MainMenu::animate(float &totaltimepassed, int optionSelected) {
@@ -224,9 +206,9 @@ void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 		if (totaltimepassed > ANIMATION_SPEED) 
 		{
 			totaltimepassed -= ANIMATION_SPEED;
-			int left = menuSprites[optionSelected].getTextureRect().left; // get left position of previous selected texture
+			int left = menuSprites[optionSelected]->getTextureRect().left; // get left position of previous selected texture
 			left = left == 256 ? 512 : 256;
-			menuSprites[optionSelected].setTextureRect(IntRect(left, 0, 256, 128));
+			menuSprites[optionSelected]->setTextureRect(IntRect(left, 0, 256, 128));
 		}
 	}
 
@@ -234,27 +216,27 @@ void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 
 void MainMenu::changeSeletedOption(int direction) 
 {	
-	unsigned int oldOptionSelected = optionSelected;
-	buttonsCounter = menuSprites.size() + menuTexts.size() + guiElements.size();
-	optionSelected += (buttonsCounter + direction);
-	optionSelected = optionSelected % buttonsCounter;
-
-	if (menuSprites.size() != 0)
-	{
-		menuSprites[oldOptionSelected].setTextureRect(IntRect(0, 0, 256, 128));
-		menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
+	// Disgusting but it works...
+	if (tabOrder[optionSelected].first == "TXT") {
+		((Text*)tabOrder[optionSelected].second)->setFillColor(Color::White);
 	}
-
-	if (menuTexts.size() != 0)
-	{
-		menuTexts[oldOptionSelected].setFillColor(Color::White);
-		menuTexts[optionSelected].setFillColor(Color::Red);
+	else if (tabOrder[optionSelected].first == "SP") {
+		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(0, 0, 256, 128));
+	} 
+	else if (tabOrder[optionSelected].first == "GUI") {
+		((GuiElement*)tabOrder[optionSelected].second)->unSelect();
 	}
+	optionSelected += (tabOrder.size() + direction);
+	optionSelected = optionSelected % tabOrder.size();
 
-	if (guiElements.size() != 0) 
-	{
-		guiElements[oldOptionSelected]->unSelect();
-		guiElements[optionSelected]->setSelected();
+	if (tabOrder[optionSelected].first == "TXT") {
+		((Text*)tabOrder[optionSelected].second)->setFillColor(Color::Red);
+	} 
+	else if (tabOrder[optionSelected].first == "SP") {
+		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(256, 0, 256, 128));
+	} 
+	else if (tabOrder[optionSelected].first == "GUI") {
+		((GuiElement*)tabOrder[optionSelected].second)->setSelected();
 	}
 }
 
@@ -262,6 +244,8 @@ void MainMenu::clearTextures()
 {
 	menuTexts.clear();
 	menuSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
 	optionSelected = 0;
 }
 
@@ -294,14 +278,19 @@ void MainMenu::initOptions()
 	const float MARGIN_Y = 0.02f*WIN_HEIGHT;
 	const float DISTANCE_BETWEEN = 30 + MARGIN_Y *2;
 	
-	guiElements.push_back(new ValueBar(m_window,Vector2f(MARGIN_X, TOP_CONTAINER),Text("Music Volume",font,30),font, Controller::getMusicVolume()));
+	ValueBar* buffer = new ValueBar(m_window, Vector2f(MARGIN_X, TOP_CONTAINER), Text("Music Volume", font, 30), font, (float)Controller::getMusicVolume());
+	guiElements.push_back(buffer);
+	drawStack[2 + drawStack.size()] = buffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
 	vector<pair<string, string>> resolutions; 
 	for (Vector2i res : Controller::getAvailableResolutions()) 
 	{
 		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
 	}
-	guiElements.push_back(new OptionBox(m_window, Vector2f(MARGIN_X, TOP_CONTAINER + DISTANCE_BETWEEN), Text("Resolution", font, 30), font, Controller::getResolutionID(), resolutions));
-	
+	OptionBox* opBuffer = new OptionBox(m_window, Vector2f(MARGIN_X, TOP_CONTAINER + DISTANCE_BETWEEN), Text("Resolution", font, 30), font, Controller::getResolutionID(), resolutions);
+	guiElements.push_back(opBuffer);
+	drawStack[2 + drawStack.size()] = opBuffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
 	optionSelected = 0;
 	guiElements[0]->setSelected();
 }

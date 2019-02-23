@@ -17,17 +17,19 @@ public:
 	virtual void input() = 0;
 	virtual void actions() = 0;
 	
-	struct CustomCompare
-	{
-		bool operator()(const pair<int, Drawable*> left, const pair<int, Drawable*> right)
-		{
-			return (left.first < right.first);
-		}
-	};
 	Font font; // Global font for main menu text
 	RenderWindow* m_window; // DONT DELETE
 
-	set<pair<int, Drawable*>, CustomCompare> drawStack; // a set with the order in which graphics render
+	map<int, Drawable*> drawStack; // a set with the order in which graphics render
+	/*
+		DrawStack Ordering:
+		0: Background
+		1: Background Secondary
+		2: Main Content
+		3: Main Content Secondary
+		4: Alerts, Popups etc
+	*/
 
+	map<int, pair<string, Drawable*>> tabOrder; // a set with the order in which you can select elements
 };
 

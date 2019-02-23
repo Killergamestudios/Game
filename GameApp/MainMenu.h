@@ -49,15 +49,13 @@ private:
 	ifstream saveFile; // used to oped save files
 	vector<string> loadFilePath; // path for load game files
 
-	vector<Text> menuTexts; // text for menu entries (load game files)
-	
-	vector<Sprite> menuSprites; // sprites for menu items
+	vector<Text*> menuTexts; // text for menu entries (load game files)
+
+	vector<Sprite*> menuSprites; // sprites for menu items
 	vector<string> fileNamesToLoad; // path of sprites for to load
 
-	vector<Sprite> backgroundSprites; // sprites for background images 
+	vector<Sprite*> backgroundSprites; // sprites for background images 
 	vector<GuiElement*> guiElements; // gui elements for forms (options menu)
-
-
 
 	const vector<string> mainMenu =
 	{
