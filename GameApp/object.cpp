@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "object.h"
-
-
+#include <iostream>
 
 /****************************************************************************************************************************************/
 //                                                   The Object Class                                                                   //
@@ -15,6 +14,7 @@ object::object(RenderWindow &window, String Category, String Type, Vector2i Posi
 	m_position.x = Position.x; m_position.y = Position.y;
 	vertarr.setPrimitiveType(Quads);
 	vertarr.resize(4);
+	m_map = map;
 }
 
 
@@ -101,6 +101,10 @@ void CharacterObject::equipArmor(ArmorComponent *armorcomponent)
 	m_Armor = armorcomponent;
 }
 
+void CharacterObject::AddAbility1(AbilityComponent * ability)
+{
+	m_ability1 = ability;
+}
 
 
 /****************************************************************************************************************************************/
@@ -208,6 +212,7 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.y++;
 				facingdir = FacingDirection::front;
 				isMoving = false;
+				m_map->swapPosition(category,Vector2i(m_position.x,m_position.y - 1),m_position);
 			}
 		}
 		break;
@@ -232,6 +237,8 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.y--;
 				facingdir = FacingDirection::back;
 				isMoving = false;
+				m_map->swapPosition(category, Vector2i(m_position.x, m_position.y + 1), m_position);
+
 			}
 		}
 		break;
@@ -256,6 +263,8 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.x--;
 				facingdir = FacingDirection::fleft;
 				isMoving = false;
+				m_map->swapPosition(category, Vector2i(m_position.x + 1, m_position.y), m_position);
+
 			}
 		}
 		break;
@@ -280,6 +289,8 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.x++;
 				facingdir = FacingDirection::fright;
 				isMoving = false;
+				m_map->swapPosition(category, Vector2i(m_position.x - 1, m_position.y), m_position);
+
 			}
 		}
 		break;
@@ -331,10 +342,58 @@ int CharacterObject::getActionsRemaining()
 	return m_stats.actionsremaining;
 }
 
+string CharacterObject::getCategory()
+{
+	return category;
+}
+
+Map * CharacterObject::getmap()
+{
+	return m_map;
+}
+
+int CharacterObject::getEnergy()
+{
+	return m_stats.Energy;
+}
+
+int CharacterObject::getAgility()
+{
+	return m_stats.Agility;
+}
+
+int CharacterObject::getLegsTimesHit()
+{
+	return LegsTimeHit;
+}
+
+
+
 const Stats & CharacterObject::getM_stats()
 {
 	return m_stats;
 }
+/****************************************************************************************************************************************/
+//                                                   The Setters                                                                        //
+/****************************************************************************************************************************************/
+
+void CharacterObject::UpdateStats(Stats & stats)
+{
+	m_stats.Agility = stats.Agility;
+	m_stats.MagicResistance = stats.MagicResistance;
+	m_stats.Armor = stats.Armor;
+	m_stats.Mastery = stats.Mastery;
+	m_stats.Precision = stats.Precision;
+}
+
+void CharacterObject::addModifier(ModifierComponent * m)
+{
+	m_modifiers.push_back(m);
+	m->setParent(this);
+}
+
+
+
 
 /****************************************************************************************************************************************/
 //                                                   Leveling Up                                                                        //
@@ -462,9 +521,10 @@ void CharacterObject::usedAction(int used)
 	if (m_stats.actionsremaining < 0) m_stats.actionsremaining = 0;
 }
 
-void CharacterObject::UseAblity1(Vector2i & position, CharacterObject * target)
+
+void CharacterObject::UseAbility1(Vector2i & position, CharacterObject * target)
 {
-	if (!m_ability1->canUse()) return;
+	if (!m_ability1->canUse(position, target)) return;
 	m_ability1->use(position,target);
 	usedAction(m_ability1->getCost());
 }

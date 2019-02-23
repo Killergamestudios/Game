@@ -9,6 +9,8 @@
 #include <sstream>
 
 
+
+
 using namespace sf;
 using namespace std;
 // this func gets a string like: "name = int" and returns the int
@@ -21,6 +23,17 @@ int getStringNumber(string &s) {
 	ss >> tmps >> tmpc >> ret;
 	return ret;
 }
+
+AbilityComponent *readAbility(string &s, CharacterObject *object) {
+	AbilityComponent *ability = nullptr;
+	if (s == "whirldwind")
+		ability = new Whirlwind(object);
+	else if (s == "rally")
+		ability = new Rally(object);
+
+	return ability;
+}
+
 
 CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefilename,string Name, string Class) {
 
@@ -56,12 +69,21 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefil
 	myfile >> tempc;
 
 	Character->spawn(stats, statgain);
-	
+
+
+	//The abilities
+	getline(myfile, line);
+	getline(myfile,line);
+	AbilityComponent *ability = readAbility(line, Character);
+	Character->AddAbility1(ability);
+
+
+
 	//The Weapon
 
 	// The Armor
 
-	//The abilities
+
 	
 	// The items
 
@@ -75,13 +97,12 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefil
 void Map::loadParty(Map *map, string savefilename){
 	//get the position of every character.
     vector<Vector3i> pos;
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			//cout << m_friendlyCharacters[i][j];
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
 			if (m_friendlyCharacters[i][j] != 0) {
 				switch (m_friendlyCharacters[i][j]) {
 				case 1:
-					party.push_back(*SpawnCharacter(Vector2i(i,j), map, savefilename, "nathan", "warrior"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "nathan", "warrior"));
 					break;
 				case 2:
 					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name2", "healer"));
@@ -104,11 +125,15 @@ void Map::loadParty(Map *map, string savefilename){
 				}
 			}
 		}
-
 	}
 
 }
 
 vector<CharacterObject> & Map::getparty() {
 	return party;
+}
+
+vector<CharacterObject>& Map::getenemys()
+{
+	return m_enemys;
 }

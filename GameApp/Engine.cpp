@@ -86,7 +86,7 @@ void Engine::updateState()
 	}
 }
 
-void Engine::clearControlUnit(bool hardFlush)
+void Engine::clearControlUnit(bool hardFlush = false)
 {
 	if (hardFlush) 
 		controlUnit.clear();

@@ -96,6 +96,7 @@ void Engine::input(float dtAsSeconds) {
 		if (evt.type == Event::KeyPressed)
 			if (Keyboard::isKeyPressed(Keyboard::BackSpace)) 
 				m_window.close();
+
 	
 	}
 }
