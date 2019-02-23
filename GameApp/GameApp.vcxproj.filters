@@ -105,6 +105,9 @@
     <ClInclude Include="GuiElement.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
+    <ClInclude Include="Algorithms2.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">

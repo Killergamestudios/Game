@@ -37,7 +37,7 @@ void Engine::run() {
 	}
 }
 
-void Engine::updateState() 
+void Engine::clearControlUnit(bool hardFlush = false)
 {
 	Controller::applyChanges();
 }

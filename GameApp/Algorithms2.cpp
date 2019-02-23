@@ -4,6 +4,7 @@
 #include "Map.h"
 #include <map>
 #include <set>
+#include "Algorithms2.h"
 
 using namespace std;
 
@@ -72,7 +73,7 @@ int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY
 // vector<Vector2i> : contains the optimal path from(startPosX, startPosY) to
 //                    (endPosX, endPosY).First element is the last position of hero
 //
-vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, int &energy,Map currentMap)
+vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, int &energy,Map &currentMap)
 {
 	pPair start = make_pair(heuristicCostEstimate(startPosX, startPosY, endPosX, endPosY), make_pair(startPosX, startPosY));
 	set<pPair> openSet; // tiles that are to be processed
@@ -154,7 +155,7 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 // Returns :
 // vector<Vector3i>: contains all the available tiles sorted by X value and their respective distance
 //
-vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map currentMap)
+vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map &currentMap)
 {
 	pPair start = make_pair(0, make_pair(startPosX, startPosY)); //the starting point and its distance from the beginning = 0
 	Pair startW = make_pair(startPosX, startPosY); // the starting point without weight
@@ -239,3 +240,4 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	}
 	return finalTilesSet;
 }
+
