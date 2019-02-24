@@ -3,7 +3,7 @@
 #include "AbilityComponent.h"
 #include "Map.h"
 #include "ModifierComponent.h"
-#include "Algorithms2.h"
+#include "Algorithms.h"
 
 /******************************************************ABILITY COMPONENT CLASS *********************************************/
 AbilityComponent::AbilityComponent(CharacterObject *Parent, String Name):component(nullptr,"Ability")
