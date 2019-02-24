@@ -6,8 +6,8 @@ using namespace std;
 
 MainMenu::MainMenu(RenderWindow &window):GameMenu(window)
 {
-	index = 0;
 	depth = 1;
+	loadMenu = false;
 	backButton.push_back("Quit");
 }
 
@@ -84,7 +84,7 @@ void MainMenu::actions()
 		return;
 	}
 
-	if (index == 1 && depth == 2 )
+	if (loadMenu)
 	{
 		Controller::setRunning(false);
 		Controller::setLoadFile(true);
@@ -92,29 +92,8 @@ void MainMenu::actions()
 	}
 	else if(depth == 1)
 	{
-		switch (optionSelected)
-		{
-		case 0: // New Game
-			//Loads intro cutscene or whatever		
-			index = 0;
-			depth = 2;
-			initLayer();
-			break;
-		case 1: //Load Game
-			index = 1;
-			depth = 2;
-			initLayer();
-			break;
-		case 2: //Options
-			index = 2;
-			depth = 2;
-			initLayer();
-			break;
-		case 3: //Credits
-			//index = 3;
-			//depth = 2;
-			break;
-		}
+		depth++;
+		initLayer();
 	}
 }
 
@@ -141,41 +120,44 @@ void MainMenu::input() {
 	}
 }
 
-void MainMenu::initData()
-{
-	
-}
-
 void MainMenu::initLayer()
 {
+	clearTextures();
+	loadMenu = false;
+	Theme::clearRegion(Theme::MainMenu);
+	backButton[0] = "Back";
+
 	if (depth == 1) {
-		clearTextures();
-		Theme::clearRegion(Theme::MainMenu);
 		initFileNamesToLoad(mainMenu, Theme::MainMenu);
 		backButton[0] = "Quit";
-		loadTextGraphics(backButton, Theme::BackButton);
 	}
-	else if (index == 0 && depth == 2) {
+	else if (optionSelected == 0 && depth == 2) {
 		Controller::setRunning(false);
 		Controller::setLoadFile(false);
 		Theme::clear();
 	}
-	else if (index == 1 && depth == 2) {
-		clearTextures();
-		Theme::clearRegion(Theme::MainMenu);
+	else if (optionSelected == 1 && depth == 2) {
 		loadSaveFiles();
-		backButton[0] = "Back";
-		loadTextGraphics(backButton, Theme::BackButton);
+		loadMenu = true;
+		
 	}
-	else if (index == 2 && depth == 2) {
-		clearTextures();
+	else if (optionSelected == 2 && depth == 2) {
 		initOptions();
-		Theme::clearRegion(Theme::MainMenu);
-		backButton[0] = "Back";
-		loadTextGraphics(backButton, Theme::BackButton);
 	}
+	else if (optionSelected == 3 && depth == 2) {
+	}
+
+	optionSelected = 0;
+	loadTextGraphics(backButton, Theme::BackButton);
 }
 
+void MainMenu::clearTextures()
+{
+	menuTexts.clear();
+	menuSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
+}
 
 void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)
 {
@@ -275,15 +257,6 @@ void MainMenu::changeSeletedOption(int direction)
 	else if (tabOrder[optionSelected].first == "GUI") {
 		((GuiElement*)tabOrder[optionSelected].second)->setSelected();
 	}
-}
-
-void MainMenu::clearTextures()
-{
-	menuTexts.clear();
-	menuSprites.clear();
-	drawStack.clear();
-	tabOrder.clear();
-	optionSelected = 0;
 }
 
 void MainMenu::loadSaveFiles() {

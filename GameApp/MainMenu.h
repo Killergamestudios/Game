@@ -22,7 +22,6 @@ public:
 	void input() override;
 
 private:
-	void initData(); // Initializes everything
 	void initFileNamesToLoad(vector<string> fileNames, Theme::Regions region); // get the files names for sprites
 	void setMenuSprites(Theme::Regions region); // set the sprites for main menu textures
 	void loadTextGraphics(vector<string> textsArray, Theme::Regions region); // load and set main menu texts
@@ -31,15 +30,15 @@ private:
 	void initOptions(); // initializes options menu
 	void changeSeletedOption(int direction); // changes selected option
 	void clearTextures();
-	void initLayer();
+	void initLayer(); // initializes each menu layer
 	
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
 	Sprite *title; // used for emblem and game title
 	float opacity; // nedded for fade in animation
 	int optionSelected; // show the currently selected menu item
-	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
+	bool loadMenu; // shows if player is in load menu
 	float totalTimePassed; // needed for animation
 	vector<string> backButton;
 	// ---------------
