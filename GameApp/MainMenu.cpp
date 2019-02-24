@@ -20,6 +20,8 @@ MainMenu::~MainMenu()
 	menuTexts.clear();
 	menuSprites.clear();
 	backgroundSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
 }
 
 void MainMenu::init() 
@@ -84,6 +86,7 @@ void MainMenu::actions()
 			//Loads intro cutscene or whatever
 			Controller::setRunning(false);
 			Controller::setLoadFile(false);
+			Theme::clear();
 			break;
 		case 1: //Load Game
 			index = 1;

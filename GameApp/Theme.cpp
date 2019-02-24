@@ -65,6 +65,11 @@ void Theme::clearRegion(Regions region)
 	
 }
 
+void Theme::clear()
+{
+	int();
+}
+
 vector<Vector2f> Theme::renderRegion(Regions region, vector<FloatRect> elements)
 {
 	vector<Vector2f> renderedElements;

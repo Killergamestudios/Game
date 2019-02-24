@@ -11,6 +11,7 @@ BootMenu::~BootMenu()
 {
 	delete backgroundMusic;
 	delete title;
+	drawStack.clear();
 }
 
 void BootMenu::init()
@@ -20,9 +21,11 @@ void BootMenu::init()
 	backgroundMusic = new Music();
 	backgroundMusic->openFromFile("./music/MainMenu/KGS Intro.ogg"); // Load intro music
 	backgroundMusic->play(); // start playing intro music
-	backgroundMusic->setVolume(Controller::getMusicVolume()); // set volume of music
-	title->setPosition(Vector2f((float)(m_window->getSize().x - title->getTexture()->getSize().x) / 2,
-		(float)(m_window->getSize().y - title->getTexture()->getSize().y) / 2));
+	backgroundMusic->setVolume((float)Controller::getMusicVolume()); // set volume of music
+	drawStack[0] = title;
+	vector<FloatRect> dimensions;
+	dimensions.push_back(title->getLocalBounds());
+	title->setPosition(Theme::renderRegion(Theme::BACKGROUND, dimensions)[0]);
 	// set emblem in the center
 	Controller::setInitialized(true);
 	Controller::setRunning(true);
@@ -59,7 +62,8 @@ void BootMenu::update(float dtasSeconds)
 
 void BootMenu::draw()
 {
-	m_window->draw(*title);
+	for (pair<int,Drawable*> dr : drawStack)
+	m_window->draw(*dr.second);
 }
 
 void BootMenu::input()
@@ -67,6 +71,7 @@ void BootMenu::input()
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
 		Controller::setRunning(false);
+		Theme::clear();
 	}
 }
 

@@ -18,7 +18,9 @@ public:
 	~Theme();
 
 	static void clearRegion(Regions region);
+	static void clear();
 	static vector<Vector2f> renderRegion(Regions region, vector<FloatRect> elements);
+
 
 	map<Regions,int> counter;
 	map<Regions, Vector2f> margin;
