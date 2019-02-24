@@ -72,9 +72,6 @@
     <ClInclude Include="MainMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Algorithms2.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="CheckBox.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
@@ -108,6 +105,9 @@
     <ClInclude Include="Controller.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Algorithms.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -139,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="object.cpp">
       <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Algorithms2.cpp">
-      <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
     <ClCompile Include="draw.cpp">
       <Filter>Source Files\Core\Engine</Filter>
@@ -193,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Algorithms.cpp">
+      <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
