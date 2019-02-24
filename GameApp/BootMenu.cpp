@@ -25,7 +25,7 @@ void BootMenu::init()
 	drawStack[0] = title;
 	vector<FloatRect> dimensions;
 	dimensions.push_back(title->getLocalBounds());
-	title->setPosition(Theme::renderRegion(Theme::BACKGROUND, dimensions)[0]);
+	title->setPosition(Theme::renderRegion(Theme::Background, dimensions)[0]);
 	// set emblem in the center
 	Controller::setInitialized(true);
 	Controller::setRunning(true);

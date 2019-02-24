@@ -8,40 +8,40 @@ Theme* Theme::m_s_Instance = nullptr;
 
 void Theme::init()
 {
-	counter[BACKGROUND] = 0;
-	margin[BACKGROUND] = Vector2f(0, 0);
-	elementSeperation[BACKGROUND] = 0;
-	regionDimensions[BACKGROUND] = Vector2f(WIN_WIDTH, WIN_HEIGHT);
+	counter[Background] = 0;
+	margin[Background] = Vector2f(0, 0);
+	elementSeperation[Background] = 0;
+	regionDimensions[Background] = Vector2f(WIN_WIDTH, WIN_HEIGHT);
 
-	counter[LOGO] = 0;
-	margin[LOGO] = Vector2f(0, WIN_HEIGHT * 0.03f);
-	elementSeperation[LOGO] = 0;
-	regionDimensions[LOGO] = Vector2f(0, 0);
+	counter[Logo] = 0;
+	margin[Logo] = Vector2f(0, WIN_HEIGHT * 0.03f);
+	elementSeperation[Logo] = 0;
+	regionDimensions[Logo] = Vector2f(0, 0);
 
-	counter[MAINMENU] = 0;
-	margin[MAINMENU] = Vector2f(0, 0);
-	elementSeperation[MAINMENU] = 0;
-	regionDimensions[MAINMENU] = Vector2f(0, 0);
+	counter[MainMenu] = 0;
+	margin[MainMenu] = Vector2f(0, 0);
+	elementSeperation[MainMenu] = 0;
+	regionDimensions[MainMenu] = Vector2f(0, 0);
 	
-	counter[BACKBUTTON] = 0;
-	margin[BACKBUTTON] = Vector2f(WIN_WIDTH*0.02f, WIN_HEIGHT * 0.03f);
-	elementSeperation[BACKBUTTON] = 0;
-	regionDimensions[BACKBUTTON] = Vector2f(0, 0);
+	counter[BackButton] = 0;
+	margin[BackButton] = Vector2f(WIN_WIDTH*0.02f, WIN_HEIGHT * 0.03f);
+	elementSeperation[BackButton] = 0;
+	regionDimensions[BackButton] = Vector2f(0, 0);
 	
-	counter[OPTIONSMENU] = 0;
-	margin[OPTIONSMENU] = Vector2f(0.05f * WIN_WIDTH, WIN_HEIGHT * 0.03f);
-	elementSeperation[OPTIONSMENU] = 0;
-	regionDimensions[OPTIONSMENU] = Vector2f(0, 0);
+	counter[OptionsMenu] = 0;
+	margin[OptionsMenu] = Vector2f(0.05f * WIN_WIDTH, WIN_HEIGHT * 0.03f);
+	elementSeperation[OptionsMenu] = 0;
+	regionDimensions[OptionsMenu] = Vector2f(0, 0);
 
-	counter[ALERTS] = 0;
-	margin[ALERTS] = Vector2f(0, 0);
-	elementSeperation[ALERTS] = 0;
-	regionDimensions[ALERTS] = Vector2f(WIN_WIDTH, WIN_HEIGHT);
+	counter[Alerts] = 0;
+	margin[Alerts] = Vector2f(0, 0);
+	elementSeperation[Alerts] = 0;
+	regionDimensions[Alerts] = Vector2f(WIN_WIDTH, WIN_HEIGHT);
 	
-	counter[CONTENT] = 0;
-	margin[CONTENT] = Vector2f(0, 0);
-	elementSeperation[CONTENT] = 0;
-	regionDimensions[CONTENT] = Vector2f(WIN_WIDTH, WIN_HEIGHT);
+	counter[Content] = 0;
+	margin[Content] = Vector2f(0, 0);
+	elementSeperation[Content] = 0;
+	regionDimensions[Content] = Vector2f(WIN_WIDTH, WIN_HEIGHT);
 }
 
 Theme::Theme(RenderWindow &window)
@@ -74,35 +74,35 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<FloatRect> elements)
 {
 	vector<Vector2f> renderedElements;
 	switch (region) {
-	case BACKGROUND:
+	case Background:
 		for (FloatRect element: elements) {
 			renderedElements.push_back(Vector2f((m_s_Instance->WIN_WIDTH - element.width) / 2,
 								(m_s_Instance->WIN_HEIGHT - element.height) / 2));
 		}
 		break;
-	case BACKBUTTON:
+	case BackButton:
 		for (FloatRect element : elements) {
-			renderedElements.push_back(Vector2f(m_s_Instance->WIN_WIDTH - element.width - m_s_Instance->margin[LOGO].x,
-				m_s_Instance->regionDimensions[LOGO].y + m_s_Instance->regionDimensions[MAINMENU].y + m_s_Instance->margin[BACKBUTTON].y));
+			renderedElements.push_back(Vector2f(m_s_Instance->WIN_WIDTH - element.width - m_s_Instance->margin[BackButton].x,
+				m_s_Instance->WIN_HEIGHT - element.height - m_s_Instance->margin[BackButton].y));
 			
-			m_s_Instance->regionDimensions[BACKBUTTON] = Vector2f(m_s_Instance->WIN_WIDTH, element.height + m_s_Instance->margin[BACKBUTTON].y);
+			m_s_Instance->regionDimensions[BackButton] = Vector2f(m_s_Instance->WIN_WIDTH, element.height + m_s_Instance->margin[BackButton].y);
 		}
 		break;
-	case LOGO:
+	case Logo:
 		for (FloatRect element : elements) {
-			renderedElements.push_back(Vector2f((m_s_Instance->WIN_WIDTH - element.width) / 2, m_s_Instance->margin[LOGO].y));
-			m_s_Instance->regionDimensions[LOGO] = Vector2f(m_s_Instance->WIN_WIDTH, element.height + m_s_Instance->margin[LOGO].y);
+			renderedElements.push_back(Vector2f((m_s_Instance->WIN_WIDTH - element.width) / 2, m_s_Instance->margin[Logo].y));
+			m_s_Instance->regionDimensions[Logo] = Vector2f(m_s_Instance->WIN_WIDTH, element.height + m_s_Instance->margin[Logo].y);
 		}
 		break;
-	case MAINMENU:
+	case MainMenu:
 		int flag = 0;
 		for (FloatRect element : elements) {
 			
 			renderedElements.push_back(Vector2f((m_s_Instance->WIN_WIDTH - element.width) / 2,
-				m_s_Instance->regionDimensions[LOGO].y + m_s_Instance->margin[MAINMENU].y
-				+ flag * m_s_Instance->elementSeperation[MAINMENU] + m_s_Instance->regionDimensions[MAINMENU].y));
-			m_s_Instance->regionDimensions[MAINMENU].x = m_s_Instance->WIN_WIDTH;
-			m_s_Instance->regionDimensions[MAINMENU].y +=  m_s_Instance->margin[MAINMENU].y + element.height + flag * m_s_Instance->elementSeperation[MAINMENU];
+				m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y
+				+ flag * m_s_Instance->elementSeperation[MainMenu] + m_s_Instance->regionDimensions[MainMenu].y));
+			m_s_Instance->regionDimensions[MainMenu].x = m_s_Instance->WIN_WIDTH;
+			m_s_Instance->regionDimensions[MainMenu].y +=  m_s_Instance->margin[MainMenu].y + element.height + flag * m_s_Instance->elementSeperation[MainMenu];
 			flag = 1;
 		}
 		break;

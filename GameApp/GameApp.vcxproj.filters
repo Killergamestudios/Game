@@ -93,13 +93,7 @@
     <ClInclude Include="BootMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="IniWriter.h">
-      <Filter>Header Files\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="IniReader.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameMainMenu.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Controller.h">
@@ -107,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="Algorithms.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="IniWriter.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameMainMenu.h">
+      <Filter>Header Files\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
