@@ -4,7 +4,7 @@ exp = 0
 MaxHealth = 20
 Agility = 10
 Precision = 25
-MaxEnergy = 10
+MaxEnergy = 20
 MagicResistance = 5
 Armor = 5
 Mastery = 1
@@ -15,3 +15,6 @@ AgilityGain = 2
 PrecisionGain = 2
 MagicResistanceGain = 1
 ArmorGain = 2
+Abilities:
+whirlwind
+rally

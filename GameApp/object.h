@@ -3,13 +3,16 @@
 #include "textureHolder.h"
 #include "Map.h"
 #include "AbilityComponent.h"
-
+#include "component.h"
+#include "ModifierComponent.h"
 
 using namespace sf;
 using namespace std;
 
 class Map;
 class AbilityComponent;
+class ModifierComponent;
+
 enum Move {standing,left,right,up,down,};
 enum FacingDirection{front,back,fleft,fright};
 //most of the components later will get replaced by dedicated classes than inherit the component class
@@ -83,11 +86,21 @@ public:
 	//Move Functions
 	void MoveAdj(Vector2i newPos);
 	void MoveToPosition(vector<Vector2i> &path);
-	
+
 	//Getters
 	const Stats & getM_stats();
 	Vector2i getMyPosition();
 	int getActionsRemaining();
+	string getCategory();
+	Map * getmap();
+	int getEnergy();
+	int getAgility();
+	int getLegsTimesHit();
+
+
+	//Setters
+	void UpdateStats(Stats &s);
+	void addModifier(ModifierComponent *m);
 
 	//Leveling up
 	void LevelUp();	
@@ -98,7 +111,9 @@ public:
 	void spawn(Stats &stats, StatGain &statgain);
 	void equipWeapon(WeaponComponent *weapon);
 	void equipArmor(ArmorComponent *armorcomponent);
-	
+	void AddAbility1(AbilityComponent *ability);
+
+
 	//combat related functions
 	int Attack(CharacterObject *target, String place); // return the damage, -1 if attack dodged. place is body,head etc
 	int isAttacked(string place, int damage, string damageType, int Penetration);
@@ -108,7 +123,8 @@ public:
 	
 	//rest of the funcions. whatever we will need later
 	//Abilitys
-	void UseAblity1(Vector2i &position,CharacterObject *target);
+
+	void UseAbility1(Vector2i &position,CharacterObject *target);
 	
 
 private:
@@ -135,7 +151,7 @@ private:
 	//end
 
 	// buffs or debuffs that need to be removed added or aply
-	//vector<component> m_modifiers; 
+	vector<ModifierComponent*> m_modifiers; 
 
 	//abilities
 	AbilityComponent *m_ability1; // starts at null gets unlocked at some point

@@ -34,6 +34,15 @@
     <Filter Include="Source Files\GameLogic">
       <UniqueIdentifier>{0fc92884-283c-4a02-b3a6-38653d1f689e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Engine">
+      <UniqueIdentifier>{9f70f3fe-e8a5-480c-a086-a5372929bfec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Windows\Gui">
+      <UniqueIdentifier>{a2c55674-b4b5-4d28-b2ce-d1b71226d72d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Windows\Gui">
+      <UniqueIdentifier>{10e197bd-86e4-4d66-b997-348c430baf4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -63,24 +72,48 @@
     <ClInclude Include="MainMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="CheckBox.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiElement.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionBox.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueBar.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Theme.h">
+      <Filter>Header Files\Windows\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMenu.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="BootMenu.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="IniWriter.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="IniReader.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameMainMenu.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Algorithms.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="update.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="LoadCharacters.cpp">
@@ -91,9 +124,6 @@
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="cameraUpdate.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="textureHolder.cpp">
       <Filter>Source Files\Core</Filter>
@@ -110,7 +140,58 @@
     <ClCompile Include="object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Algorithms2.cpp">
+    <ClCompile Include="draw.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="update.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckBox.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiElement.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionBox.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="ValueBar.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Theme.cpp">
+      <Filter>Source Files\Windows\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="BootMenu.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMenu.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameMainMenu.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="init.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="IniReader.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="IniWriter.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Algorithms.cpp">
       <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
   </ItemGroup>

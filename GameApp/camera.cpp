@@ -23,3 +23,7 @@ void Engine::cameraUpdate(int direction)
 		camera.setCenter(camera.getCenter().x, mapHeight - (camera.getSize().y / 2));
 	}
 }
+
+void Engine::cameraReset() {
+	camera.setCenter(windowWidth/2,windowHeight/2);
+}

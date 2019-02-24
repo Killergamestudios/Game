@@ -4,6 +4,8 @@
 #include "Map.h"
 #include <map>
 #include <set>
+#include "Algorithms.h"
+#include <iostream>
 
 using namespace std;
 
@@ -11,8 +13,6 @@ typedef pair<int, pair<int, int>> pPair;
 
 typedef pair<int, int> Pair;
 
-
-// function to reconstruct the path form getPath function
 vector<Vector2i> reconstructPath(map<pair<int, int>, pair<int, int>> cameFrom, int endPosX, int endPosY) {
 	vector<Vector2i> totalPath;
 	totalPath.push_back(Vector2i(endPosX, endPosY));
@@ -29,7 +29,6 @@ vector<Vector2i> reconstructPath(map<pair<int, int>, pair<int, int>> cameFrom, i
 	return totalPath;
 }
 
-// construct totalMap using the layers provided by Map class
 int ** getTotalMap(Map currentMap) {
 	int ** terrainMap = currentMap.getTerrainMap();
 	int ** enemyMap = currentMap.getEnemyMap();
@@ -57,23 +56,11 @@ int ** getTotalMap(Map currentMap) {
 // function that estimates the distance between two tiles (can be optimised)
 int heuristicCostEstimate(int startPosX, int startPosY, int endPosX, int endPosY)
 {
-	return abs((double)(startPosX - endPosX)) + abs((double)(startPosY - endPosY));
+	return (int)(abs((double)(startPosX - endPosX)) + abs((double)(startPosY - endPosY)));
 }
 
 
-// function to get the optimal path between (startX, startY) and (endX, endY)
-//
-// Parameters:
-// int startPosX, int startPosY : coordinates of starting point
-// int endPosX, int endPosY : coordinates of end point
-// int &energy : pass by reference the variable of the heroe's energy
-// Map currentMap : currently active Map instance
-//
-// Returns :
-// vector<Vector2i> : contains the optimal path form(startPosX, startPosY) to
-//                    (endPosX, endPosY).First element is the last position of hero
-//
-vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, int &energy,Map currentMap)
+vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY, int &energy,Map &currentMap)
 {
 	pPair start = make_pair(heuristicCostEstimate(startPosX, startPosY, endPosX, endPosY), make_pair(startPosX, startPosY));
 	set<pPair> openSet; // tiles that are to be processed
@@ -144,18 +131,11 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 			gScore[x][j] = score;
 		}
 	}
+	cout << "Couldn't find path!" << endl;
+	return vector<Vector2i>();
 }
 
-// function to find all the tiles you can access given a starting point and a range 
-// Parameters:
-// int startPosX, int startPosY : coordinates of starting point
-// int range : the total movement distance the hero can travel
-// Map currentMap : currently active Map instance
-//
-// Returns :
-// vector<Vector3i>: contains all the available tiles sorted by X value and their respective distance
-//
-vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map currentMap)
+vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, Map &currentMap)
 {
 	pPair start = make_pair(0, make_pair(startPosX, startPosY)); //the starting point and its distance from the beginning = 0
 	Pair startW = make_pair(startPosX, startPosY); // the starting point without weight
@@ -240,3 +220,34 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	}
 	return finalTilesSet;
 }
+
+vector<Vector3i> getStraightPath(int startPosX, int startPosY, int range, Map & currentMap)
+{
+	Pair start = make_pair(startPosX, startPosY); // the starting point without weight
+	vector<Vector3i> finalTilesSet; // the final set of tiles to return
+	int mapWidth = currentMap.getMapWidth(); // width of map array
+	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int ** totalMap = getTotalMap(currentMap); // get the whole map for calculating energy cost
+	int energyConsumed = 0; // total energy consumed 
+
+	for (int direction = 1; direction > -2; direction -= 2) {
+		energyConsumed = 0;
+		for (int i = startPosX; energyConsumed < range; i += direction) {
+			// if outOfbound or blocked stop
+			if (i < 0 || i > mapWidth - 1 || totalMap[i][startPosY] == -1)
+				break;
+			energyConsumed += totalMap[i][startPosY];
+			finalTilesSet.push_back(Vector3i(i, startPosY, energyConsumed));
+		}
+		energyConsumed = 0;
+		for (int j = startPosY; energyConsumed < range; j += direction) {
+			// if outOfbound or blocked stop
+			if (j < 0 || j > mapHeight - 1 || totalMap[startPosX][j] == -1)
+				break;
+			energyConsumed += totalMap[startPosX][j];
+			finalTilesSet.push_back(Vector3i(startPosX, j, energyConsumed));
+		}
+	}
+	return finalTilesSet;
+}
+

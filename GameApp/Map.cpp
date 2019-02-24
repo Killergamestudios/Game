@@ -100,7 +100,6 @@ void Map::load(int mapIndex)
 				}
 			}
 			y++; // Going to the next Row.
-
 		}
 		//Copying Dummy to the appropriate array.
 		switch (layerIndex)
@@ -159,6 +158,23 @@ int Map::getFriendlyinPosition(Vector2i position)
 int Map::getMiscinPosition(Vector2i position)
 {
 	return m_misc[position.x][position.y];
+}
+
+void Map::swapPosition(string maptype, Vector2i Startingpos, Vector2i Destination)
+{
+	int temp;
+	cout << Startingpos.x << Startingpos.y << endl;
+	cout << Destination.x << Destination.y << endl;
+	if (maptype == "friendly") {
+		temp = m_friendlyCharacters[Startingpos.x][Startingpos.y];
+		m_friendlyCharacters[Startingpos.x][Startingpos.y] = m_friendlyCharacters[Destination.x][Destination.y];
+		m_friendlyCharacters[Destination.x][Destination.y] = temp;
+	}
+	else if (maptype == "enemy") {
+		temp = m_enemyCharacters[Startingpos.x][Startingpos.y];
+		m_enemyCharacters[Startingpos.x][Startingpos.y] = m_enemyCharacters[Destination.x][Destination.y];
+		m_enemyCharacters[Destination.x][Destination.y] = temp;
+	}
 }
 
 CharacterObject Map::getenemy(Vector2i position)

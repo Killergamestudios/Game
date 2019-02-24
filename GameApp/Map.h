@@ -23,12 +23,16 @@ public:
 	int getEnemyinPosition(Vector2i position);
 	int getFriendlyinPosition(Vector2i position);
 	int getMiscinPosition(Vector2i position);
+	void swapPosition(string maptype, Vector2i Startingpos, Vector2i Destination);
+
+
 
 	CharacterObject getenemy(Vector2i);
 	CharacterObject *SpawnCharacter(Vector2i position,Map *map, string savefilename, string Name, string Class);
 	void loadParty(Map *map,string savefilename);
+	
 	vector<CharacterObject> &getparty();
-
+	vector<CharacterObject> &getenemys();
 
 private:
 	int width, height; // Store map size (width and height)
