@@ -4,123 +4,145 @@
 #include <iostream>
 using namespace std;
 
-MainMenu::MainMenu(RenderWindow &window, map<string, string> &controlUnit)
+MainMenu::MainMenu(RenderWindow &window):GameMenu(window)
 {
-	m_window = &window;
-	returnState = &controlUnit;
 	index = 0;
 	depth = 1;
-	font.loadFromFile("./graphics/fonts/ARCADECLASSIC.TTF");
-	popup = false;
 }
 
 
 MainMenu::~MainMenu()
 {
-}
-
-// -------------------------------
-// Begin of Boot related functions
-// -------------------------------
-
-void MainMenu::initBoot()
-{
-	opacity = 0;
-	title = new Sprite(TextureHolder::GetTexture("./graphics/kgs.png"));// load emblem
-	backgroundMusic = new Music();
-	backgroundMusic->openFromFile("./music/MainMenu/KGS Intro.ogg"); // Load intro music
-	backgroundMusic->play(); // start playing intro music
-	title->setPosition(Vector2f((float)(m_window->getSize().x - title->getTexture()->getSize().x) / 2,
-		(float)(m_window->getSize().y - title->getTexture()->getSize().y) / 2));
-	(*returnState)["Initialized"] = "True";
-	(*returnState)["Running"] = "True";
-	// set emblem in center 
-}
-
-void MainMenu::updateBoot()
-{
-	if ((*returnState)["Running"] == "False")
-	{
-		(*returnState)["Next State"] = "InMenu";
-		(*returnState)["Initialized"] = "";
-		backgroundMusic->stop();
-		return;
-	}
-	const float FADE_IN_SPEED = 0.5f;
-	const float START_FADE_IN = 1.0f;
-	const float START_FADE_OUT = 6.0f;
-	if ((backgroundMusic->getPlayingOffset().asSeconds() < START_FADE_OUT)
-		&& (backgroundMusic->getPlayingOffset().asSeconds() > START_FADE_IN) && opacity < 255)
-	{
-		opacity += FADE_IN_SPEED;
-	}
-	else if ((backgroundMusic->getPlayingOffset().asSeconds() > START_FADE_OUT) && opacity > 0)
-	{
-		opacity -= FADE_IN_SPEED;
-	}
-
-	if (backgroundMusic->getStatus() != Music::Playing)
-	{
-		(*returnState)["Running"] = "False";
-	}
-	title->setColor(Color(255, 255, 255, (unsigned int)opacity));
-}
-
-void MainMenu::drawBoot()
-{
-	m_window->draw(*title);
-}
-
-// -----------------------------
-// End of Boot related functions
-// -----------------------------
-
-// -----------------------------------
-// Begin of MainMenu related functions
-// -----------------------------------
-void MainMenu::initMenu()
-{
-	init(); // Initialize everything. Fresh start
-	if (!popup) (*returnState)["Initialized"] = "True";
-
-	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
-	totalTimePassed = 0;
-	if (!popup)
-	{
-		backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
-		backgroundMusic->play();
-		backgroundMusic->setVolume(0.0f);
-		backgroundMusic->setLoop(true);
-	}
-	if (!popup) (*returnState)["Running"] = "True";
-}
-
-void MainMenu::init()
-{
-	clearData();
-	if (!popup) backgroundMusic = new Music();
-	initFileNamesToLoad(mainMenu);
-}
-
-void MainMenu::clearData()
-{
-	returnState->clear(); // Clears map because a new State is invoked
-	if(backgroundMusic == NULL) delete backgroundMusic;
+	if (backgroundMusic == NULL) delete backgroundMusic;
 	backgroundMusic = NULL;
 	if (title == NULL) delete title;
 	title = NULL;
-}
-
-void MainMenu::clearTextures()
-{
 	menuTexts.clear();
 	menuSprites.clear();
+	backgroundSprites.clear();
+}
+
+void MainMenu::init() 
+{
+	initData(); // Initialize everything. Fresh start
+	Controller::setInitialized(true);
+
+	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
+	totalTimePassed = 0;
+	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
+	backgroundMusic->play();
+	backgroundMusic->setVolume(100.0f);
+	backgroundMusic->setLoop(true);
+
+	Controller::setRunning(true);
+}
+
+void MainMenu::draw() 
+{
+	for (pair<int ,Drawable*> dr :  drawStack)
+		m_window->draw(*dr.second);
+}
+
+void MainMenu::update(float dtasSeconds) {
+	if (!Controller::isRunning())
+	{
+		Controller::setState(Controller::LOADING);
+		Controller::setInitialized(false);
+		backgroundMusic->stop();
+		return;
+	}
+
+	totalTimePassed += dtasSeconds;
+	animate(totalTimePassed, optionSelected);
+	backgroundMusic->setVolume((float)Controller::getMusicVolume());
+	
+	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
+	{
+		for (unsigned int i = 0; i < guiElements.size(); i++) 
+		{
+			if (guiElements[i]->label.getString() == "Music Volume")
+			{	
+				Controller::setMusicVolume((int)guiElements[i]->getValue());
+			}
+		}
+	}
+}
+
+void MainMenu::actions()
+{
+	if (index == 1 && depth == 2)
+	{
+		Controller::setRunning(false);
+		Controller::setLoadFile(true);
+		Controller::setSaveFileDirectory(loadFilePath[optionSelected]);
+	}
+	else
+	{
+		switch (optionSelected)
+		{
+		case 0: // New Game
+			//Loads intro cutscene or whatever
+			Controller::setRunning(false);
+			Controller::setLoadFile(false);
+			break;
+		case 1: //Load Game
+			index = 1;
+			depth = 2;
+			clearTextures();
+			Theme::clearRegion(Theme::MAINMENU);
+			loadSaveFiles();
+			break;
+		case 2: //Options
+			index = 2;
+			depth = 2;
+			clearTextures();
+			initOptions();
+			break;
+		case 3: //Credits
+			break;
+		}
+	}
+
+	if (optionSelected == buttonsCounter - 1) {
+		if (depth == 1) {
+			m_window->close();
+		}
+	}
+}
+
+void MainMenu::input() {
+	if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
+	{
+		changeSeletedOption(-1);
+	}
+	else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
+	{
+		changeSeletedOption(1);
+	}
+	else if (Keyboard::isKeyPressed(Keyboard::Enter))
+	{
+		actions();
+	}
+	else if (guiElements.size()!=0 && (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))) 
+	{
+		guiElements[optionSelected]->update(1);
+	}
+	else if (guiElements.size() != 0 && (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)))
+	{
+		guiElements[optionSelected]->update(-1);
+	}
+}
+
+void MainMenu::initData()
+{
+	backgroundMusic = new Music();
+	initFileNamesToLoad(mainMenu);
 }
 
 void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 {
 	fileNamesToLoad.clear();
-	for (unsigned int i = 0; i < (popup ? 3 : fileNames.size()); i++) {
+	for (unsigned int i = 0; i < fileNames.size(); i++) {
 		fileNamesToLoad.push_back(fileNames[i]);
 	} // populate array fileNameToLoad in order to load the sprites
 
@@ -129,72 +151,52 @@ void MainMenu::initFileNamesToLoad(vector<string> fileNames)
 
 void MainMenu::setMenuSprites()
 {
-	const int SPRITE_WIDTH = 256;
-	const int SPRITE_HEIGHT = 128;
 	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
-	const int WIN_HEIGHT = popup ? NUMBER_OF_SPRITES * SPRITE_HEIGHT : m_window->getSize().y;
-	const int WIN_WIDTH = popup ? SPRITE_WIDTH : m_window->getSize().x;
-	const int X_START_POS = 0; // used for offsetting everything in the x axis without too much effort
-	const int Y_START_POS = popup ? m_window->getSize().y - WIN_HEIGHT : 0; // used for offsetting everything in the y axis without too much effort
-	const float MARGIN_LOGO = popup ? 0 : WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float BOTTOM_MARGIN = popup ? 0 : WIN_HEIGHT * 0.05f; // bottom margin
-	const float HEIGHT_LOGO = popup ? 0 : WIN_HEIGHT * 0.3f; // to be initialized properly
-	const float HEIGHT_CONTAINER = WIN_HEIGHT - 2 * MARGIN_LOGO - BOTTOM_MARGIN - HEIGHT_LOGO;
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
-	const float MARGIN_BETWEEN_BUTTONS = (float)((HEIGHT_CONTAINER - (SPRITE_HEIGHT * NUMBER_OF_SPRITES)) / NUMBER_OF_SPRITES);
-
+	
 	/*
 		Adds Sprites to vector and trims them
-		Sets Origin of sprites to center
+		Render region in which they will be placed
 		Set Position of Sprites 
+		Add Sprites into drawStack and tabOrder sets
 	*/
-	menuSprites.clear();
-	backgroundSprites.clear();
-
-	if (popup)
-	{
-		backgroundSprites.push_back(Sprite(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/PopupMainMenuBackground.png")));
-		backgroundSprites[0].setPosition(Vector2f(X_START_POS, Y_START_POS));
-		backgroundSprites[0].setScale(1, 1.5);
-		backgroundSprites.push_back(Sprite(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/PopupMainMenuBackgroundBorder.png")));
-		backgroundSprites[1].setPosition(Vector2f(X_START_POS, Y_START_POS));
-		backgroundSprites[1].setScale(1, 1.5);
-	}
+	vector<FloatRect> dimensions; // vector with dimensions of elements
 
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
-		menuSprites.push_back(Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128))); 
-		menuSprites[i].setOrigin(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);  
-		menuSprites[i].setPosition(Vector2f((float)((WIN_WIDTH / 2) + X_START_POS),	
-			(float)((TOP_CONTAINER + ((1 + 2 * i) * SPRITE_HEIGHT / 2) + MARGIN_BETWEEN_BUTTONS * (i + 1))) + Y_START_POS));
+		Sprite* buffer = new Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128));
+		dimensions.push_back(buffer->getLocalBounds());  // get dimensions of Sprites needed by the region
+		drawStack[drawStack.size() + 2] = buffer;  // add items to the draw stack (details for ordering in GameMenu.h)
+		tabOrder[tabOrder.size()] = make_pair("SP",buffer); // add items to the tabOrder
+		menuSprites.push_back(buffer); // add Sprites to the menuSprites
 	}
 
-	
-
-	menuSprites[0].setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
+	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions); // render elements in region. FloatRect is used as a wrapper
+	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		menuSprites[i]->setPosition(newPositions[i]);
+	}
+	menuSprites[0]->setTextureRect(IntRect(256, 0, 256, 128)); // set NewGame as Default Selected
 }
 
 
 void MainMenu::loadTextGraphics(vector<string> textsArray)
 {
-	const int WIN_HEIGHT = m_window->getSize().y;
-	const int WIN_WIDTH = m_window->getSize().x;
-	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 	const float TEXT_LEFT_MARGIN = (float)(WIN_WIDTH / 10);
 	const int MARGIN_BETWEEN_TEXT = 10;
 
-	menuTexts.clear();
+	vector<FloatRect> dimensions; // vector with dimensions of elements
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
-		menuTexts.push_back(Text(textsArray[i],font,24));
-		menuTexts[i].setFillColor(Color::White);
-		FloatRect textRect = menuTexts[i].getLocalBounds();
-		menuTexts[i].setPosition(sf::Vector2f(TEXT_LEFT_MARGIN, 
-			TOP_CONTAINER + (textRect.height + MARGIN_BETWEEN_TEXT) * i));
+		Text* buffer = new Text(textsArray[i], font, 24);
+		menuTexts.push_back(buffer);
+		dimensions.push_back(buffer->getLocalBounds());
+		drawStack[drawStack.size() + 2] = buffer;
+		tabOrder[tabOrder.size()] = make_pair("TXT", buffer);
+		buffer->setFillColor(Color::White);
 	} 
-	optionSelected = 0;
-	menuTexts[0].setFillColor(Color::Red); //set as default selected
+	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions);
+	for (unsigned int i = 0; i < menuTexts.size(); i++) {
+		menuTexts[i]->setPosition(newPositions[i]);
+	}
+	menuTexts[0]->setFillColor(Color::Red); //set as default selected
 }
 
 void MainMenu::animate(float &totaltimepassed, int optionSelected) {
@@ -204,112 +206,47 @@ void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 		if (totaltimepassed > ANIMATION_SPEED) 
 		{
 			totaltimepassed -= ANIMATION_SPEED;
-			int left = menuSprites[optionSelected].getTextureRect().left; // get left position of previous selected texture
+			int left = menuSprites[optionSelected]->getTextureRect().left; // get left position of previous selected texture
 			left = left == 256 ? 512 : 256;
-			menuSprites[optionSelected].setTextureRect(IntRect(left, 0, 256, 128));
+			menuSprites[optionSelected]->setTextureRect(IntRect(left, 0, 256, 128));
 		}
 	}
 
 }
 
-void MainMenu::fadeInMusic(Music & music)
-{
-	const float FADE_IN_SPEED = 0.01f;
-	float currentVolume = music.getVolume();
-	if (currentVolume < 100.0f) {
-		music.setVolume(currentVolume + FADE_IN_SPEED);
-	}
-}
-
-void MainMenu::updateMenu(float dtasSeconds)
-{
-	if ((*returnState)["Running"] == "False" && (*returnState)["InGameMenu"] != "True")
-	{
-		(*returnState)["Next State"] = "Loading";
-		(*returnState)["Initialized"] = "";
-		backgroundMusic->stop();
-		return;
-	}
-
-	if(!popup) fadeInMusic(*backgroundMusic);
-	totalTimePassed += dtasSeconds;
-	animate(totalTimePassed, optionSelected);
-	drawMenu();
-}
-
-void MainMenu::drawMenu() {
-	for (unsigned int i = 0; i < backgroundSprites.size(); i++)
-	{
-		m_window->draw(backgroundSprites[i]);
-	}
-
-	for (unsigned int i = 0; i < menuSprites.size(); i++)
-	{
-		m_window->draw(menuSprites[i]);
-	}
-
-	for (unsigned int i = 0; i < menuTexts.size(); i++)
-	{
-		m_window->draw(menuTexts[i]);
-	}
-}
-
-void MainMenu::changeSeletedOption(int direction) {
-	if (menuSprites.size() != 0)
-	{
-		menuSprites[optionSelected].setTextureRect(IntRect(0, 0, 256, 128));
-		optionSelected += (menuSprites.size() + direction);
-		optionSelected = optionSelected % menuSprites.size();
-		menuSprites[optionSelected].setTextureRect(IntRect(256, 0, 256, 128));
-	}
-
-	if (menuTexts.size() != 0)
-	{
-		menuTexts[optionSelected].setFillColor(Color::White);
-		optionSelected += (menuTexts.size() + direction);
-		optionSelected = optionSelected % menuTexts.size();
-		menuTexts[optionSelected].setFillColor(Color::Red);
-	}
-}
-
-void MainMenu::actions()
+void MainMenu::changeSeletedOption(int direction) 
 {	
-	clearTextures();
-	if (index == 1 && depth == 2) 
-	{
-		(*returnState)["Running"] = "False";
-		(*returnState)["Initialized"] = "";
-		(*returnState)["Next State"] = "Loading";
-		(*returnState)["Load Game"] = "True";
-		(*returnState)["Save File"] = loadFilePath[optionSelected];
+	// Disgusting but it works...
+	if (tabOrder[optionSelected].first == "TXT") {
+		((Text*)tabOrder[optionSelected].second)->setFillColor(Color::White);
+	}
+	else if (tabOrder[optionSelected].first == "SP") {
+		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(0, 0, 256, 128));
 	} 
-	else
-	{
-		switch (optionSelected)
-		{
-		case 0: // New Game
-			//Loads intro cutscene or whatever
-			(*returnState)["Running"] = "False";
-			(*returnState)["Initialized"] = "";
-			(*returnState)["Next State"] = "Loading";
-			(*returnState)["Load Game"] = "False";
-			break;
-		case 1: //Load Game
-			index = 1;
-			depth = 2;
-			loadSaveFiles();
-			break;
-		case 2: //Options
-			break;
-		case 3: //Credits
-			break;
-		}
+	else if (tabOrder[optionSelected].first == "GUI") {
+		((GuiElement*)tabOrder[optionSelected].second)->unSelect();
+	}
+	optionSelected += (tabOrder.size() + direction);
+	optionSelected = optionSelected % tabOrder.size();
+
+	if (tabOrder[optionSelected].first == "TXT") {
+		((Text*)tabOrder[optionSelected].second)->setFillColor(Color::Red);
+	} 
+	else if (tabOrder[optionSelected].first == "SP") {
+		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(256, 0, 256, 128));
+	} 
+	else if (tabOrder[optionSelected].first == "GUI") {
+		((GuiElement*)tabOrder[optionSelected].second)->setSelected();
 	}
 }
 
-void MainMenu::changeState(bool isPopup)
+void MainMenu::clearTextures()
 {
-	popup = isPopup;
+	menuTexts.clear();
+	menuSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
+	optionSelected = 0;
 }
 
 void MainMenu::loadSaveFiles() {
@@ -330,9 +267,32 @@ void MainMenu::loadSaveFiles() {
 
 }
 
-// ---------------------------------
-// End of MainMenu related functions
-// ---------------------------------
-
+void MainMenu::initOptions()
+{
+	const int WIN_HEIGHT = m_window->getSize().y;
+	const int WIN_WIDTH = m_window->getSize().x;
+	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
+	const float MARGIN_X = 0.05f*WIN_WIDTH;
+	const float MARGIN_Y = 0.02f*WIN_HEIGHT;
+	const float DISTANCE_BETWEEN = 30 + MARGIN_Y *2;
+	
+	ValueBar* buffer = new ValueBar(m_window, Vector2f(MARGIN_X, TOP_CONTAINER), Text("Music Volume", font, 30), font, (float)Controller::getMusicVolume());
+	guiElements.push_back(buffer);
+	drawStack[2 + drawStack.size()] = buffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
+	vector<pair<string, string>> resolutions; 
+	for (Vector2i res : Controller::getAvailableResolutions()) 
+	{
+		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
+	}
+	OptionBox* opBuffer = new OptionBox(m_window, Vector2f(MARGIN_X, TOP_CONTAINER + DISTANCE_BETWEEN), Text("Resolution", font, 30), font, Controller::getResolutionID(), resolutions);
+	guiElements.push_back(opBuffer);
+	drawStack[2 + drawStack.size()] = opBuffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
+	optionSelected = 0;
+	guiElements[0]->setSelected();
+}
 
 

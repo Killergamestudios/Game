@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+
 class object;
 class CharacterObject;
 using namespace sf;

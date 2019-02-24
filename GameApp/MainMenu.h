@@ -3,39 +3,37 @@
 #include <SFML/Audio.hpp>
 #include "textureHolder.h"
 #include "fstream"
+#include "GameMenu.h"
+#include "ValueBar.h"
+#include "OptionBox.h"
+
 using namespace sf;
 
-//enum MainMenuState {opening,Main,newGame,LoadGame,Options,credits};
-
-class MainMenu
+class MainMenu : public GameMenu
 {
 public:
-	MainMenu(RenderWindow &window, map<string, string> &controlUnit);
+	MainMenu(RenderWindow &window);
 	~MainMenu();
 	
-	void initBoot();
-	void updateBoot();
-	void drawBoot();
-
-	void initMenu();
-	void updateMenu(float);
-	void drawMenu();
-	void changeSeletedOption(int direction);
-	void actions();
-
-	void changeState(bool);
+	void init() override;
+	void draw() override;
+	void update(float) override;
+	void actions() override;
+	void input() override;
 
 private:
-	void init(); // Initializes everything
-	void clearData(); // Deletes everything. Called inside init()
-	void clearTextures(); // Clears menuTextures in menu transitions
+	void initData(); // Initializes everything
 	void initFileNamesToLoad(vector<string> fileNames); // get the files names for sprites
 	void setMenuSprites(); // set the sprites for main menu textures
 	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
-	void fadeInMusic(Music &music); // Animation: fade in Music
 	void loadSaveFiles(); // handles the loading of all save files
-
+	void initOptions(); // initializes options menu
+	void changeSeletedOption(int direction); // changes selected option
+	void clearTextures();
+	
+	
+	
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
 	Sprite *title; // used for emblem and game title
@@ -44,23 +42,21 @@ private:
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
-	Font font; // Font for text
-	bool popup; // boolean variable that determines if mainMenu is in popup mode or not. Popup Mode: in game mainmenu
+	unsigned int buttonsCounter;
 	// ---------------
 
 	// variables for loading games
 	ifstream saveFile; // used to oped save files
 	vector<string> loadFilePath; // path for load game files
 
-	RenderWindow* m_window; // DONT DELETE
-	map<string,string> *returnState; // DONT DELETE 
+	vector<Text*> menuTexts; // text for menu entries (load game files)
 
-	vector<Text> menuTexts; // text for menu entries (load game files)
-	
-	vector<Sprite> menuSprites; // sprites for menu items
+	vector<Sprite*> menuSprites; // sprites for menu items
 	vector<string> fileNamesToLoad; // path of sprites for to load
 
-	vector<Sprite> backgroundSprites; // sprites for background images 
+	vector<Sprite*> backgroundSprites; // sprites for background images 
+	vector<GuiElement*> guiElements; // gui elements for forms (options menu)
+
 	const vector<string> mainMenu =
 	{
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
@@ -69,5 +65,20 @@ private:
 		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
 	};    // paths of mainMenuButtons (depth = 0)
 
+	const vector<string> optionsMenu =
+	{
+		"Resolution",
+		"Music Volume",
+		"Sound Volume"
+	};		// options menu
+
+
+	// general purpose constants 
+	const int WIN_HEIGHT = m_window->getSize().y;
+	const int WIN_WIDTH = m_window->getSize().x;
+	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
+	const float BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
+	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
+	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 };
 
