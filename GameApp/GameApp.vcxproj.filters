@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Windows\Gui">
       <UniqueIdentifier>{b63afb0c-bd10-49fb-9de9-3ff803ab4a95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Databases">
+      <UniqueIdentifier>{ddba66a2-ec80-429e-a200-13c24dd13a37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -134,9 +137,6 @@
     <ClCompile Include="object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Algorithms2.cpp">
-      <Filter>Source Files\GameLogic</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
@@ -190,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="InGameMainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Algorithms.cpp">
+      <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

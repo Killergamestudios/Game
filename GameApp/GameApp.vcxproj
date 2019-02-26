@@ -183,7 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbilityComponent.cpp" />
-    <ClCompile Include="Algorithms2.cpp" />
+    <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="BootMenu.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CheckBox.cpp" />
