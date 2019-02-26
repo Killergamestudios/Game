@@ -8,6 +8,7 @@ MainMenu::MainMenu(RenderWindow &window):GameMenu(window)
 {
 	index = 0;
 	depth = 1;
+	backButton.push_back("Quit");
 }
 
 
@@ -20,15 +21,17 @@ MainMenu::~MainMenu()
 	menuTexts.clear();
 	menuSprites.clear();
 	backgroundSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
 }
 
 void MainMenu::init() 
 {
-	initData(); // Initialize everything. Fresh start
+	initLayer(); // Initialize everything. Fresh start
 	Controller::setInitialized(true);
-
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	totalTimePassed = 0;
+	backgroundMusic = new Music();
 	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
 	backgroundMusic->play();
 	backgroundMusic->setVolume(100.0f);
@@ -70,42 +73,47 @@ void MainMenu::update(float dtasSeconds) {
 
 void MainMenu::actions()
 {
-	if (index == 1 && depth == 2)
+	if (optionSelected == tabOrder.size() - 1) {
+		if (depth == 1) {
+			m_window->close();
+		}
+		else if (depth != 1) {
+			depth -= 1;
+			initLayer();
+		}
+		return;
+	}
+
+	if (index == 1 && depth == 2 )
 	{
 		Controller::setRunning(false);
 		Controller::setLoadFile(true);
 		Controller::setSaveFileDirectory(loadFilePath[optionSelected]);
 	}
-	else
+	else if(depth == 1)
 	{
 		switch (optionSelected)
 		{
 		case 0: // New Game
-			//Loads intro cutscene or whatever
-			Controller::setRunning(false);
-			Controller::setLoadFile(false);
+			//Loads intro cutscene or whatever		
+			index = 0;
+			depth = 2;
+			initLayer();
 			break;
 		case 1: //Load Game
 			index = 1;
 			depth = 2;
-			clearTextures();
-			Theme::clearRegion(Theme::MAINMENU);
-			loadSaveFiles();
+			initLayer();
 			break;
 		case 2: //Options
 			index = 2;
 			depth = 2;
-			clearTextures();
-			initOptions();
+			initLayer();
 			break;
 		case 3: //Credits
+			//index = 3;
+			//depth = 2;
 			break;
-		}
-	}
-
-	if (optionSelected == buttonsCounter - 1) {
-		if (depth == 1) {
-			m_window->close();
 		}
 	}
 }
@@ -135,21 +143,51 @@ void MainMenu::input() {
 
 void MainMenu::initData()
 {
-	backgroundMusic = new Music();
-	initFileNamesToLoad(mainMenu);
+	
 }
 
-void MainMenu::initFileNamesToLoad(vector<string> fileNames)
+void MainMenu::initLayer()
+{
+	if (depth == 1) {
+		clearTextures();
+		Theme::clearRegion(Theme::MainMenu);
+		initFileNamesToLoad(mainMenu, Theme::MainMenu);
+		backButton[0] = "Quit";
+		loadTextGraphics(backButton, Theme::BackButton);
+	}
+	else if (index == 0 && depth == 2) {
+		Controller::setRunning(false);
+		Controller::setLoadFile(false);
+		Theme::clear();
+	}
+	else if (index == 1 && depth == 2) {
+		clearTextures();
+		Theme::clearRegion(Theme::MainMenu);
+		loadSaveFiles();
+		backButton[0] = "Back";
+		loadTextGraphics(backButton, Theme::BackButton);
+	}
+	else if (index == 2 && depth == 2) {
+		clearTextures();
+		initOptions();
+		Theme::clearRegion(Theme::MainMenu);
+		backButton[0] = "Back";
+		loadTextGraphics(backButton, Theme::BackButton);
+	}
+}
+
+
+void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)
 {
 	fileNamesToLoad.clear();
 	for (unsigned int i = 0; i < fileNames.size(); i++) {
 		fileNamesToLoad.push_back(fileNames[i]);
 	} // populate array fileNameToLoad in order to load the sprites
 
-	setMenuSprites();
+	setMenuSprites(Theme::MainMenu);
 }
 
-void MainMenu::setMenuSprites()
+void MainMenu::setMenuSprites(Theme::Regions region)
 {
 	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
 	
@@ -170,7 +208,7 @@ void MainMenu::setMenuSprites()
 		menuSprites.push_back(buffer); // add Sprites to the menuSprites
 	}
 
-	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions); // render elements in region. FloatRect is used as a wrapper
+	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions); // render elements in region. FloatRect is used as a wrapper
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++) {
 		menuSprites[i]->setPosition(newPositions[i]);
 	}
@@ -178,10 +216,8 @@ void MainMenu::setMenuSprites()
 }
 
 
-void MainMenu::loadTextGraphics(vector<string> textsArray)
+void MainMenu::loadTextGraphics(vector<string> textsArray, Theme::Regions region)
 {
-	const float TEXT_LEFT_MARGIN = (float)(WIN_WIDTH / 10);
-	const int MARGIN_BETWEEN_TEXT = 10;
 
 	vector<FloatRect> dimensions; // vector with dimensions of elements
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
@@ -192,16 +228,17 @@ void MainMenu::loadTextGraphics(vector<string> textsArray)
 		tabOrder[tabOrder.size()] = make_pair("TXT", buffer);
 		buffer->setFillColor(Color::White);
 	} 
-	vector<Vector2f> newPositions = Theme::renderRegion(Theme::MAINMENU, dimensions);
-	for (unsigned int i = 0; i < menuTexts.size(); i++) {
-		menuTexts[i]->setPosition(newPositions[i]);
+	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions);
+	for (unsigned int i = 0; i < textsArray.size(); i++) {
+		menuTexts[menuTexts.size() - textsArray.size() + i]->setPosition(newPositions[i]);
 	}
-	menuTexts[0]->setFillColor(Color::Red); //set as default selected
+	if (tabOrder.size() == menuTexts.size())
+		menuTexts[0]->setFillColor(Color::Red); //set as default selected
 }
 
 void MainMenu::animate(float &totaltimepassed, int optionSelected) {
 	const float ANIMATION_SPEED = 0.3f;
-	if (menuSprites.size() != 0)
+	if (menuSprites.size() != 0 && tabOrder[optionSelected].first=="SP")
 	{
 		if (totaltimepassed > ANIMATION_SPEED) 
 		{
@@ -263,7 +300,7 @@ void MainMenu::loadSaveFiles() {
 		loadFilePath.push_back(pathOfSaveFile);
 	}
 
-	loadTextGraphics(saveFilesArray);
+	loadTextGraphics(saveFilesArray, Theme::MainMenu);
 
 }
 

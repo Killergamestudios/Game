@@ -23,16 +23,15 @@ public:
 
 private:
 	void initData(); // Initializes everything
-	void initFileNamesToLoad(vector<string> fileNames); // get the files names for sprites
-	void setMenuSprites(); // set the sprites for main menu textures
-	void loadTextGraphics(vector<string> textsArray); // load and set main menu texts
+	void initFileNamesToLoad(vector<string> fileNames, Theme::Regions region); // get the files names for sprites
+	void setMenuSprites(Theme::Regions region); // set the sprites for main menu textures
+	void loadTextGraphics(vector<string> textsArray, Theme::Regions region); // load and set main menu texts
 	void animate(float &totaltimepassed,int optionSelected); //Handles the animation of menu buttons
 	void loadSaveFiles(); // handles the loading of all save files
 	void initOptions(); // initializes options menu
 	void changeSeletedOption(int direction); // changes selected option
 	void clearTextures();
-	
-	
+	void initLayer();
 	
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
@@ -42,7 +41,7 @@ private:
 	int index; // the option that was selected
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
-	unsigned int buttonsCounter;
+	vector<string> backButton;
 	// ---------------
 
 	// variables for loading games
