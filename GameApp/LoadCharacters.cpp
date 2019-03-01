@@ -28,9 +28,9 @@ AbilityComponent *readAbility(string &s, CharacterObject *object) {
 	AbilityComponent *ability = nullptr;
 	if (s == "whirldwind")
 		ability = new Whirlwind(object);
-	else if (s == "rally")
+	/*else if (s == "rally")
 		ability = new Rally(object);
-
+	*/
 	return ability;
 }
 
@@ -50,12 +50,12 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefil
 	filereadints = new int[12];
 	char tempc;
 	getline(myfile, line);
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 8; i++) {
 		getline(myfile, line);
 		filereadints[i] = getStringNumber(line);
 	}
 	Stats stats = {filereadints[0],filereadints[1] ,filereadints[2] ,filereadints[3] ,filereadints[4] ,filereadints[5] 
-					,filereadints[6] ,filereadints[7],filereadints[8],filereadints[9],filereadints[2],filereadints[5],filereadints[9] };
+					,filereadints[6] ,filereadints[7],filereadints[2],filereadints[3],filereadints[4]};
 	delete filereadints;
 	getline(myfile, line);
 	filereadints = new int[5];
@@ -77,12 +77,18 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefil
 	AbilityComponent *ability = readAbility(line, Character);
 	Character->AddAbility1(ability);
 
+	getline(myfile, line);
+	ability = readAbility(line, Character);
+	//Character->AddAbility2(ability);
+
+	getline(myfile, line);
+	ability = readAbility(line, Character);
+	//Character->AddAbility3(ability);
 
 
 	//The Weapon
 
 	// The Armor
-
 
 	
 	// The items

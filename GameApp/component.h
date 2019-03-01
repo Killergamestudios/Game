@@ -1,11 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <utility>
+#include "object.h"
+//#include "ModifierComponent.h"
 
 class object;
 class CharacterObject;
+class ModifierComponent;
+
 using namespace sf;
 using namespace std;
+
 
 struct Resistance
 {
@@ -17,7 +22,12 @@ struct Resistance
 	float BludgeoningResistance;
 };
 
-/********************************************COMPONENT CLASS************************************/
+enum ElementType {none,fire,ice,poison,dark,nature,wind,light,harmony};
+enum WeaponType {longsword,halbert,knife,bow,scepter,staff,dagger};
+
+/****************************************************************************************************************************************/
+//                                                   The Component Class                                                                 //
+/****************************************************************************************************************************************/
 class component
 {
 public:
@@ -32,71 +42,199 @@ protected:
 };
 
 
-/*************************************WEAPON COMPONENT CLASS******************************************/
+/****************************************************************************************************************************************/
+//                                                   The Weapon Class                                                                    //
+/****************************************************************************************************************************************/
 class WeaponComponent : public component {
 public:
-	WeaponComponent(CharacterObject * Parent, String name);
+	WeaponComponent(WeaponType type, String name, int ID, CharacterObject * Parent = nullptr);
 	~WeaponComponent();
 	
-	void spawn();
-	
+	void spawn(ElementType Element, float amplitude, int duration, int damage, int range, int mastery, string classrequirment, string Description);
+	bool canEquip(CharacterObject * Parent);
+	void equip(CharacterObject * Parent);
 
-	void update() override;//updating for special weapons (like a waepon that heals etc) a switch will be addet later we'll keep it null for now
+	void update() override;
+	WeaponComponent* copySelf();
 
-	String Gettype();
+	WeaponType Gettype();
 	String Getname();
-	String GetDamageType();
-	int GetattackRange();
+	ElementType getElement();
+	float getAmplitude();
 	int getDamage();
-	int getPenetration();
+	int getRange();
+	int getduration();
+	string getDescription();
+	int getid();
 
 private:
-	String type; //sword bow staff etc
+	WeaponType type; //sword bow staff etc
 	String name;// GreatSword , a special sword that a character has etc
-	String DamageType; //physical magic , hybridetc
-	String ElementalDamageType;
+	ElementType element;
+	float elementAmplitude;
+	int elementDuration;
+	int Damage;
+	int range;
+	int id;
 
-	int penetration;
-	int attackRange; // one tile 2 tiles etc
-	int Damage; //
-	int ElementalDamage;
-
+	int MasteryRequirment;
+	string ClassRequirment;
+	string Description;
 	CharacterObject *parent;
 
 };
 
-/**************************************************ARMOR COMPONENT CLASS**************************************************************/
+/****************************************************************************************************************************************/
+//                                                   The Armor Class                                                                     //
+/****************************************************************************************************************************************/
 class ArmorComponent :public component {
 public:
-	ArmorComponent(CharacterObject *Parent, String Type, String Place);
+	ArmorComponent(String name, int id = 0, CharacterObject *Parent = nullptr);
 	~ArmorComponent();
-	float getResistance(String type);//where type = magic poison or physical
-	void update(); // same as before we keep it for special armor effects
-	void spawn(std::vector<int> resistances, std::vector<int> modifiers);
-	void ChangeParent(CharacterObject *Parent);
+	void spawn(pair< ElementType, float> Resistance[9] , bool Isdropable, string description, pair<string,bool> coverage[5], int mastery, string Class, int physicalresistance);
+	bool canEquip(CharacterObject * Parent);
 
+	void equip(CharacterObject * Parent);
+	void unequip();
+
+	void update() override;
+	ArmorComponent* copySelf(); // NOT READY YET Modifier not ready
+
+	string getname();
+	float getResistance(ElementType element);
+	bool isDropable();
+	string getDescription();
+	bool getcoverage(string place);
+	int getid();
+	int getPhysicalResistance();
 
 private:
 	CharacterObject *parent;
-	String type; // chainmail, platemail etc
-
-
-	int m_weight;
-	int m_armor;
-
-	// The resistances
-	int magicResistance;
-	int PoisonResistance;
+	int id;
+	String name; // chainmail, platemail etc
+	pair<ElementType, float> elementResistance[9];
+	bool isdropable;
+	string Description;
+	pair<string, bool> coverage[5];
+	vector<ModifierComponent*> Modifiers;
 	int physicalResistance;
 
-	//The resistance modifiers for eatch body part
-	int HeadResMod;
-	int BodyResMod;
-	int LegsResMod;
-	int RightHandResMod;
-	int LeftHandResMod;
+	int MasteryRequirment;
+	string ClassRequirment;
+};
+
+/****************************************************************************************************************************************/
+//                                                   The Modifier Class                                                                  //
+/****************************************************************************************************************************************/
+
+class ModifierComponent : public component {
+public:
+	ModifierComponent(CharacterObject *Prnt, int turns, std::string type);
+	~ModifierComponent();
+
+	bool getIsDead();
+	int GetTurnsToDie();
+	string getType();
+
+	void setisDead();
+	void setParent(CharacterObject *Prnt);
+	void update() override;
+	virtual void kill() = 0;
+	virtual void aply() = 0;
+protected:
+	CharacterObject *Parent;
+	bool isdead;
+	int turnsToDie;
+	string type;
+};
+
+class BuffModifierComponent : public ModifierComponent {
+public:
+	BuffModifierComponent(CharacterObject *Prnt, int turns, string atribute, int amplitude);
+	~BuffModifierComponent();
+	void update() override;
+	void kill() override;
+	void aply() override;
+private:
+	int amplitude;
+	string atribute;
+	int previousValue;// how much was it before the debuff - how much it is now
+};
+
+/*
+class RallyModifier : public ModifierComponent {
+public:
+	RallyModifier(CharacterObject *Prnt);
+	void kill();
+	void aply();
+};
+*/
+
+
+/****************************************************************************************************************************************/
+//                                                   The Ability Component Class                                                         //
+/****************************************************************************************************************************************/
+
+class AbilityComponent :public component {
+public:
+	AbilityComponent(CharacterObject *Parent, String Name);
+	~AbilityComponent();
+	virtual void update() = 0;
+	virtual void use(Vector2i &position, CharacterObject *target) = 0;
+	virtual bool canUse(Vector2i & position, CharacterObject * target) = 0;
+	int getCost();
+
+protected:
+	CharacterObject *parent;
+	String name;
+	String description;
+	int ActionCost;
+	Sprite m_sprite;
+	int range;
 };
 
 
+/****************************************************************************************************************************************/
+//                                                   The Whirldwind Class                                                                //
+/****************************************************************************************************************************************/
+class Whirlwind : public AbilityComponent {
+public:
+	Whirlwind(CharacterObject *Parent);
+	~Whirlwind();
+
+	void update() override;
+	void use(Vector2i &position, CharacterObject *target = nullptr) override;
+	bool canUse(Vector2i & position, CharacterObject * target) override;
+};
 
 
+/****************************************************************************************************************************************/
+//                                                   The Rally Class                                                                     //
+/****************************************************************************************************************************************/
+class Rally : public AbilityComponent {
+public:
+	Rally(CharacterObject *Parent);
+
+	void update() override;
+	void use(Vector2i &position, CharacterObject *target = nullptr) override;
+	bool canUse(Vector2i & position, CharacterObject * target) override;
+};
+
+/****************************************************************************************************************************************/
+//                                                   The charge Class                                                                    //
+/****************************************************************************************************************************************/
+
+
+
+class Charge : public AbilityComponent {
+public:
+	Charge(CharacterObject *Parent);
+
+	void setNumOfTiles(int n);
+	void update() override;
+	void use(Vector2i &position, CharacterObject *target) override;
+	bool canUse(Vector2i & position, CharacterObject * target) override;
+private:
+	int numOfTiles = 0;
+
+};

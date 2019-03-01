@@ -2,43 +2,48 @@
 #include <SFML/Graphics.hpp>
 #include "textureHolder.h"
 #include "Map.h"
-#include "AbilityComponent.h"
 #include "component.h"
-#include "ModifierComponent.h"
 
 using namespace sf;
 using namespace std;
 
 class Map;
+class component;
 class AbilityComponent;
 class ModifierComponent;
+class WeaponComponent;
+class ArmorComponent;
 
 enum Move {standing,left,right,up,down,};
 enum FacingDirection{front,back,fleft,fright};
+enum ElementType;
+
 //most of the components later will get replaced by dedicated classes than inherit the component class
 struct StatGain
 {
 	int MaxHealthGain;
+	int MaxEnergyGain;
+	int MaxActionsGain;
 	int AgilityGain;  // every 5 levels
 	int PrecisionGain;
-	int MagicResistanceGain;
-	int ArmorGain;
 };
 struct Stats
 {
-	// The constant stats
+	// The Level Stats
 	int level;
 	int exp;
+
+	//The Constant Resourse stats
 	int MaxHealth;
+	int MaxEnergy;
+	int MaxActions;
+
+	//The Constant Stats
 	int Agility;
 	int Precision;
-	int MaxEnergy;
-	int MagicResistance;
-	int Armor;
 	int Mastery;
-	int actions;
 
-	// The temp
+	// The temp Resourse stats
 	int Health;
 	int Energy;
 	int actionsremaining;
@@ -96,15 +101,20 @@ public:
 	int getEnergy();
 	int getAgility();
 	int getLegsTimesHit();
+	String getType();
+	int getMastery();
+	int getPrecision();
 
-
-	//Setters
+	//setters
 	void UpdateStats(Stats &s);
 	void addModifier(ModifierComponent *m);
+	void setAgility(int agi);
+	void setPrecision(int prec);
 
 	//Leveling up
 	void LevelUp();	
 	bool GiveExp(int exp); // true if the character leveled up
+	void LevelMastery();
 
 	//To spawn a Characetr: call the constructor, call the spawn func, add weapon and armor with those functions 
 	//Spawn functions
@@ -116,8 +126,10 @@ public:
 
 	//combat related functions
 	int Attack(CharacterObject *target, String place); // return the damage, -1 if attack dodged. place is body,head etc
-	int isAttacked(string place, int damage, string damageType, int Penetration);
+	int isAttackedPhysical(string place, int damage);
+	int isAttackedMagic(float amplitude, ElementType element, int duration);
 	void loseHp(int HpLoss);
+	void gainHp(int HpGain, CharacterObject *target = nullptr);
 	bool AttackRegisters(string place,CharacterObject *target);
 	void usedAction(int used);
 	
@@ -160,16 +172,8 @@ private:
 
 	AbilityComponent* m_ability3;
 
-	AbilityComponent* m_passiveAbility;
-
 	// end of abilities
 
-	//NEEDS WORK
-	//Head m_head;
-	//Body m_body;
-	//RightHand m_righthand;
-	//leftHand m_lefthand;
-	//Legs m_legs;
 	
 	//The Ai
 	component *m_AI; // null for playable characters .will expand later
