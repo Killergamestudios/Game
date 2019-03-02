@@ -58,11 +58,10 @@ struct Stats
 class object
 {
 public:
-	object(RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture,Map *map);
+	object(RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture);
 	~object();
 	virtual void Draw() = 0;
 	virtual void update(float dtAsseconds) = 0;
-	Map * getmap();
 
 protected:
 	String category;//friendly enemy misc
@@ -71,7 +70,6 @@ protected:
 	VertexArray vertarr;
 	RenderWindow *m_window;
 	Vector2i m_position;
-	Map *m_map;
 };
 
 
@@ -81,7 +79,7 @@ protected:
 
 class CharacterObject : public object {
 public:
-	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture,Map *map);
+	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture);
 	~CharacterObject();
 
 	//Draw and Update Functions
@@ -97,7 +95,6 @@ public:
 	Vector2i getMyPosition();
 	int getActionsRemaining();
 	string getCategory();
-	Map * getmap();
 	int getEnergy();
 	int getAgility();
 	int getLegsTimesHit();
@@ -127,9 +124,10 @@ public:
 	//combat related functions
 	int Attack(CharacterObject *target, String place); // return the damage, -1 if attack dodged. place is body,head etc
 	int isAttackedPhysical(string place, int damage);
-	int isAttackedMagic(float amplitude, ElementType element, int duration);
+	int isAttackedMagic(float amplitude, ElementType element, int duration, int PhysicalDamage = 0);
 	void loseHp(int HpLoss);
 	void gainHp(int HpGain, CharacterObject *target = nullptr);
+	void gainActions(int ActionGain);
 	bool AttackRegisters(string place,CharacterObject *target);
 	void usedAction(int used);
 	
@@ -174,9 +172,6 @@ private:
 
 	// end of abilities
 
-	
-	//The Ai
-	component *m_AI; // null for playable characters .will expand later
 
 
 	//The Stats

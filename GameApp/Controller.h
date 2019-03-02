@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "IniReader.h"
 #include "IniWriter.h"
+#include "Map.h"
 
 using namespace sf;
 using namespace std;
@@ -13,6 +14,8 @@ private:
 	enum State { Booting, InMenu, Playing, Loading, Incutscene };
 	enum SecondaryState { InGameMainMenu, None };
 	static Controller* m_s_Instance;
+
+	Map *map;
 
 	const int numberOfSecondaryStates = 1;
 	State currentState, tmpCurrentState;
@@ -62,6 +65,9 @@ public:
 	
 	static void applyChanges();
 	static void clearState(bool hardFlush = false, bool secondary = false, SecondaryState state = SecondaryState::None);
+	
+	static Map * getMap();
+	void setMap(Map *mp);
 
 	static void setResolutionID(int);
 	static int getResolutionID();

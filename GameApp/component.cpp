@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "component.h"
 #include "Algorithms2.h"
+#include "Controller.h"
 
+/****************************************************************************************************************************************/
+//                                                   The Component Class                                                                 //
+/****************************************************************************************************************************************/
 component::component(object *Parent, String Category)
 {
 	parent = Parent;
@@ -12,7 +16,7 @@ component::component(object *Parent, String Category)
 
 component::~component()
 {
-	if (parent) parent = NULL;
+	if (parent) parent = nullptr;
 }
 
 String component::getCategory()
@@ -28,7 +32,7 @@ String component::getCategory()
 
 
 
-WeaponComponent::WeaponComponent(WeaponType Type, String Name, int ID, CharacterObject * Parent):component(NULL,"Weapon")
+WeaponComponent::WeaponComponent(WeaponType Type, String Name, int ID, CharacterObject * Parent):component(nullptr,"Weapon")
 {
 	name = Name;
 	parent = Parent;
@@ -37,7 +41,7 @@ WeaponComponent::WeaponComponent(WeaponType Type, String Name, int ID, Character
 
 WeaponComponent::~WeaponComponent()
 {
-	if (parent) parent = NULL;
+	if (parent) parent = nullptr;
 }
 
 bool WeaponComponent::canEquip(CharacterObject * Parent)
@@ -247,9 +251,12 @@ int ArmorComponent::getPhysicalResistance()
 
 
 
+/****************************************************************************************************************************************/
+//                                                   The Modifier Class                                                                  //
+/****************************************************************************************************************************************/
 
 
-ModifierComponent::ModifierComponent(CharacterObject *Prnt, int turns, std::string Type) :component(NULL, "modifier"), turnsToDie(turns)
+ModifierComponent::ModifierComponent(CharacterObject *Prnt, int turns, std::string Type) :component(nullptr, "modifier"), turnsToDie(turns)
 {
 	Parent = Prnt;
 	isdead = false;
@@ -259,7 +266,7 @@ ModifierComponent::ModifierComponent(CharacterObject *Prnt, int turns, std::stri
 
 ModifierComponent::~ModifierComponent()
 {
-	if (Parent) Parent = NULL;
+	if (Parent) Parent = nullptr;
 }
 
 bool ModifierComponent::getIsDead()
@@ -297,6 +304,144 @@ void ModifierComponent::update()
 		kill();
 	}
 }
+
+/****************************************************************************************************************************************/
+//                                                   The Buff Class                                                                      //
+/****************************************************************************************************************************************/
+
+
+
+
+BuffModifierComponent::BuffModifierComponent(CharacterObject * Prnt, int turns, string Atribute, int Amplitude,string bufftype) :ModifierComponent(Prnt, turns, bufftype)
+{
+	atribute = Atribute;
+	amplitude = Amplitude;
+
+}
+
+BuffModifierComponent::~BuffModifierComponent()
+{
+	if (Parent) Parent = nullptr;
+}
+
+void BuffModifierComponent::update()
+{
+	turnsToDie--;
+	if (turnsToDie == 0) isdead = true;
+}
+
+void BuffModifierComponent::kill()
+{
+	if (!isdead) return;
+	if (atribute == "agility") {
+		Parent->setAgility(Parent->getAgility() - previousValue);
+		return;
+	}
+	else if (atribute == "precision") {
+		Parent->setPrecision(Parent->getPrecision() - previousValue);
+		return;
+	}
+}
+
+void BuffModifierComponent::aply()
+{
+	if (atribute == "agility") {
+		int agility = Parent->getAgility();
+		previousValue = agility;
+		if(type == "buf")
+			agility += amplitude;
+		else {
+			agility -= amplitude;
+			if (agility < 1) agility = 1;
+		}
+		previousValue = previousValue - agility;
+		Parent->setAgility(agility);
+		return;
+	}
+	else if (atribute == "precision") {
+		int Precision = Parent->getPrecision();
+		previousValue = Precision;
+		if (type == "buf")
+			Precision += amplitude;
+		else {
+			Precision -= amplitude;
+			if (Precision < 1) Precision = 1;
+		}
+		Precision += amplitude;
+		previousValue = previousValue - Precision;
+		Parent->setPrecision(Precision);
+		return;
+	}
+}
+
+
+
+
+/****************************************************************************************************************************************/
+//                                                   The Ability Class                                                                   //
+/****************************************************************************************************************************************/
+
+AbilityComponent::AbilityComponent(CharacterObject *Parent, String Name) :component(nullptr, "Ability")
+{
+	parent = Parent;
+	name = Name;
+}
+
+AbilityComponent::~AbilityComponent()
+{
+	parent = nullptr;
+}
+
+int AbilityComponent::getCost()
+{
+	return ActionCost;
+}
+/****************************************************************************************************************************************/
+//                                                   The Wirlwind Class                                                                  //
+/****************************************************************************************************************************************/
+
+Whirlwind::Whirlwind(CharacterObject * Parent) :AbilityComponent(Parent, "Whirlwind")
+{
+	ActionCost = 3;
+}
+
+Whirlwind::~Whirlwind()
+{
+	parent = nullptr;
+}
+
+void Whirlwind::update()
+{
+}
+
+void Whirlwind::use(Vector2i & position, CharacterObject * target)
+{
+	Vector2i m_position = parent->getMyPosition();
+	if (position.x != m_position.x || position.y != m_position.y) throw std::exception("invalid position");
+	Map *map = Controller::getMap();
+	std::vector<Vector2i> enemysToHit;
+	CharacterObject *enemy;
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++) {
+			if ((i != 0 && j != 0) && map->getEnemyinPosition(Vector2i(i + m_position.x, j + m_position.y)) != 0)
+				enemysToHit.push_back(Vector2i(i + m_position.x, j + m_position.y));
+		}
+	for (unsigned int i = 0; i < enemysToHit.size(); i++) {
+		enemy = &map->getenemy(enemysToHit[i]);
+		parent->Attack(enemy, "body");
+	}
+}
+
+bool Whirlwind::canUse(Vector2i & position, CharacterObject * target)
+{
+	return (parent->getActionsRemaining() >= ActionCost);
+}
+
+/****************************************************************************************************************************************/
+//                                                   The Rally Class                                                                     //
+/****************************************************************************************************************************************/
+
+
 /*
 RallyModifier::RallyModifier(CharacterObject * Prnt):ModifierComponent(Prnt,3)
 {
@@ -326,66 +471,8 @@ void RallyModifier::aply()
 	}
 	Parent->UpdateStats(s);
 }
-*/
 
 
-
-
-/******************************************************ABILITY COMPONENT CLASS *********************************************/
-AbilityComponent::AbilityComponent(CharacterObject *Parent, String Name) :component(nullptr, "Ability")
-{
-	parent = Parent;
-	name = Name;
-}
-
-AbilityComponent::~AbilityComponent()
-{
-	parent = nullptr;
-}
-
-int AbilityComponent::getCost()
-{
-	return ActionCost;
-}
-/******************************************************Whirlwind CLASS *********************************************/
-Whirlwind::Whirlwind(CharacterObject * Parent) :AbilityComponent(Parent, "Whirlwind")
-{
-	ActionCost = 3;
-}
-
-Whirlwind::~Whirlwind()
-{
-	parent = nullptr;
-}
-
-void Whirlwind::update()
-{
-}
-
-void Whirlwind::use(Vector2i & position, CharacterObject * target)
-{
-	Vector2i m_position = parent->getMyPosition();
-	if (position.x != m_position.x || position.y != m_position.y) throw std::exception("invalid position");
-	Map *map = parent->getmap();
-	std::vector<Vector2i> enemysToHit;
-	CharacterObject *enemy;
-	for (int i = -1; i <= 1; i++)
-		for (int j = -1; j <= 1; j++) {
-			if ((i != 0 && j != 0) && map->getEnemyinPosition(Vector2i(i + m_position.x, j + m_position.y)) != 0)
-				enemysToHit.push_back(Vector2i(i + m_position.x, j + m_position.y));
-		}
-	for (unsigned int i = 0; i < enemysToHit.size(); i++) {
-		enemy = &map->getenemy(enemysToHit[i]);
-		parent->Attack(enemy, "body");
-	}
-}
-
-bool Whirlwind::canUse(Vector2i & position, CharacterObject * target)
-{
-	return (parent->getActionsRemaining() >= ActionCost);
-}
-/******************************************************Rally CLASS *********************************************/
-/*
 Rally::Rally(CharacterObject * Parent) :AbilityComponent(Parent, "Rally")
 {
 	ActionCost = 6;
@@ -422,7 +509,9 @@ bool Rally::canUse(Vector2i & position, CharacterObject * target)
 
 */
 
-/******************************************************Charge CLASS *********************************************/
+/****************************************************************************************************************************************/
+//                                                   The Charge Class                                                                    //
+/****************************************************************************************************************************************/
 
 
 Charge::Charge(CharacterObject * Parent) :AbilityComponent(Parent, "charge")
@@ -444,7 +533,7 @@ void Charge::use(Vector2i & position, CharacterObject * target)
 	vector<Vector2i> path;
 	Vector2i m_position = parent->getMyPosition();
 	int temp = 100;
-	Map *map = parent->getmap();
+	Map *map = Controller::getMap();
 	path = getPath(m_position.x, m_position.y, position.x, position.y, temp, *map);
 	int travelcoordinate;//0 = up,1 = right, 2 = down, 3=left
 	if (m_position.x < position.x) travelcoordinate = 1;
@@ -505,54 +594,24 @@ bool Charge::canUse(Vector2i & position, CharacterObject * target)
 
 	return ret;
 }
+/****************************************************************************************************************************************/
+//                                                   The Damage over time Class                                                          //
+/****************************************************************************************************************************************/
 
-BuffModifierComponent::BuffModifierComponent(CharacterObject * Prnt, int turns, string Atribute, int Amplitude):ModifierComponent(Prnt,turns,"buff")
+DamageOverTimeModifier::DamageOverTimeModifier(CharacterObject * Prnt, int turns, string dmgtype, int Amplitude): ModifierComponent(Prnt,turns,"Damage Over Time")
 {
-	atribute = Atribute;
+	damagetype = dmgtype;
 	amplitude = Amplitude;
-
 }
 
-BuffModifierComponent::~BuffModifierComponent()
+DamageOverTimeModifier::~DamageOverTimeModifier() {}
+
+void DamageOverTimeModifier::kill(){}
+
+void DamageOverTimeModifier::aply()
 {
-	if (Parent) Parent = nullptr;
+	Parent->loseHp(amplitude);
 }
 
-void BuffModifierComponent::update()
-{
-	turnsToDie--;
-	if (turnsToDie == 0) isdead = true;
-}
 
-void BuffModifierComponent::kill()
-{
-	if (!isdead) return;
-	if (atribute == "agility") {
-		Parent->setAgility(Parent->getAgility() - previousValue);
-		return;
-	}
-	else if (atribute == "precision") {
-		Parent->setPrecision(Parent->getPrecision() - previousValue);
-		return;
-	}
-}
 
-void BuffModifierComponent::aply()
-{
-	if (atribute == "agility") {
-		int agility = Parent->getAgility();
-		previousValue = agility;
-		agility += amplitude;
-		previousValue = previousValue - agility;
-		Parent->setAgility(agility);
-		return;
-	}
-	else if (atribute == "precision") {
-		int Precision = Parent->getPrecision();
-		previousValue = Precision;
-		Precision += amplitude;
-		previousValue = previousValue - Precision;
-		Parent->setPrecision(Precision);
-		return;
-	}
-}

@@ -138,9 +138,9 @@ public:
 
 	void setisDead();
 	void setParent(CharacterObject *Prnt);
-	void update() override;
-	virtual void kill() = 0;
-	virtual void aply() = 0;
+	void update() override; //call at the end of the characters turn;
+	virtual void kill() = 0; // undoes the effects of the modifier
+	virtual void aply() = 0; // trigers the effects of the modifier
 protected:
 	CharacterObject *Parent;
 	bool isdead;
@@ -148,9 +148,12 @@ protected:
 	string type;
 };
 
+/****************************************************************************************************************************************/
+//                                                   The Buff Class                                                                      //
+/****************************************************************************************************************************************/
 class BuffModifierComponent : public ModifierComponent {
 public:
-	BuffModifierComponent(CharacterObject *Prnt, int turns, string atribute, int amplitude);
+	BuffModifierComponent(CharacterObject *Prnt, int turns, string atribute, int amplitude,string bufftype);
 	~BuffModifierComponent();
 	void update() override;
 	void kill() override;
@@ -160,6 +163,22 @@ private:
 	string atribute;
 	int previousValue;// how much was it before the debuff - how much it is now
 };
+
+/****************************************************************************************************************************************/
+//                                                   The Damage over time Class                                                          //
+/****************************************************************************************************************************************/
+
+class DamageOverTimeModifier : public ModifierComponent {
+public:
+	DamageOverTimeModifier(CharacterObject *Prnt, int turns, string dmgtype, int Amplitude);
+	~DamageOverTimeModifier();
+	void kill() override;
+	void aply() override;
+private:
+	int amplitude;
+	string damagetype;
+};
+
 
 /*
 class RallyModifier : public ModifierComponent {
