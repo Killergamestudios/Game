@@ -72,9 +72,6 @@
     <ClInclude Include="MainMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="CheckBox.h">
-      <Filter>Header Files\Windows\Gui</Filter>
-    </ClInclude>
     <ClInclude Include="GuiElement.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
@@ -151,9 +148,6 @@
     </ClCompile>
     <ClCompile Include="update.cpp">
       <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="CheckBox.cpp">
-      <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
     <ClCompile Include="GuiElement.cpp">
       <Filter>Source Files\Windows\Gui</Filter>

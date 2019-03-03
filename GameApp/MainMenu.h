@@ -69,14 +69,5 @@ private:
 		"Music Volume",
 		"Sound Volume"
 	};		// options menu
-
-
-	// general purpose constants 
-	const int WIN_HEIGHT = m_window->getSize().y;
-	const int WIN_WIDTH = m_window->getSize().x;
-	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float BOTTOM_MARGIN = WIN_HEIGHT * 0.05f; // bottom margin
-	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
 };
 

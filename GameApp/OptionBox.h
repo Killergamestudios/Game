@@ -3,7 +3,7 @@
 class OptionBox : public GuiElement
 {
 public:
-	OptionBox(RenderWindow *window, Vector2f position, Text label, Font font, int currentValue, vector<pair<string,string>>);
+	OptionBox(RenderWindow *window, Text label, Font font, Theme::Regions region, int currentValue, vector<pair<string,string>>);
 	~OptionBox();
 
 

@@ -23,8 +23,8 @@ void BootMenu::init()
 	backgroundMusic->play(); // start playing intro music
 	backgroundMusic->setVolume((float)Controller::getMusicVolume()); // set volume of music
 	drawStack[0] = title;
-	vector<FloatRect> dimensions;
-	dimensions.push_back(title->getLocalBounds());
+	vector<Vector2f> dimensions;
+	dimensions.push_back(Vector2f(title->getLocalBounds().width, title->getLocalBounds().height));
 	title->setPosition(Theme::renderRegion(Theme::Background, dimensions)[0]);
 	// set emblem in the center
 	Controller::setInitialized(true);

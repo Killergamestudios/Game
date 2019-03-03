@@ -25,5 +25,5 @@ void Engine::cameraUpdate(int direction)
 }
 
 void Engine::cameraReset() {
-	camera.setCenter(windowWidth/2,windowHeight/2);
+	camera.setCenter(viewWidth/2,viewHeight/2);
 }

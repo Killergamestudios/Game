@@ -41,10 +41,12 @@ private:
 	// -------------------------------------------------
 
 	// game constancts
-	float windowWidth;
-	float windowHeight;
+	float viewWidth;
+	float viewHeight;
 	float mapWidth;
 	float mapHeight;
+	float windowWidth;
+	float windowHeight;
 	// --------------------------------------------------
 
 	void initGameVariables(int indexFileToLoad);
