@@ -28,17 +28,17 @@ AbilityComponent *readAbility(string &s, CharacterObject *object) {
 	AbilityComponent *ability = nullptr;
 	if (s == "whirldwind")
 		ability = new Whirlwind(object);
-	else if (s == "rally")
+	/*else if (s == "rally")
 		ability = new Rally(object);
-
+	*/
 	return ability;
 }
 
 
-CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefilename,string Name, string Class) {
+CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,string Name, string Class) {
 
 	string texture = "./graphics/Sprites/" + Class + ".png";
-	CharacterObject *Character = new CharacterObject(Name, *m_window, "friendly", "warrior", position, TextureHolder::GetTexture(texture), map);
+	CharacterObject *Character = new CharacterObject(Name, *m_window, "friendly", "warrior", position, TextureHolder::GetTexture(texture));
 	string filename;
 	ifstream myfile;
 	filename = savefilename + "Characters/" + Name + ".txt";
@@ -50,12 +50,12 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefil
 	filereadints = new int[12];
 	char tempc;
 	getline(myfile, line);
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 8; i++) {
 		getline(myfile, line);
 		filereadints[i] = getStringNumber(line);
 	}
 	Stats stats = {filereadints[0],filereadints[1] ,filereadints[2] ,filereadints[3] ,filereadints[4] ,filereadints[5] 
-					,filereadints[6] ,filereadints[7],filereadints[8],filereadints[9],filereadints[2],filereadints[5],filereadints[9] };
+					,filereadints[6] ,filereadints[7],filereadints[2],filereadints[3],filereadints[4]};
 	delete filereadints;
 	getline(myfile, line);
 	filereadints = new int[5];
@@ -77,12 +77,18 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, Map *map, string savefil
 	AbilityComponent *ability = readAbility(line, Character);
 	Character->AddAbility1(ability);
 
+	getline(myfile, line);
+	ability = readAbility(line, Character);
+	//Character->AddAbility2(ability);
+
+	getline(myfile, line);
+	ability = readAbility(line, Character);
+	//Character->AddAbility3(ability);
 
 
 	//The Weapon
 
 	// The Armor
-
 
 	
 	// The items
@@ -102,25 +108,25 @@ void Map::loadParty(Map *map, string savefilename){
 			if (m_friendlyCharacters[i][j] != 0) {
 				switch (m_friendlyCharacters[i][j]) {
 				case 1:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "nathan", "warrior"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j), savefilename, "nathan", "warrior"));
 					break;
 				case 2:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name2", "healer"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j), savefilename, "name2", "healer"));
 					break;
 				case 3:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name3", "archer"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j), savefilename, "name3", "archer"));
 					break;
 				case 4:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name4", "tank"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j) ,savefilename, "name4", "tank"));
 					break;
 				case 5:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name5", "ranger"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j),  savefilename, "name5", "ranger"));
 					break;
 				case 6:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name 6", "mage"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j), savefilename, "name 6", "mage"));
 					break;
 				case 7:
-					party.push_back(*SpawnCharacter(Vector2i(i, j), map, savefilename, "name 7", "doctor"));
+					party.push_back(*SpawnCharacter(Vector2i(i, j), savefilename, "name 7", "doctor"));
 					break;
 				}
 			}

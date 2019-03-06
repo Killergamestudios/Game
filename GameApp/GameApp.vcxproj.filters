@@ -54,13 +54,7 @@
     <ClInclude Include="textureHolder.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="AbilityComponent.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="component.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="ModifierComponent.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="object.h">
@@ -104,6 +98,8 @@
     </ClInclude>
     <ClInclude Include="InGameMainMenu.h">
       <Filter>Header Files\Windows</Filter>
+    <ClInclude Include="DataBase.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,13 +121,7 @@
     <ClCompile Include="textureHolder.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="AbilityComponent.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="component.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="ModifierComponent.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="object.cpp">
@@ -187,6 +177,8 @@
     </ClCompile>
     <ClCompile Include="Algorithms.cpp">
       <Filter>Source Files\GameLogic</Filter>
+    <ClCompile Include="DataBase.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "object.h"
 #include <iostream>
+#include <algorithm>
+#include "controller.h"
 
 /****************************************************************************************************************************************/
 //                                                   The Object Class                                                                   //
 /****************************************************************************************************************************************/
-object::object(RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture, Map *map)
+object::object(RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture)
 {
 	m_window = &window;
 	type = Type;
@@ -14,7 +16,6 @@ object::object(RenderWindow &window, String Category, String Type, Vector2i Posi
 	m_position.x = Position.x; m_position.y = Position.y;
 	vertarr.setPrimitiveType(Quads);
 	vertarr.resize(4);
-	m_map = map;
 }
 
 
@@ -22,20 +23,16 @@ object::~object()
 {
 	category.clear();
 	type.clear();
-	m_window = NULL;
+	m_window = nullptr;
 }
 
-Map * object::getmap()
-{
-	return m_map;
-}
 
 
 /****************************************************************************************************************************************/
 //                                                   The CharacterObject Class                                                          //
 /****************************************************************************************************************************************/
-CharacterObject::CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture,Map *map) :
-	object(window, Category, Type, Position, texture,map)
+CharacterObject::CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture) :
+	object(window, Category, Type, Position, texture)
 {
 	name = Name;
 	move = Move::standing;
@@ -43,8 +40,7 @@ CharacterObject::CharacterObject(String Name, RenderWindow &window, String Categ
 	//setting all the pointers to NULL
 	m_weapon = nullptr;
 	m_Armor = nullptr;
-	m_ability1 = m_ability2 = m_ability3 = m_passiveAbility = nullptr;
-	m_AI = nullptr;
+	m_ability1 = m_ability2 = m_ability3 = nullptr;
 
 }
 
@@ -52,16 +48,15 @@ CharacterObject::~CharacterObject()
 {
 	name.clear();
 	if (m_weapon) delete m_weapon;
-	/*for (unsigned int i = m_modifiers.size() - 1; i >= 0 ; i--) {
+	for (unsigned int i = m_modifiers.size() - 1; i >= 0 ; i--) {
 		m_modifiers.pop_back();
 	}
-	for (unsigned int i = m_items.size() - 1; i >= 0 ; i--) {
+	/*for (unsigned int i = m_items.size() - 1; i >= 0 ; i--) {
 		m_items.pop_back();
 	}*/
 	if (m_ability1) delete m_ability1;
 	if (m_ability2) delete m_ability2;
 	if (m_ability3) delete m_ability3;
-	if (m_AI) delete m_AI;
 }
 /****************************************************************************************************************************************/
 //                                                   The Spawn Functions                                                                //
@@ -72,20 +67,20 @@ void CharacterObject::spawn(Stats & stats, StatGain &statgain)
 	m_stats.exp = stats.exp;
 	m_stats.MaxHealth = stats.MaxHealth;
 	m_stats.MaxEnergy = stats.MaxEnergy;
+	m_stats.MaxActions = stats.MaxActions;
 	m_stats.Agility = stats.Agility;
-	m_stats.MagicResistance = stats.MagicResistance;
-	m_stats.Armor = stats.Armor;
 	m_stats.Mastery = stats.Mastery;
 	m_stats.Precision = stats.Precision;
 
 	m_stats.Health = m_stats.MaxHealth;
 	m_stats.Energy = m_stats.MaxEnergy;
+	m_stats.actionsremaining = m_stats.MaxActions;
 
 	m_statGain.MaxHealthGain += statgain.MaxHealthGain;
 	m_statGain.AgilityGain += statgain.AgilityGain;
-	m_statGain.MagicResistanceGain += statgain.MagicResistanceGain;
-	m_statGain.ArmorGain += statgain.ArmorGain;
 	m_statGain.PrecisionGain += statgain.PrecisionGain;
+	m_statGain.MaxActionsGain += statgain.MaxActionsGain;
+	m_statGain.MaxEnergyGain += statgain.MaxEnergyGain;
 }
 
 
@@ -212,7 +207,7 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.y++;
 				facingdir = FacingDirection::front;
 				isMoving = false;
-				m_map->swapPosition(category,Vector2i(m_position.x,m_position.y - 1),m_position);
+				Controller::getMap()->swapPosition(category,Vector2i(m_position.x,m_position.y - 1),m_position);
 			}
 		}
 		break;
@@ -237,7 +232,7 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.y--;
 				facingdir = FacingDirection::back;
 				isMoving = false;
-				m_map->swapPosition(category, Vector2i(m_position.x, m_position.y + 1), m_position);
+				Controller::getMap()->swapPosition(category, Vector2i(m_position.x, m_position.y + 1), m_position);
 
 			}
 		}
@@ -263,7 +258,7 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.x--;
 				facingdir = FacingDirection::fleft;
 				isMoving = false;
-				m_map->swapPosition(category, Vector2i(m_position.x + 1, m_position.y), m_position);
+				Controller::getMap()->swapPosition(category, Vector2i(m_position.x + 1, m_position.y), m_position);
 
 			}
 		}
@@ -289,7 +284,7 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.x++;
 				facingdir = FacingDirection::fright;
 				isMoving = false;
-				m_map->swapPosition(category, Vector2i(m_position.x - 1, m_position.y), m_position);
+				Controller::getMap()->swapPosition(category, Vector2i(m_position.x - 1, m_position.y), m_position);
 
 			}
 		}
@@ -344,12 +339,7 @@ int CharacterObject::getActionsRemaining()
 
 string CharacterObject::getCategory()
 {
-	return category;
-}
-
-Map * CharacterObject::getmap()
-{
-	return m_map;
+	return string(category);
 }
 
 int CharacterObject::getEnergy()
@@ -367,6 +357,21 @@ int CharacterObject::getLegsTimesHit()
 	return LegsTimeHit;
 }
 
+String CharacterObject::getType()
+{
+	return type;
+}
+
+int CharacterObject::getMastery()
+{
+	return m_stats.Mastery;
+}
+
+int CharacterObject::getPrecision()
+{
+	return m_stats.Precision;
+}
+
 
 
 const Stats & CharacterObject::getM_stats()
@@ -380,8 +385,6 @@ const Stats & CharacterObject::getM_stats()
 void CharacterObject::UpdateStats(Stats & stats)
 {
 	m_stats.Agility = stats.Agility;
-	m_stats.MagicResistance = stats.MagicResistance;
-	m_stats.Armor = stats.Armor;
 	m_stats.Mastery = stats.Mastery;
 	m_stats.Precision = stats.Precision;
 }
@@ -390,6 +393,16 @@ void CharacterObject::addModifier(ModifierComponent * m)
 {
 	m_modifiers.push_back(m);
 	m->setParent(this);
+}
+
+void CharacterObject::setAgility(int agi)
+{
+	m_stats.Agility = agi;
+}
+
+void CharacterObject::setPrecision(int prec)
+{
+	m_stats.Precision = prec;
 }
 
 
@@ -401,19 +414,16 @@ void CharacterObject::addModifier(ModifierComponent * m)
 
 void CharacterObject::LevelUp()
 {
-	int EnergyGain = 1; int MasteryGain = 1; int ActionGain = 1;
 	int LevelstoUpdate = 3;
 
 	m_stats.level++;
 
 	m_stats.MaxHealth += m_statGain.MaxHealthGain;
-	m_stats.MaxEnergy += m_stats.level % LevelstoUpdate == 0 ? 0 : EnergyGain ;
+	m_stats.MaxEnergy += m_statGain.MaxEnergyGain;
 	m_stats.Agility += m_statGain.AgilityGain;
-	m_stats.MagicResistance += m_statGain.MagicResistanceGain;
-	m_stats.Armor += m_statGain.ArmorGain;
-	m_stats.Mastery += m_stats.level % LevelstoUpdate == 0 ? 0 : MasteryGain;
 	m_stats.Precision += m_statGain.PrecisionGain;
-	m_stats.actions += m_stats.level % LevelstoUpdate == 0 ? 0 : ActionGain;
+	m_stats.MaxActions += m_stats.level % LevelstoUpdate == 0 ? 0 : m_statGain.MaxActionsGain;
+
 }
 
 bool CharacterObject::GiveExp(int exp)
@@ -428,6 +438,11 @@ bool CharacterObject::GiveExp(int exp)
 	return hasLeveledUp; 
 }
 
+void CharacterObject::LevelMastery()
+{
+	m_stats.Mastery++;
+}
+
 
 /****************************************************************************************************************************************/
 //                                                   The combat Related Functions                                                       //
@@ -437,49 +452,129 @@ bool CharacterObject::GiveExp(int exp)
 int CharacterObject::Attack(CharacterObject *target, String place) // NEEDS WORK
 {
 	if (!AttackRegisters(place, target)) return -1;
-	int damage = (int) m_stats.Mastery*m_weapon->getDamage() * (100 - 25*RightHandTimesHit)/100;
-	return target->isAttacked(place, damage, m_weapon->GetDamageType(), m_weapon->getPenetration());;
+	int damagetodeal = m_stats.Mastery*m_weapon->getDamage()*(100 - 25 * RightHandTimesHit) / 100;
+	ElementType element = m_weapon->getElement();
+	
+	int physicalDamageDealt = target->isAttackedPhysical(place, damagetodeal);
+	float amplitude;
+	int duration;
+	int elementdamage;
+	switch (element) {
+	case fire:
+		amplitude = m_stats.Mastery*m_weapon->getAmplitude();
+		elementdamage = target->isAttackedMagic(amplitude, fire, 0);
+		break;
+	case ice:
+		amplitude = m_weapon->getAmplitude();
+		duration = m_weapon->getduration();
+		elementdamage = target->isAttackedMagic(amplitude, ice, duration);
+		break;
+	case wind:
+		amplitude = m_weapon->getAmplitude();
+		duration = m_weapon->getduration();
+		elementdamage = target->isAttackedMagic(amplitude, wind, duration);
+		break;
+	case poison:
+		amplitude = m_weapon->getAmplitude();
+		duration = m_weapon->getduration();
+		elementdamage = target->isAttackedMagic(amplitude, poison, duration);
+		break;
+	case dark:
+		amplitude = m_weapon->getAmplitude() ;
+		elementdamage = target->isAttackedMagic(amplitude, dark, 0, physicalDamageDealt);
+		gainHp(elementdamage);
+		elementdamage = 0;
+		break;
+	case nature:
+		amplitude = m_weapon->getAmplitude();
+		elementdamage = target->isAttackedMagic(amplitude, nature, 0, physicalDamageDealt);
+		gainActions(elementdamage);
+		elementdamage = 0;
+		break;
+	case harmony:
+	{
+		amplitude = m_weapon->getAmplitude();
+		elementdamage = target->isAttackedMagic(amplitude, dark, 0, physicalDamageDealt);
+		gainHp(elementdamage);
+
+		elementdamage = target->isAttackedMagic(amplitude, nature, 0, physicalDamageDealt);
+		gainActions(elementdamage);
+
+		duration = m_weapon->getduration();
+		elementdamage = target->isAttackedMagic(amplitude, poison, duration);
+
+		duration = m_weapon->getduration();
+		elementdamage = target->isAttackedMagic(amplitude, wind, duration);
+
+		duration = m_weapon->getduration();
+		elementdamage = target->isAttackedMagic(amplitude, ice, duration);
+
+		amplitude = m_stats.Mastery*m_weapon->getAmplitude();
+		elementdamage = target->isAttackedMagic(amplitude, fire, 0);
+	}
+		break;
+	}
+	return physicalDamageDealt + elementdamage;
 }
 
-int CharacterObject::isAttacked(string place, int damage, string damageType, int Penetration)
+int CharacterObject::isAttackedPhysical(string place, int damage)
 {
-	int damagedealt;
-	float damageresisted;
-	if (damageType == "physical") {
-		damageresisted = (float)(m_stats.Armor*(100 - Penetration));
-		damageresisted /= 100;
-	}
-	else if (damageType == "magic") {
-		damageresisted = (float)m_stats.MagicResistance*(100 - Penetration);
-		damageresisted /= 100;
-	}
-	else if (damageType == "hybrid") {
-		float magicdamageresisted = (float)m_stats.MagicResistance*(100 - Penetration);
-		magicdamageresisted /= 200;
-		float physicaldamageresisted = (float)m_stats.Armor*(100 - Penetration);
-		physicaldamageresisted /= 200;
-		damageresisted = magicdamageresisted + physicaldamageresisted;
+	int armor;
+	if (m_Armor->getcoverage(place) == false) armor = 0;
+	else armor = m_Armor->getPhysicalResistance();
+	int damageDealt;
+	damageDealt = damage - armor;
+	loseHp(damageDealt);
+	return damageDealt;
+}
 
+int CharacterObject::isAttackedMagic(float amplitude, ElementType element, int duration, int PhysicalDamage)
+{
+	int damage;
+	int Amplitude;
+	switch (element) {
+	case fire:
+		damage = int(amplitude - m_Armor->getResistance(fire));
+		loseHp(damage);
+		return damage;
+		break;
+	case ice:
+	{
+		Amplitude = int(m_stats.Agility * 0.1f * std::max(amplitude - m_Armor->getResistance(ice), 0.0f));// agility * 10/100 * amplitude - resistance.negative not allowed
+		if (Amplitude == 0) return 0; //dont create a debuff with 0 amplitude
+		BuffModifierComponent* icedebuff = new BuffModifierComponent(this, duration, "agility", Amplitude, "debuff");
+		addModifier(icedebuff);
+		return 0;
 	}
-	damagedealt = damage - (int)damageresisted;
-	if (damagedealt < 0) damagedealt = 0;
-	if (place == "head") {
-		damagedealt *= 2;
+		break;
+	case wind:
+	{
+		Amplitude = int(m_stats.Precision * 0.1f * std::max(amplitude - m_Armor->getResistance(wind), 0.0f));// Precision * 10/100 * amplitude - resistance.negative not allowed
+		if (Amplitude == 0) return 0; //dont create a debuff with 0 amplitude
+		BuffModifierComponent* winddebuff = new BuffModifierComponent(this, duration, "precision", Amplitude, "debuff");
+		addModifier(winddebuff);
+		return 0;
 	}
-	else if (place == "righthand") {
-		damagedealt = (int) ((float)damagedealt*0.75f);
-		if (RightHandTimesHit < RightHandTimesHit) RightHandTimesHit++;
+		break;
+	case poison:
+	{
+		Amplitude = int(std::max(amplitude - m_Armor->getResistance(poison), 0.0f));
+		if (Amplitude == 0) return 0;
+		DamageOverTimeModifier *poison = new DamageOverTimeModifier(this, duration, "poison", Amplitude);
+		addModifier(poison);
+		return 0;
 	}
-	else if (place == "lefthand") {
-		damagedealt = (int)((float)damagedealt*0.75f);
-		if (LeftHandTimesHit < MaxLeftHandTimesHit) LeftHandTimesHit++;
+		break;
+	case dark:
+		Amplitude = int(0.1f * PhysicalDamage * std::max(0.0f, amplitude - m_Armor->getResistance(dark)));
+		return Amplitude;
+		break;
+	case nature:
+		Amplitude = int(0.1f * PhysicalDamage * std::max(0.0f, amplitude - m_Armor->getResistance(nature)));
+		return Amplitude;
+		break;
 	}
-	else if (place == "legs") {
-		damagedealt = (int)((float)damagedealt*0.75f);
-		if (LegsTimeHit < MaxLegsTimesHit) LegsTimeHit++;
-	}
-	loseHp(damagedealt);
-	return damagedealt;
+	return 0;
 }
 
 void CharacterObject::loseHp(int HpLoss)
@@ -491,6 +586,23 @@ void CharacterObject::loseHp(int HpLoss)
 	}
 }
 
+void CharacterObject::gainHp(int HpGain, CharacterObject * target)
+{
+	if (target == nullptr) {
+		m_stats.Health += HpGain;
+		if (m_stats.Health > m_stats.MaxHealth) m_stats.Health = m_stats.MaxHealth;
+	}
+	else {
+		target->gainHp(HpGain, nullptr);
+	}
+}
+
+void CharacterObject::gainActions(int ActionGain)
+{
+	m_stats.actionsremaining += ActionGain;
+	if (m_stats.actionsremaining > m_stats.MaxActions) m_stats.actionsremaining = m_stats.MaxActions;
+}
+
 bool CharacterObject::AttackRegisters(string place, CharacterObject * target)
 {
 	// throw exception
@@ -498,13 +610,14 @@ bool CharacterObject::AttackRegisters(string place, CharacterObject * target)
 	bool registers;
 	
 	float actualprecition = (float)(m_stats.Precision*(100 - LeftHandTimesHit * 25));
-	int precisionModifier = 5;
+	const int precisionModifier = 5;
 
 	float actualAgility = (float)(target->m_stats.Agility*(100 - target->LegsTimeHit * 25));
 	float AgilityModifier;
 	if (place == "body") AgilityModifier = 1.0f;
 	else if (place == "head") AgilityModifier = 1.5f;
 	else if (place == "righthand" || place == "lefthand" || place == "legs") AgilityModifier = 1.2f;
+
 
 	float ishit = actualprecition * precisionModifier - actualAgility * AgilityModifier;
 

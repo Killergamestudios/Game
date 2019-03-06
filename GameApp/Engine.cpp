@@ -24,6 +24,7 @@ void Engine::run() {
 	Clock clock;
 	m_map = new Map(m_window);
 	keyPressed = false;
+	m_controller.setMap(m_map);
 
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
