@@ -34,14 +34,14 @@
     <Filter Include="Source Files\GameLogic">
       <UniqueIdentifier>{0fc92884-283c-4a02-b3a6-38653d1f689e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Windows\Gui">
+      <UniqueIdentifier>{042f9bae-f57f-4061-968f-beb661253326}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Core\Engine">
-      <UniqueIdentifier>{9f70f3fe-e8a5-480c-a086-a5372929bfec}</UniqueIdentifier>
+      <UniqueIdentifier>{9065a360-8970-4de0-87e9-937dad499b55}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Windows\Gui">
-      <UniqueIdentifier>{a2c55674-b4b5-4d28-b2ce-d1b71226d72d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Windows\Gui">
-      <UniqueIdentifier>{10e197bd-86e4-4d66-b997-348c430baf4c}</UniqueIdentifier>
+      <UniqueIdentifier>{b63afb0c-bd10-49fb-9de9-3ff803ab4a95}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,11 +60,14 @@
     <ClInclude Include="object.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
+    <ClInclude Include="Algorithms.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Header Files\Windows</Filter>
+    <ClInclude Include="IniReader.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="IniWriter.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="GuiElement.h">
       <Filter>Header Files\Windows\Gui</Filter>
@@ -72,14 +75,11 @@
     <ClInclude Include="OptionBox.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="ValueBar.h">
-      <Filter>Header Files\Windows\Gui</Filter>
-    </ClInclude>
     <ClInclude Include="Theme.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="GameMenu.h">
-      <Filter>Header Files\Windows</Filter>
+    <ClInclude Include="ValueBar.h">
+      <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
     <ClInclude Include="BootMenu.h">
       <Filter>Header Files\Windows</Filter>
@@ -109,9 +109,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="LoadCharacters.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="GameApp.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -127,13 +124,16 @@
     <ClCompile Include="object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
+    <ClCompile Include="Algorithms2.cpp">
+      <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="draw.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
     <ClCompile Include="update.cpp">
@@ -145,10 +145,10 @@
     <ClCompile Include="OptionBox.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="ValueBar.cpp">
+    <ClCompile Include="Theme.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="Theme.cpp">
+    <ClCompile Include="ValueBar.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
     <ClCompile Include="BootMenu.cpp">
