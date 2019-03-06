@@ -48,7 +48,7 @@ CharacterObject::~CharacterObject()
 {
 	name.clear();
 	if (m_weapon) delete m_weapon;
-	for (unsigned int i = m_modifiers.size() - 1; i >= 0 ; i--) {
+	for (int i = m_modifiers.size() - 1; i >= 0 ; i--) {
 		m_modifiers.pop_back();
 	}
 	/*for (unsigned int i = m_items.size() - 1; i >= 0 ; i--) {
