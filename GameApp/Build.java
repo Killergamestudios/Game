@@ -46,7 +46,7 @@ public class Build {
                 if(sc instanceof SourceCode) {
                     break;
                 }
-                out.println("    <ClInclude Include=\"src\\" + sc.getDir() + sc.getName() + "\">");
+                out.println("    <ClInclude Include=\"" + sc.getName() + "\">");
                 out.println("      <Filter>" + sc.getDir().substring(0,sc.getDir().length()-1) + "</Filter>");
                 out.println("    </ClInclude>");
             }
@@ -56,7 +56,7 @@ public class Build {
                 if(hc instanceof HeaderCode) {
                     continue;
                 }
-                out.println("    <ClCompile Include=\"src\\" + hc.getDir() + hc.getName() + "\">");
+                out.println("    <ClCompile Include=\"" + hc.getName() + "\">");
                 out.println("      <Filter>" + hc.getDir().substring(0,hc.getDir().length()-1) + "</Filter>");
                 out.println("    </ClCompile>");
             }

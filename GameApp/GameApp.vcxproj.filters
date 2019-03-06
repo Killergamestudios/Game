@@ -45,141 +45,135 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Header Files\Core\Algorithms.h">
+    <ClInclude Include="Algorithms.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\Controller.h">
+    <ClInclude Include="Controller.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\Engine.h">
+    <ClInclude Include="Engine.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\IniReader.h">
+    <ClInclude Include="IniReader.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\IniWriter.h">
+    <ClInclude Include="IniWriter.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\Map.h">
+    <ClInclude Include="Map.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\pch.h">
+    <ClInclude Include="pch.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Core\textureHolder.h">
+    <ClInclude Include="textureHolder.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Objects\component.h">
+    <ClInclude Include="component.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Objects\DataBase.h">
+    <ClInclude Include="object.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Objects\object.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\BootMenu.h">
+    <ClInclude Include="BootMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\GameMenu.h">
+    <ClInclude Include="GameMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\Gui\GuiElement.h">
+    <ClInclude Include="GuiElement.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\Gui\OptionBox.h">
+    <ClInclude Include="OptionBox.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\Gui\Theme.h">
+    <ClInclude Include="Theme.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\Gui\ValueBar.h">
+    <ClInclude Include="ValueBar.h">
       <Filter>Header Files\Windows\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\InGameMainMenu.h">
+    <ClInclude Include="InGameMainMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Header Files\Windows\MainMenu.h">
+    <ClInclude Include="MainMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Source Files\Core\Algorithms.cpp">
+    <ClCompile Include="Algorithms.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Controller.cpp">
+    <ClCompile Include="Controller.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Engine\camera.cpp">
+    <ClCompile Include="camera.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Engine\draw.cpp">
+    <ClCompile Include="draw.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Engine\Engine.cpp">
+    <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Engine\init.cpp">
+    <ClCompile Include="init.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Engine\input.cpp">
+    <ClCompile Include="input.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Engine\update.cpp">
+    <ClCompile Include="update.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\GameApp.cpp">
+    <ClCompile Include="GameApp.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\IniReader.cpp">
+    <ClCompile Include="IniReader.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\IniWriter.cpp">
+    <ClCompile Include="IniWriter.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\Map.cpp">
+    <ClCompile Include="Map.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\pch.cpp">
+    <ClCompile Include="pch.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Core\textureHolder.cpp">
+    <ClCompile Include="textureHolder.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Objects\component.cpp">
+    <ClCompile Include="component.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Objects\DataBase.cpp">
+    <ClCompile Include="LoadCharacters.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Objects\LoadCharacters.cpp">
+    <ClCompile Include="object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Objects\object.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\BootMenu.cpp">
+    <ClCompile Include="BootMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\GameMenu.cpp">
+    <ClCompile Include="GameMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\Gui\GuiElement.cpp">
+    <ClCompile Include="GuiElement.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\Gui\OptionBox.cpp">
+    <ClCompile Include="OptionBox.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\Gui\Theme.cpp">
+    <ClCompile Include="Theme.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\Gui\ValueBar.cpp">
+    <ClCompile Include="ValueBar.cpp">
       <Filter>Source Files\Windows\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\InGameMainMenu.cpp">
+    <ClCompile Include="InGameMainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Windows\MainMenu.cpp">
+    <ClCompile Include="MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
   </ItemGroup>
