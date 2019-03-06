@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "ValueBar.h"
+#pragma once
+#include "../../../Header Files/Windows/Gui/ValueBar.h"
 
 ValueBar::ValueBar(RenderWindow *window, Text label, Font font, Theme::Regions region,
 	float currentValue,float max, float min, float step)

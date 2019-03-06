@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "TextureHolder.h"
+#pragma once
+#include "../../Header Files/Core/TextureHolder.h"
 // Include the "assert feature"
 #include <assert.h>
 TextureHolder* TextureHolder::m_s_Instance = nullptr;

@@ -1,9 +1,8 @@
 #pragma once
-#include "pch.h"
-#include "textureHolder.h"
+#include "../../Header Files/Core/textureHolder.h"
 #include <SFML/Graphics.hpp>
-#include "object.h"
-#include "Engine.h"
+#include "../../Header Files/Objects/object.h"
+#include "../../Header Files/Core/Engine.h"
 #include "fstream"
 #include <iostream>
 #include <sstream>

@@ -1,7 +1,7 @@
-#include "pch.h"
-#include "component.h"
-#include "Algorithms2.h"
-#include "Controller.h"
+#pragma once
+#include "../../Header Files/Objects/component.h"
+#include "../../Header Files/Core/Algorithms.h"
+#include "../../Header Files/Core/Controller.h"
 
 /****************************************************************************************************************************************/
 //                                                   The Component Class                                                                 //

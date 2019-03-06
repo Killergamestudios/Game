@@ -1,6 +1,5 @@
 #pragma once
-#include "pch.h"
-#include "Engine.h"
+#include "../../../Header Files/Core/Engine.h"
 
 void Engine::input(float dtAsSeconds) {
 	Event evt;

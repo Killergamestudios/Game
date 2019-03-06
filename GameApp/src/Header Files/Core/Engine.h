@@ -2,13 +2,12 @@
 #include "textureHolder.h"
 #include <SFML/Graphics.hpp>
 #include "Map.h"
-#include "GameMenu.h"
-#include "MainMenu.h"
-#include "BootMenu.h"
-#include "InGameMainMenu.h"
-#include "object.h"
+#include "../Windows/MainMenu.h"
+#include "../Windows/BootMenu.h"
+#include "../Windows/InGameMainMenu.h"
+#include "../Objects/object.h"
 #include "Controller.h"
-#include "Theme.h"
+#include "../Windows/Gui/Theme.h"
 
 using namespace sf;
 //enum State{Booting,Playing, Loading, InMenu, Incutscene};

@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "textureHolder.h"
-#include "Map.h"
+#include "../Core/textureHolder.h"
+#include "../Core/Map.h"
 #include "component.h"
 
 using namespace sf;

@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "Theme.h"
+#pragma once
+#include "../../../Header Files/Windows/Gui/Theme.h"
 #include <assert.h>
 #include <iostream>
 

@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "textureHolder.h"
+#include "../Core/textureHolder.h"
 #include "fstream"
 #include "GameMenu.h"
-#include "ValueBar.h"
-#include "OptionBox.h"
+#include "Gui/ValueBar.h"
+#include "Gui/OptionBox.h"
 
 using namespace sf;
 

@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "DataBase.h"
+#pragma once
+#include "../../Header Files/Objects/DataBase.h"
 
 DataBase::DataBase()
 {

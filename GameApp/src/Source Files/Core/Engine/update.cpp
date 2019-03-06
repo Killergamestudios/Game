@@ -1,7 +1,7 @@
 #pragma once
-#include "pch.h"
-#include "Engine.h"
+#include "../../../Header Files/Core/Engine.h"
 #include <iostream>
+
 void Engine::update(float dtAsSeconds) {
 	switch(Controller::getState()){
 	case Controller::BOOTING:

@@ -1,8 +1,8 @@
-#include "pch.h"
-#include "object.h"
+#pragma once
+#include "../../Header Files/Objects/object.h"
 #include <iostream>
 #include <algorithm>
-#include "controller.h"
+#include "../../Header Files/Core/controller.h"
 
 /****************************************************************************************************************************************/
 //                                                   The Object Class                                                                   //

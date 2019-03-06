@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "MainMenu.h"
+#pragma once
+#include "../../Header Files/Windows/MainMenu.h"
 #include "fstream"
 #include <iostream>
 using namespace std;

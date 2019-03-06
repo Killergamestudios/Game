@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "GuiElement.h"
+#pragma once
+#include "../../../Header Files/Windows/Gui/GuiElement.h"
 
 
 GuiElement::GuiElement(RenderWindow *window, Text label, Font font, Theme::Regions region)

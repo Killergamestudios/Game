@@ -1,6 +1,5 @@
 #pragma once
-#include "pch.h"
-#include "Controller.h"
+#include "../../Header Files/Core/Controller.h"
 #include <assert.h>
 #include <windows.h>
 

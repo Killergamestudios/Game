@@ -1,7 +1,7 @@
 #pragma once
 #include "textureHolder.h"
 #include <SFML/Graphics.hpp>
-#include "object.h"
+#include "../Objects/object.h"
 
 class CharacterObject;
 using namespace sf;

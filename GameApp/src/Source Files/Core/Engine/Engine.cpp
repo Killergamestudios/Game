@@ -1,7 +1,6 @@
 #pragma once
-#include "pch.h"
-#include "Engine.h"
-#include "textureHolder.h"
+#include "../../../Header Files/Core/Engine.h"
+#include "../../../Header Files/Core/textureHolder.h"
 #include "fstream"
 
 Engine::Engine() {

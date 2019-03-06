@@ -1,6 +1,5 @@
 #pragma once
-#include "pch.h"
-#include "IniReader.h"
+#include "../../Header Files/Core/IniReader.h"
 #include <iostream>
 #include <Windows.h>
 

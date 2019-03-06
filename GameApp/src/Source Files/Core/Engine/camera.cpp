@@ -1,6 +1,5 @@
-#include "pch.h"
-#include "Engine.h"
-
+#pragma once
+#include "../../../Header Files/Core/Engine.h"
 
 void Engine::cameraUpdate(int direction)
 {	

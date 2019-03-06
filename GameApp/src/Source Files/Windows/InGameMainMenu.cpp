@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "InGameMainMenu.h"
+#pragma once
+#include "../../Header Files/Windows/InGameMainMenu.h"
 
 
 InGameMainMenu::InGameMainMenu(RenderWindow &window) :GameMenu(window)

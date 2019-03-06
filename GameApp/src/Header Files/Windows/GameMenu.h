@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "textureHolder.h"
+#include "../Core/textureHolder.h"
 #include "fstream"
-#include "Controller.h"
-#include "Theme.h"
+#include "../Core/Controller.h"
+#include "Gui/Theme.h"
 class GameMenu
 {
 public:

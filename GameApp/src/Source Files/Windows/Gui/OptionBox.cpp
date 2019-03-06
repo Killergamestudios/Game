@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "OptionBox.h"
+#pragma once
+#include "../../../Header Files/Windows/Gui/OptionBox.h"
 
 
 OptionBox::OptionBox(RenderWindow *window, Text label, Font font, Theme::Regions region,

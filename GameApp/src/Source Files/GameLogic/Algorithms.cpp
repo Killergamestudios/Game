@@ -1,10 +1,9 @@
 #pragma once
-#include "pch.h"
 #include <vector>
-#include "Map.h"
+#include "../../Header Files/Core/Map.h"
 #include <map>
 #include <set>
-#include "Algorithms.h"
+#include "../../Header Files/Core/Algorithms.h"
 #include <iostream>
 
 using namespace std;

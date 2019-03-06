@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "GameMenu.h"
+#pragma once
+#include "../../Header Files/Windows/GameMenu.h"
 
 
 GameMenu::GameMenu(RenderWindow &window)

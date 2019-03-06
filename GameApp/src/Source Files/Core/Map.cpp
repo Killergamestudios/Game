@@ -1,6 +1,5 @@
 #pragma once
-#include "pch.h"
-#include "Map.h"
+#include "../../Header Files/Core/Map.h"
 #include "fstream"
 #include <iostream>
 #include <sstream>
