@@ -7,11 +7,15 @@
 Engine::Engine() {
 
 	// get resolution from ini file. Need casting to int
-	windowWidth = (float) Controller::getResolutionWidth(); // casting string to int 
-	windowHeight = (float) Controller::getResolitionHeight(); // casting string to int  
+	viewWidth = (float) Controller::getResolutionWidth();
+	viewHeight = (float) Controller::getResolitionHeight();
+	windowWidth = (float) VideoMode::getDesktopMode().width;
+	windowHeight = (float) VideoMode::getDesktopMode().height;
 	m_window.create(VideoMode((unsigned int)windowWidth,(unsigned int)windowHeight), "Game Name", Style::Fullscreen);
-	camera.setCenter(Vector2f(windowWidth/2, windowHeight/2));
-	camera.setSize(Vector2f(windowWidth, windowHeight));
+	camera.setViewport(FloatRect((windowWidth - viewWidth) / 2 / windowWidth, (windowHeight - viewHeight) / 2 / windowHeight,
+									viewWidth / windowWidth, viewHeight / windowHeight));
+	camera.setCenter(Vector2f(viewWidth / 2, viewHeight / 2));
+	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
 	m_theme = new Theme(m_window);
 }
@@ -20,6 +24,7 @@ void Engine::run() {
 	Clock clock;
 	m_map = new Map(m_window);
 	keyPressed = false;
+	m_controller.setMap(m_map);
 
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();

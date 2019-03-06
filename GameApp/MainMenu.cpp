@@ -6,17 +6,17 @@ using namespace std;
 
 MainMenu::MainMenu(RenderWindow &window):GameMenu(window)
 {
-	index = 0;
 	depth = 1;
+	loadMenu = false;
 	backButton.push_back("Quit");
 }
 
 
 MainMenu::~MainMenu()
 {
-	if (backgroundMusic == NULL) delete backgroundMusic;
+	if (backgroundMusic != NULL) delete backgroundMusic;
 	backgroundMusic = NULL;
-	if (title == NULL) delete title;
+	if (title != NULL) delete title;
 	title = NULL;
 	menuTexts.clear();
 	menuSprites.clear();
@@ -84,7 +84,7 @@ void MainMenu::actions()
 		return;
 	}
 
-	if (index == 1 && depth == 2 )
+	if (loadMenu)
 	{
 		Controller::setRunning(false);
 		Controller::setLoadFile(true);
@@ -92,29 +92,8 @@ void MainMenu::actions()
 	}
 	else if(depth == 1)
 	{
-		switch (optionSelected)
-		{
-		case 0: // New Game
-			//Loads intro cutscene or whatever		
-			index = 0;
-			depth = 2;
-			initLayer();
-			break;
-		case 1: //Load Game
-			index = 1;
-			depth = 2;
-			initLayer();
-			break;
-		case 2: //Options
-			index = 2;
-			depth = 2;
-			initLayer();
-			break;
-		case 3: //Credits
-			//index = 3;
-			//depth = 2;
-			break;
-		}
+		depth++;
+		initLayer();
 	}
 }
 
@@ -141,41 +120,45 @@ void MainMenu::input() {
 	}
 }
 
-void MainMenu::initData()
-{
-	
-}
-
 void MainMenu::initLayer()
 {
+	clearTextures();
+	loadMenu = false;
+	Theme::clearRegion(Theme::MainMenu);
+	backButton[0] = "Back";
+
 	if (depth == 1) {
-		clearTextures();
-		Theme::clearRegion(Theme::MainMenu);
 		initFileNamesToLoad(mainMenu, Theme::MainMenu);
 		backButton[0] = "Quit";
-		loadTextGraphics(backButton, Theme::BackButton);
 	}
-	else if (index == 0 && depth == 2) {
+	else if (optionSelected == 0 && depth == 2) {
 		Controller::setRunning(false);
 		Controller::setLoadFile(false);
 		Theme::clear();
 	}
-	else if (index == 1 && depth == 2) {
-		clearTextures();
-		Theme::clearRegion(Theme::MainMenu);
+	else if (optionSelected == 1 && depth == 2) {
 		loadSaveFiles();
-		backButton[0] = "Back";
-		loadTextGraphics(backButton, Theme::BackButton);
+		loadMenu = true;
+		
 	}
-	else if (index == 2 && depth == 2) {
-		clearTextures();
+	else if (optionSelected == 2 && depth == 2) {
 		initOptions();
-		Theme::clearRegion(Theme::MainMenu);
-		backButton[0] = "Back";
-		loadTextGraphics(backButton, Theme::BackButton);
 	}
+	else if (optionSelected == 3 && depth == 2) {
+	}
+
+	optionSelected = 0;
+	loadTextGraphics(backButton, Theme::BackButton);
 }
 
+void MainMenu::clearTextures()
+{
+	menuTexts.clear();
+	menuSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
+	guiElements.clear();
+}
 
 void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)
 {
@@ -197,12 +180,12 @@ void MainMenu::setMenuSprites(Theme::Regions region)
 		Set Position of Sprites 
 		Add Sprites into drawStack and tabOrder sets
 	*/
-	vector<FloatRect> dimensions; // vector with dimensions of elements
+	vector<Vector2f> dimensions; // vector with dimensions of elements
 
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
 		Sprite* buffer = new Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128));
-		dimensions.push_back(buffer->getLocalBounds());  // get dimensions of Sprites needed by the region
+		dimensions.push_back(Vector2f(buffer->getLocalBounds().width, buffer->getLocalBounds().height));  // get dimensions of Sprites needed by the region
 		drawStack[drawStack.size() + 2] = buffer;  // add items to the draw stack (details for ordering in GameMenu.h)
 		tabOrder[tabOrder.size()] = make_pair("SP",buffer); // add items to the tabOrder
 		menuSprites.push_back(buffer); // add Sprites to the menuSprites
@@ -219,11 +202,11 @@ void MainMenu::setMenuSprites(Theme::Regions region)
 void MainMenu::loadTextGraphics(vector<string> textsArray, Theme::Regions region)
 {
 
-	vector<FloatRect> dimensions; // vector with dimensions of elements
+	vector<Vector2f> dimensions; // vector with dimensions of elements
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
 		Text* buffer = new Text(textsArray[i], font, 24);
 		menuTexts.push_back(buffer);
-		dimensions.push_back(buffer->getLocalBounds());
+		dimensions.push_back(Vector2f(buffer->getLocalBounds().width, buffer->getLocalBounds().height));
 		drawStack[drawStack.size() + 2] = buffer;
 		tabOrder[tabOrder.size()] = make_pair("TXT", buffer);
 		buffer->setFillColor(Color::White);
@@ -277,15 +260,6 @@ void MainMenu::changeSeletedOption(int direction)
 	}
 }
 
-void MainMenu::clearTextures()
-{
-	menuTexts.clear();
-	menuSprites.clear();
-	drawStack.clear();
-	tabOrder.clear();
-	optionSelected = 0;
-}
-
 void MainMenu::loadSaveFiles() {
 	string lineReader;
 	const string saveFileMapDirectory = "./savefiles/saveFilesMap.txt";
@@ -306,16 +280,8 @@ void MainMenu::loadSaveFiles() {
 
 void MainMenu::initOptions()
 {
-	const int WIN_HEIGHT = m_window->getSize().y;
-	const int WIN_WIDTH = m_window->getSize().x;
-	const float HEIGHT_LOGO = WIN_HEIGHT * 0.3f; // to be initialized properly
-	const float MARGIN_LOGO = WIN_HEIGHT * 0.05f; // top and down margin of logo
-	const float TOP_CONTAINER = 2 * MARGIN_LOGO + HEIGHT_LOGO;
-	const float MARGIN_X = 0.05f*WIN_WIDTH;
-	const float MARGIN_Y = 0.02f*WIN_HEIGHT;
-	const float DISTANCE_BETWEEN = 30 + MARGIN_Y *2;
-	
-	ValueBar* buffer = new ValueBar(m_window, Vector2f(MARGIN_X, TOP_CONTAINER), Text("Music Volume", font, 30), font, (float)Controller::getMusicVolume());
+
+	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, Theme::MainMenu, (float)Controller::getMusicVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
@@ -324,7 +290,7 @@ void MainMenu::initOptions()
 	{
 		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
 	}
-	OptionBox* opBuffer = new OptionBox(m_window, Vector2f(MARGIN_X, TOP_CONTAINER + DISTANCE_BETWEEN), Text("Resolution", font, 30), font, Controller::getResolutionID(), resolutions);
+	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, Theme::MainMenu, Controller::getResolutionID(), resolutions);
 	guiElements.push_back(opBuffer);
 	drawStack[2 + drawStack.size()] = opBuffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);

@@ -150,6 +150,16 @@ void Controller::clearState(bool hardFlush, bool secondary, SecondaryState state
 
 }
 
+Map * Controller::getMap()
+{
+	return m_s_Instance->map;
+}
+
+void Controller::setMap(Map * mp)
+{
+	map = mp;
+}
+
 void Controller::setResolutionID(int value)
 {
 	m_s_Instance->resolutionID = value;

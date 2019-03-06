@@ -28,7 +28,7 @@ public:
 
 
 	CharacterObject getenemy(Vector2i);
-	CharacterObject *SpawnCharacter(Vector2i position,Map *map, string savefilename, string Name, string Class);
+	CharacterObject *SpawnCharacter(Vector2i position,string savefilename, string Name, string Class);
 	void loadParty(Map *map,string savefilename);
 	
 	vector<CharacterObject> &getparty();
