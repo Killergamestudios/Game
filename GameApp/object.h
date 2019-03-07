@@ -103,7 +103,7 @@ public:
 	int getPrecision();
 
 	//setters
-	void UpdateStats(Stats &s);
+	void UpdateStats(int Agi, int Prec);
 	void addModifier(ModifierComponent *m);
 	void setAgility(int agi);
 	void setPrecision(int prec);

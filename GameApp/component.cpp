@@ -1,7 +1,17 @@
 #include "pch.h"
 #include "component.h"
-#include "Algorithms2.h"
+#include "Algorithms.h"
 #include "Controller.h"
+
+string CalculateBuffType(CharacterObject *obj) {
+	if (obj->getCategory() == "enemy") return "buff";
+	else return "debuff";
+
+}
+
+
+
+
 
 /****************************************************************************************************************************************/
 //                                                   The Component Class                                                                 //
@@ -416,6 +426,7 @@ void Whirlwind::update()
 
 void Whirlwind::use(Vector2i & position, CharacterObject * target)
 {
+	int mastery = parent->getMastery();
 	Vector2i m_position = parent->getMyPosition();
 	if (position.x != m_position.x || position.y != m_position.y) throw std::exception("invalid position");
 	Map *map = Controller::getMap();
@@ -426,9 +437,25 @@ void Whirlwind::use(Vector2i & position, CharacterObject * target)
 			if ((i != 0 && j != 0) && map->getEnemyinPosition(Vector2i(i + m_position.x, j + m_position.y)) != 0)
 				enemysToHit.push_back(Vector2i(i + m_position.x, j + m_position.y));
 		}
+
 	for (unsigned int i = 0; i < enemysToHit.size(); i++) {
 		enemy = &map->getenemy(enemysToHit[i]);
-		parent->Attack(enemy, "body");
+		switch (mastery) {
+		case 1:
+		case 2:
+			parent->Attack(enemy, "body");
+			break;
+		case 3:
+		case 4:
+			parent->Attack(enemy, "body");
+			parent->Attack(enemy, "body");
+			break;
+		case 5:
+			parent->Attack(enemy, "body");
+			parent->Attack(enemy, "body");
+			parent->Attack(enemy, "body");
+			break;
+		}
 	}
 }
 
@@ -438,40 +465,85 @@ bool Whirlwind::canUse(Vector2i & position, CharacterObject * target)
 }
 
 /****************************************************************************************************************************************/
-//                                                   The Rally Class                                                                     //
+//                                                   The Rally  Modifier Class                                                           //
 /****************************************************************************************************************************************/
 
 
-/*
-RallyModifier::RallyModifier(CharacterObject * Prnt):ModifierComponent(Prnt,3)
-{
-}
 
+RallyModifier::RallyModifier(CharacterObject * Prnt,int mastery):ModifierComponent(Prnt,3,CalculateBuffType(Prnt))
+{
+	Mastery = mastery;
+}
 void RallyModifier::kill()
 {
-	if (!isdead) return;
-	Stats s;
-	if (Parent->getCategory() == "friendly") {
-		s = { 0,0,0,-1,-1,0,-3,-5,-1,0 ,0,0,0 };
+	if (Parent->getType() == "enemy") {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() + 1, Parent->getPrecision() + 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() + 2, Parent->getPrecision() + 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() + 3, Parent->getPrecision() + 3);
+			break;
+		}
 	}
-	else if (Parent->getCategory() == "enemy") {
-		s = { 0,0,0,1,1,0,3,5,1,0 ,0,0,0 };
+	else {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() - 1, Parent->getPrecision() - 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() - 2, Parent->getPrecision() - 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() - 3, Parent->getPrecision() - 3);
+			break;
+		}
 	}
-	Parent->UpdateStats(s);
 }
 void RallyModifier::aply()
 {
-	if (!(turnsToDie == 3)) return;
-	Stats s;
-	if (Parent->getCategory() == "friendly") {
-		s = { 0,0,0,1,1,0,3,5,1,0 ,0,0,0};
+	if (Parent->getType() == "friendly") {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() + 1 , Parent->getPrecision() + 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() + 2, Parent->getPrecision() + 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() + 3 , Parent->getPrecision() + 3);
+			break;
+		}
 	}
-	else if (Parent->getCategory() == "enemy") {
-		s = { 0,0,0,-1,-1,0,-3,-5,-1,0 ,0,0,0};
+	else {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() - 1, Parent->getPrecision() - 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() - 2, Parent->getPrecision() - 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() - 3, Parent->getPrecision() - 3);
+			break;
+		}
 	}
-	Parent->UpdateStats(s);
 }
 
+/****************************************************************************************************************************************/
+//                                                   The Rally Class                                                                     //
+/****************************************************************************************************************************************/
 
 Rally::Rally(CharacterObject * Parent) :AbilityComponent(Parent, "Rally")
 {
@@ -484,20 +556,17 @@ void Rally::update()
 
 void Rally::use(Vector2i & position, CharacterObject * target)
 {
-	Map * map = parent->getmap();
+	Map *map = Controller::getMap();
 	vector<CharacterObject> party = map->getparty();
-	RallyModifier * rally;
-
-	for (unsigned int i = 0; i < party.size(); i++) {
-		rally = new RallyModifier(&party[i]);
-		party[i].addModifier(rally);
-		rally = nullptr;
-	}
 	vector<CharacterObject> enemys = map->getenemys();
+	int Mastery = parent->getMastery();
+	for (unsigned int i = 0; i < party.size(); i++) {
+		RallyModifier *raly = new RallyModifier(&party[i], Mastery);
+		party[i].addModifier(raly);
+	}
 	for (unsigned int i = 0; i < enemys.size(); i++) {
-		rally = new RallyModifier(&enemys[i]);
-		enemys[i].addModifier(rally);
-		rally = nullptr;
+		RallyModifier *raly = new RallyModifier(&enemys[i], Mastery);
+		enemys[i].addModifier(raly);
 	}
 
 }
@@ -507,7 +576,7 @@ bool Rally::canUse(Vector2i & position, CharacterObject * target)
 	return (parent->getActionsRemaining() >= ActionCost);
 }
 
-*/
+
 
 /****************************************************************************************************************************************/
 //                                                   The Charge Class                                                                    //

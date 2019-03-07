@@ -1,184 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\Core">
-      <UniqueIdentifier>{553e4ff0-86e7-4bdc-89ba-0a27d6ab21a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{597b052f-94f8-4ad8-9813-17302fbec8f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Windows">
-      <UniqueIdentifier>{28af089d-82cb-4b23-9b78-be601a834511}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core">
-      <UniqueIdentifier>{9a3ba79a-5c17-43ce-9a58-1368f587598c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Windows">
-      <UniqueIdentifier>{78aa6fea-19bb-487a-842c-bf4b217d4ce9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Objects">
-      <UniqueIdentifier>{7946306f-fbd9-46b6-ae26-24cb63c2cddc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameLogic">
-      <UniqueIdentifier>{0fc92884-283c-4a02-b3a6-38653d1f689e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Windows\Gui">
-      <UniqueIdentifier>{042f9bae-f57f-4061-968f-beb661253326}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Engine">
-      <UniqueIdentifier>{9065a360-8970-4de0-87e9-937dad499b55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Windows\Gui">
-      <UniqueIdentifier>{b63afb0c-bd10-49fb-9de9-3ff803ab4a95}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="BootMenu.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="component.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="DataBase.cpp" />
+    <ClCompile Include="draw.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="GameMenu.cpp" />
+    <ClCompile Include="GuiElement.cpp" />
+    <ClCompile Include="InGameMainMenu.cpp" />
+    <ClCompile Include="IniReader.cpp" />
+    <ClCompile Include="init.cpp" />
+    <ClCompile Include="IniWriter.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="LoadCharacters.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="OptionBox.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="textureHolder.cpp" />
+    <ClCompile Include="Theme.cpp" />
+    <ClCompile Include="update.cpp" />
+    <ClCompile Include="ValueBar.cpp" />
+    <ClCompile Include="Algorithms.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="textureHolder.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Algorithms.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="IniReader.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="IniWriter.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="GuiElement.h">
-      <Filter>Header Files\Windows\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionBox.h">
-      <Filter>Header Files\Windows\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="Theme.h">
-      <Filter>Header Files\Windows\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="ValueBar.h">
-      <Filter>Header Files\Windows\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="BootMenu.h">
-      <Filter>Header Files\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="IniReader.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Algorithms.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="IniWriter.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameMainMenu.h">
-      <Filter>Header Files\Windows</Filter>
-    <ClInclude Include="DataBase.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GameApp.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="textureHolder.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="component.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Algorithms2.cpp">
-      <Filter>Source Files\GameLogic</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="update.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="GuiElement.cpp">
-      <Filter>Source Files\Windows\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="OptionBox.cpp">
-      <Filter>Source Files\Windows\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="Theme.cpp">
-      <Filter>Source Files\Windows\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="ValueBar.cpp">
-      <Filter>Source Files\Windows\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="BootMenu.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="GameMenu.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="InGameMainMenu.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="init.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="IniReader.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="IniWriter.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Algorithms.cpp">
-      <Filter>Source Files\GameLogic</Filter>
-    <ClCompile Include="DataBase.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
+    <ClInclude Include="BootMenu.h" />
+    <ClInclude Include="component.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="DataBase.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="GameMenu.h" />
+    <ClInclude Include="GuiElement.h" />
+    <ClInclude Include="InGameMainMenu.h" />
+    <ClInclude Include="IniReader.h" />
+    <ClInclude Include="IniWriter.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="OptionBox.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="textureHolder.h" />
+    <ClInclude Include="Theme.h" />
+    <ClInclude Include="ValueBar.h" />
+    <ClInclude Include="Algorithms.h" />
   </ItemGroup>
 </Project>

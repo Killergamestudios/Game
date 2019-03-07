@@ -48,7 +48,7 @@ CharacterObject::~CharacterObject()
 {
 	name.clear();
 	if (m_weapon) delete m_weapon;
-	for (unsigned int i = m_modifiers.size() - 1; i >= 0 ; i--) {
+	for (int i = m_modifiers.size() - 1; i >= 0 ; i--) {
 		m_modifiers.pop_back();
 	}
 	/*for (unsigned int i = m_items.size() - 1; i >= 0 ; i--) {
@@ -382,11 +382,10 @@ const Stats & CharacterObject::getM_stats()
 //                                                   The Setters                                                                        //
 /****************************************************************************************************************************************/
 
-void CharacterObject::UpdateStats(Stats & stats)
+void CharacterObject::UpdateStats(int Agi, int Prec)
 {
-	m_stats.Agility = stats.Agility;
-	m_stats.Mastery = stats.Mastery;
-	m_stats.Precision = stats.Precision;
+	m_stats.Agility = Agi;
+	m_stats.Precision = Prec;
 }
 
 void CharacterObject::addModifier(ModifierComponent * m)
@@ -524,6 +523,23 @@ int CharacterObject::isAttackedPhysical(string place, int damage)
 	else armor = m_Armor->getPhysicalResistance();
 	int damageDealt;
 	damageDealt = damage - armor;
+	if (place == "body") BodyTimesHit++;
+	else if (place == "head") {
+		HeadTimesHit++;
+		damageDealt *= 2;
+	}
+	else if (place == "legs") {
+		LegsTimeHit++;
+		if (LegsTimeHit > MaxLegsTimesHit) LegsTimeHit = MaxLegsTimesHit;
+	}
+	else if (place == "rightHand") {
+		RightHandTimesHit++;
+		if (RightHandTimesHit > MaxRightHandTimesHit) RightHandTimesHit = MaxRightHandTimesHit;
+	}
+	else if (place == "leftHand") {
+		LeftHandTimesHit++;
+		if (LeftHandTimesHit > MaxLeftHandTimesHit) LeftHandTimesHit = MaxLegsTimesHit;
+	}
 	loseHp(damageDealt);
 	return damageDealt;
 }
