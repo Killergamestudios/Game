@@ -6,19 +6,19 @@
 Engine::Engine() {
 
 	// get resolution from ini file. Need casting to int
-	viewWidth = (float) Controller::getResolutionWidth();
-	viewHeight = (float) Controller::getResolitionHeight();
-	windowWidth = (float) VideoMode::getDesktopMode().width;
-	windowHeight = (float) VideoMode::getDesktopMode().height;
-	m_window.create(VideoMode((unsigned int)windowWidth,(unsigned int)windowHeight), "Game Name", Style::Fullscreen);
+	viewWidth = (float)Controller::getResolutionWidth();
+	viewHeight = (float)Controller::getResolitionHeight();
+	windowWidth = (float)VideoMode::getDesktopMode().width;
+	windowHeight = (float)VideoMode::getDesktopMode().height;
+	m_window.create(VideoMode((unsigned int)windowWidth, (unsigned int)windowHeight), "Game Name", Style::Fullscreen);
 	camera.setViewport(FloatRect((windowWidth - viewWidth) / 2 / windowWidth, (windowHeight - viewHeight) / 2 / windowHeight,
-									viewWidth / windowWidth, viewHeight / windowHeight));
+		viewWidth / windowWidth, viewHeight / windowHeight));
 	camera.setCenter(Vector2f(viewWidth / 2, viewHeight / 2));
 	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
 	m_theme = new Theme(m_window);
 	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png"));
-	
+
 }
 
 void Engine::run() {
@@ -39,7 +39,7 @@ void Engine::run() {
 			update(dtAsSeconds); // handles updates - animation etc
 			draw(); // handles drawing 
 		}
-		
+
 	}
 }
 
@@ -60,12 +60,18 @@ void Engine::mouseControl()
 	sf::Vector2i position = sf::Mouse::getPosition(m_window);
 
 	//Calculating the local position of the mouse based on the view Size and the Camera Position.
-	int localX = position.x - windowWidth / 2 + viewWidth / 2 + camera.getCenter().x- camera.getSize().x / 2;
-	int localY = position.y -windowHeight/2 +viewHeight/2 + camera.getCenter().y - camera.getSize().y / 2;
-	tile_sprite.setPosition(localX - localX% 64,localY - localY% 64); //Setting the position to draw the target selector
-	
+	int localX = position.x - windowWidth / 2 + viewWidth / 2 + camera.getCenter().x - camera.getSize().x / 2;
+	int localY = position.y - windowHeight / 2 + viewHeight / 2 + camera.getCenter().y - camera.getSize().y / 2;
+	tile_sprite.setPosition(localX - localX % 64, localY - localY % 64); //Setting the position to draw the target selector
+
 	sf::Vector2i localPos(localX / 64, localY / 64); // Finding the mouse position in the Map 2D Arrays.
-	if (Controller::getMap()->getFriendlyinPosition(localPos) > 0)
+
+	//If the localPos is beyond the size of the data arrays of the map, don't try accessing the data tables.
+	if (Controller::getMap()->getMapWidth()/64 <= localPos.x || Controller::getMap()->getMapHeight()/64 <= localPos.y || localPos.x < 0 || localPos.y < 0)
+	{
+		tile_sprite.setTextureRect(sf::IntRect(0, 0, 64, 64)); //Out of bounds. Set it to blue just for no reason.
+	}
+	else if (Controller::getMap()->getFriendlyinPosition(localPos) > 0)
 	{
 		tile_sprite.setTextureRect(sf::IntRect(0, 64, 64, 64)); // If friendly is on a tile, set the color of the target selector to yellow.
 	}
