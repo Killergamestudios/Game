@@ -55,7 +55,7 @@ private:
 	void draw();
 	void init();
 	void updateState();
-	void mouseControl();
+	void mouseControl(float &totaltimepassed,int &animState);
 	
 
 	void cameraUpdate(int direction); // handles movement of camera
@@ -67,6 +67,8 @@ private:
 	//CharacterObject *mage;
 	vector<CharacterObject> party;
 	Sprite tile_sprite;
+	float mouseTimePass;
+	int animState;
 public:
 	Engine();
 	void run();

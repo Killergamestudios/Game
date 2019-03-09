@@ -17,7 +17,9 @@ Engine::Engine() {
 	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
 	m_theme = new Theme(m_window);
-	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png"));
+	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png")); //For the mouse Texture
+	mouseTimePass = 0; //For the mouse animation
+	animState = 0; //For the mouse animation
 
 }
 
@@ -50,8 +52,16 @@ void Engine::updateState()
 }
 
 
-void Engine::mouseControl()
+void Engine::mouseControl(float &totalTimePassed, int &animState)
 {
+	float animationSpeed = 0.1f;
+	if (totalTimePassed  > animationSpeed)
+	{
+		totalTimePassed=0;
+		animState = (animState + 64) % 1024; //Has 16 frames of 64 pixel.
+	
+	}
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		// left click...
@@ -69,19 +79,19 @@ void Engine::mouseControl()
 	//If the localPos is beyond the size of the data arrays of the map, don't try accessing the data tables.
 	if (Controller::getMap()->getMapWidth()/64 <= localPos.x || Controller::getMap()->getMapHeight()/64 <= localPos.y || localPos.x < 0 || localPos.y < 0)
 	{
-		tile_sprite.setTextureRect(sf::IntRect(0, 0, 64, 64)); //Out of bounds. Set it to blue just for no reason.
+		tile_sprite.setTextureRect(sf::IntRect(animState, 0, 64, 64)); //Out of bounds. Set it to blue just for no reason.
 	}
 	else if (Controller::getMap()->getFriendlyinPosition(localPos) > 0)
 	{
-		tile_sprite.setTextureRect(sf::IntRect(0, 64, 64, 64)); // If friendly is on a tile, set the color of the target selector to yellow.
+		tile_sprite.setTextureRect(sf::IntRect(animState, 64, 64, 64)); // If friendly is on a tile, set the color of the target selector to yellow.
 	}
 	else if (Controller::getMap()->getEnemyinPosition(localPos) > 0)
 	{
-		tile_sprite.setTextureRect(sf::IntRect(0, 128, 64, 64)); //If enemy is on a tile, set the color of the target selector to red.
+		tile_sprite.setTextureRect(sf::IntRect(animState, 128, 64, 64)); //If enemy is on a tile, set the color of the target selector to red.
 	}
 	else
 	{
-		tile_sprite.setTextureRect(sf::IntRect(0, 0, 64, 64)); //If there is nothing set the color of the target selector to blue.
+		tile_sprite.setTextureRect(sf::IntRect(animState, 0, 64, 64)); //If there is nothing set the color of the target selector to blue.
 	}
 	
 }
