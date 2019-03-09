@@ -11,6 +11,7 @@ void Engine::update(float dtAsSeconds) {
 		mainmenu->update(dtAsSeconds);
 		break;
 	case Controller::PLAYING:
+		mouseControl();
 		for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].update(dtAsSeconds);
 		}

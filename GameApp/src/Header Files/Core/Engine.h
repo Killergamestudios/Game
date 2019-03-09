@@ -55,6 +55,8 @@ private:
 	void draw();
 	void init();
 	void updateState();
+	void mouseControl();
+	
 
 	void cameraUpdate(int direction); // handles movement of camera
 	void cameraReset(); // resets camera. Useful for state transitions
@@ -64,6 +66,7 @@ private:
 	//CharacterObject *Warrior;//temp
 	//CharacterObject *mage;
 	vector<CharacterObject> party;
+	Sprite tile_sprite;
 public:
 	Engine();
 	void run();
