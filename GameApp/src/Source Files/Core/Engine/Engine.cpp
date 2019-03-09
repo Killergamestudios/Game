@@ -52,7 +52,7 @@ void Engine::updateState()
 }
 
 
-void Engine::mouseControl(float &totalTimePassed, int &animState)
+sf::Vector2i Engine::mouseControl(float &totalTimePassed, int &animState)
 {
 	//Mouse control should be adapted to work differently depending on the state of the game. Or if an in-game menu is open it should affect the menu or not work at all.
 	//Should also be able to use it for selecting where to move. It might prove useful to make this function return a value. Either return an int Value depending on the type of object it traces below the mouse,
@@ -109,6 +109,7 @@ void Engine::mouseControl(float &totalTimePassed, int &animState)
 			//Show up information about the target 
 		}
 	}
+	return localPos; //After the value is returned make sure it is within the bounds of the map Arrays.
 }
 
 

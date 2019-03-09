@@ -55,7 +55,7 @@ private:
 	void draw();
 	void init();
 	void updateState();
-	void mouseControl(float &totaltimepassed,int &animState);
+	sf::Vector2i mouseControl(float &totaltimepassed,int &animState);
 	
 
 	void cameraUpdate(int direction); // handles movement of camera
