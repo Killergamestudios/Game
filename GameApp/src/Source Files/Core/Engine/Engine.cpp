@@ -17,14 +17,13 @@ Engine::Engine() {
 	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
 	m_theme = new Theme(m_window);
+	m_map = new Map(m_window);
+	m_controller.setMap(m_map);
 }
 
 void Engine::run() {
 	Clock clock;
-	m_map = new Map(m_window);
 	keyPressed = false;
-	m_controller.setMap(m_map);
-
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
 		GameTimeTotal = dt;
