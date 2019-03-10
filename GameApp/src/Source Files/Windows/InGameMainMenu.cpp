@@ -2,9 +2,8 @@
 #include "../../Header Files/Windows/InGameMainMenu.h"
 
 
-InGameMainMenu::InGameMainMenu(RenderWindow &window) :GameMenu(window)
+InGameMainMenu::InGameMainMenu(RenderWindow &window) :MainMenu(window)
 {
-	index = 0;
 	depth = 1;
 }
 
@@ -19,7 +18,7 @@ InGameMainMenu::~InGameMainMenu()
 void InGameMainMenu::init()
 {
 	clearTextures();
-	initData(); // Initialize everything. Fresh start
+	initLayer(); // Initialize everything. Fresh start
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	totalTimePassed = 0;
 
@@ -32,7 +31,8 @@ void InGameMainMenu::init()
 	backgroundFillColor->setPosition(newPositions[0]);
 	backgroundSprites[0]->setPosition(newPositions[0]);
 	for (unsigned int i = 0; i < menuTexts.size(); i++) {
-		menuTexts[i]->setPosition(newPositions[i+1]);
+		newPositions[i + 1] = Vector2f(newPositions[i + 1].x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f);
+		menuTexts[i]->setPosition(newPositions[i + 1]);
 	}
 }
 
@@ -56,33 +56,16 @@ void InGameMainMenu::update(float dtasSeconds)
 
 void InGameMainMenu::actions()
 {
-	if (index == 1 && depth == 2)
+	if (loadMenu)
 	{
 		Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
 		Controller::setLoadFile(true);
 		Controller::setSaveFileDirectory(loadFilePath[optionSelected]);
-	}
-	else
+	} 
+	else if (depth == 1)
 	{
-		switch (optionSelected)
-		{
-		case 0: // Resume Game
-			Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
-			break;
-		case 1: //Load Game
-			index = 1;
-			depth = 2;
-			loadSaveFiles();
-			break;
-		case 2: //Options
-			break;
-		case 3: //Quit Game
-			Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
-			Controller::setState(Controller::IN_MENU);
-			Controller::setRunning(false);
-			Controller::setInitialized(false);
-			break;
-		}
+		depth++;
+		initLayer();
 	}
 }
 
@@ -102,32 +85,54 @@ void InGameMainMenu::input()
 	}
 }
 
-void InGameMainMenu::initData()
+void InGameMainMenu::initLayer()
 {
-	initMenuEnrties(mainMenu);
-	setBackgroundSprites(backgroundSpritesPath);
+	clearTextures();
+	loadMenu = false;
+	Theme::clearRegion(Theme::MainMenu);
+	//backButton[0] = "Back";
+
+	if (depth == 1) {
+		loadTextGraphics(mainMenu);
+		setBackgroundSprites(backgroundSpritesPath);
+	}
+	else if (optionSelected == 0 && depth == 2) {
+		Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
+		Theme::clearRegion(Theme::NewWindow);
+	}
+	else if (optionSelected == 1 && depth == 2) {
+		loadSaveFiles();
+		loadMenu = true;
+
+	}
+	else if (optionSelected == 2 && depth == 2) {
+		//initOptions();
+	}
+	else if (optionSelected == 3 && depth == 2) {
+		Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
+		Controller::setState(Controller::IN_MENU);
+		Controller::setRunning(false);
+		Controller::setInitialized(false);
+	}
+
+	optionSelected = 0;
 }
 
-void InGameMainMenu::initMenuEnrties(vector<string> menuEntries)
+void InGameMainMenu::loadTextGraphics(vector<string> menuEntries)
 {
 	/*
 		Adds Sprites to vector and trims them
 		Sets Origin of sprites to center
 		Set Position of Sprites
 	*/
-	//vector<Vector2f> dimensions; // vector with dimensions of elements
 	for (unsigned int i = 0; i < menuEntries.size(); i++) {
 		Text* buffer = new Text(menuEntries[i], font, 24);
 		menuTexts.push_back(buffer);
-	//	dimensions.push_back(Vector2f(buffer->getLocalBounds().width, buffer->getLocalBounds().height));
 		drawStack[drawStack.size() + 2] = buffer;
 		tabOrder[tabOrder.size()] = make_pair("TXT", buffer);
 		buffer->setFillColor(Color::White);
 	}
-	//vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions);
-	//for (unsigned int i = 0; i < menuEntries.size(); i++) {
-	//	menuTexts[menuTexts.size() - menuEntries.size() + i]->setPosition(newPositions[i]);
-	//}
+
 	if (tabOrder.size() == menuTexts.size())
 		menuTexts[0]->setFillColor(Color::Red); //set as default selected
 }

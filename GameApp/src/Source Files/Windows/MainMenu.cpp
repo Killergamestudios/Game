@@ -297,5 +297,3 @@ void MainMenu::initOptions()
 	optionSelected = 0;
 	guiElements[0]->setSelected();
 }
-
-

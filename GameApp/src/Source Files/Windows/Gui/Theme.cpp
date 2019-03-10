@@ -50,7 +50,7 @@ void Theme::initContent()
 
 void Theme::initNewWindow()
 {
-	margin[NewWindow] = Vector2f(VIEW_WIDTH*0.02f, VIEW_HEIGHT * 0.03f);
+	margin[NewWindow] = Vector2f(VIEW_WIDTH*0.02f, VIEW_HEIGHT * 0.05f);
 	elementSeperation[NewWindow] = 0;
 	regionDimensions[NewWindow] = Vector2f(0, 0);
 }
