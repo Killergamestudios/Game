@@ -204,6 +204,12 @@ vector<Vector2i> Controller::getAvailableResolutions()
 	return m_s_Instance->availableResolutions;
 }
 
+void Controller::quit(RenderWindow * window)
+{
+	window->close();
+	saveVars();
+}
+
 void Controller::loadVars()
 {
 	m_s_Instance->resolutionID = stoi(m_s_Instance->iniReader->ReadVar("Display", "resolutionID", ""));
@@ -213,8 +219,8 @@ void Controller::loadVars()
 
 void Controller::saveVars()
 {
-	m_s_Instance->iniWriter->WriteVar("Display", "resolutionID", "" + m_s_Instance->resolutionID);
-	m_s_Instance->iniWriter->WriteVar("Audio", "musicVolume", "" + m_s_Instance->musicVolume);
-	m_s_Instance->iniWriter->WriteVar("Audio", "soundVolume", "" + m_s_Instance->soundVolume);
+	m_s_Instance->iniWriter->WriteVar("Display", "resolutionID", to_string(m_s_Instance->resolutionID));
+	m_s_Instance->iniWriter->WriteVar("Audio", "musicVolume", to_string(m_s_Instance->musicVolume));
+	m_s_Instance->iniWriter->WriteVar("Audio", "soundVolume", to_string(m_s_Instance->soundVolume));
 }
 

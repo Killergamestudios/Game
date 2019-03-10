@@ -57,7 +57,6 @@ void MainMenu::update(float dtasSeconds) {
 
 	totalTimePassed += dtasSeconds;
 	animate(totalTimePassed, optionSelected);
-	backgroundMusic->setVolume((float)Controller::getMusicVolume());
 	
 	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
 	{
@@ -66,6 +65,10 @@ void MainMenu::update(float dtasSeconds) {
 			if (guiElements[i]->label.getString() == "Music Volume")
 			{	
 				Controller::setMusicVolume((int)guiElements[i]->getValue());
+				backgroundMusic->setVolume((float)Controller::getMusicVolume());
+			}
+			else if (guiElements[i]->label.getString() == "Resolution") {
+				Controller::setResolutionID((int)guiElements[i]->getValue());
 			}
 		}
 	}
@@ -75,7 +78,7 @@ void MainMenu::actions()
 {
 	if (optionSelected == tabOrder.size() - 1) {
 		if (depth == 1) {
-			m_window->close();
+			Controller::quit(m_window);
 		}
 		else if (depth != 1) {
 			depth -= 1;

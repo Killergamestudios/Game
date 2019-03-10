@@ -80,7 +80,7 @@ public:
 	static void setSoundVolume(int);
 	static int getSoundVolume();
 	static vector<Vector2i> getAvailableResolutions();
-
+	static void quit(RenderWindow *window);
 	static void loadVars();
 	static void saveVars();
 
