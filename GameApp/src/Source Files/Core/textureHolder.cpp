@@ -2,6 +2,7 @@
 #include "../../Header Files/Core/TextureHolder.h"
 // Include the "assert feature"
 #include <assert.h>
+
 TextureHolder* TextureHolder::m_s_Instance = nullptr;
 TextureHolder::TextureHolder()
 {

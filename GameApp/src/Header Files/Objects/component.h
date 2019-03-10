@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <utility>
-#include "object.h"
-//#include "ModifierComponent.h"
+#include "../../Header Files/Objects/object.h"
+
 
 class object;
 class CharacterObject;
@@ -180,14 +180,18 @@ private:
 };
 
 
-/*
+/****************************************************************************************************************************************/
+//                                                          The Rally Modifier Class                                                     //
+/****************************************************************************************************************************************/
 class RallyModifier : public ModifierComponent {
 public:
-	RallyModifier(CharacterObject *Prnt);
+	RallyModifier(CharacterObject * Prnt, int mastery);
 	void kill();
 	void aply();
+private:
+	int Mastery;
 };
-*/
+
 
 
 /****************************************************************************************************************************************/
@@ -255,5 +259,6 @@ public:
 	bool canUse(Vector2i & position, CharacterObject * target) override;
 private:
 	int numOfTiles = 0;
+	int mastery;
 
 };

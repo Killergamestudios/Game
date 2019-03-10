@@ -76,11 +76,15 @@ void CharacterObject::spawn(Stats & stats, StatGain &statgain)
 	m_stats.Energy = m_stats.MaxEnergy;
 	m_stats.actionsremaining = m_stats.MaxActions;
 
-	m_statGain.MaxHealthGain += statgain.MaxHealthGain;
-	m_statGain.AgilityGain += statgain.AgilityGain;
-	m_statGain.PrecisionGain += statgain.PrecisionGain;
-	m_statGain.MaxActionsGain += statgain.MaxActionsGain;
-	m_statGain.MaxEnergyGain += statgain.MaxEnergyGain;
+	m_statGain.MaxHealthGain = statgain.MaxHealthGain;
+	m_statGain.AgilityGain = statgain.AgilityGain;
+	m_statGain.PrecisionGain = statgain.PrecisionGain;
+	m_statGain.MaxActionsGain = statgain.MaxActionsGain;
+	m_statGain.MaxEnergyGain = statgain.MaxEnergyGain;
+
+	m_stats.MaxAgility = stats.MaxAgility;
+	m_stats.MaxActions = stats.MaxActions;
+
 }
 
 
@@ -99,6 +103,16 @@ void CharacterObject::equipArmor(ArmorComponent *armorcomponent)
 void CharacterObject::AddAbility1(AbilityComponent * ability)
 {
 	m_ability1 = ability;
+}
+
+void CharacterObject::AddAbility2(AbilityComponent * ability)
+{
+	m_ability2 = ability;
+}
+
+void CharacterObject::AddAbility3(AbilityComponent * ability)
+{
+	m_ability3 = ability;
 }
 
 
@@ -372,6 +386,16 @@ int CharacterObject::getPrecision()
 	return m_stats.Precision;
 }
 
+int CharacterObject::getMaxAgility()
+{
+	return m_stats.MaxAgility;
+}
+
+int CharacterObject::getWeaponDamage()
+{
+	return m_weapon->getDamage();
+}
+
 
 
 const Stats & CharacterObject::getM_stats()
@@ -382,11 +406,10 @@ const Stats & CharacterObject::getM_stats()
 //                                                   The Setters                                                                        //
 /****************************************************************************************************************************************/
 
-void CharacterObject::UpdateStats(Stats & stats)
+void CharacterObject::UpdateStats(int agi, int prec)
 {
-	m_stats.Agility = stats.Agility;
-	m_stats.Mastery = stats.Mastery;
-	m_stats.Precision = stats.Precision;
+	m_stats.Agility = agi;
+	m_stats.Precision = prec;
 }
 
 void CharacterObject::addModifier(ModifierComponent * m)
@@ -640,5 +663,19 @@ void CharacterObject::UseAbility1(Vector2i & position, CharacterObject * target)
 	if (!m_ability1->canUse(position, target)) return;
 	m_ability1->use(position,target);
 	usedAction(m_ability1->getCost());
+}
+
+void CharacterObject::UseAbility2(Vector2i & position, CharacterObject * target)
+{
+	if (!m_ability2->canUse(position, target)) return;
+	m_ability2->use(position, target);
+	usedAction(m_ability2->getCost());
+}
+
+void CharacterObject::UseAbility3(Vector2i & position, CharacterObject * target)
+{
+	if (!m_ability3->canUse(position, target)) return;
+	m_ability3->use(position, target);
+	usedAction(m_ability3->getCost());
 }
 
