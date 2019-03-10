@@ -28,11 +28,14 @@ void InGameMainMenu::init()
 		dimensions.push_back(Vector2f(menuTexts[i]->getLocalBounds().width, menuTexts[i]->getLocalBounds().height));
 	}
 	vector<Vector2f> newPositions = Theme::renderRegion(Theme::NewWindow, dimensions, 1);
-	backgroundFillColor->setPosition(newPositions[0]);
-	backgroundSprites[0]->setPosition(newPositions[0]);
+	Vector2f camOffset =Vector2f(m_window->getView().getCenter().x - m_window->getView().getSize().x / 2.f, 
+								m_window->getView().getCenter().y - m_window->getView().getSize().y / 2.f);
+	backgroundFillColor->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
+	backgroundSprites[0]->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
 	for (unsigned int i = 0; i < menuTexts.size(); i++) {
-		newPositions[i + 1] = Vector2f(newPositions[i + 1].x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f);
-		menuTexts[i]->setPosition(newPositions[i + 1]);
+		
+		newPositions[i + 1] = Vector2f(newPositions[i + 1].x + camOffset.x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f + camOffset.y);
+		menuTexts[i]->setPosition( newPositions[i + 1]);
 	}
 }
 
