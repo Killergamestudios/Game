@@ -42,6 +42,7 @@ void Theme::initNewWindow()
 {
 	margin[NewWindow] = Vector2f(VIEW_WIDTH*0.02f, VIEW_HEIGHT * 0.05f);
 	regionDimensions[NewWindow] = Vector2f(0, 0);
+	mainMenuFlag = 0;
 }
 
 
@@ -147,13 +148,12 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 		LOCAL_VIEW_WIDTH = elements[0].x; // save dimenstion of container
 		LOCAL_VIEW_HEIGHT = elements[0].y; // 
 		elements.erase(elements.begin()); // erase the background from the list in order to have only elements to process
-		float elementSeperation = (LOCAL_VIEW_HEIGHT - 2 * m_s_Instance->margin[NewWindow].y - elements.size() * elements[0].y) / (elements.size() - 1) ; // calculate element sepearation
+		float elementSeperation = (LOCAL_VIEW_HEIGHT - elements.size() * elements[0].y) / (elements.size() + 1) ; // calculate element sepearation
 		for (Vector2f element : elements) {
 			renderedElements.push_back(Vector2f((origin.x + LOCAL_VIEW_WIDTH - element.x) / 2,
-				origin.y + m_s_Instance->margin[NewWindow].y * (1-flag) + flag * elementSeperation + m_s_Instance->regionDimensions[NewWindow].y));
+				origin.y + elementSeperation + m_s_Instance->regionDimensions[NewWindow].y));
 			m_s_Instance->regionDimensions[NewWindow].x = LOCAL_VIEW_WIDTH;
-			m_s_Instance->regionDimensions[NewWindow].y += m_s_Instance->margin[NewWindow].y  * (1-flag) + element.y + flag * elementSeperation;
-			flag = 1;
+			m_s_Instance->regionDimensions[NewWindow].y += element.y + elementSeperation;
 		}
 		break;
 	}

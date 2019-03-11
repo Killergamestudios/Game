@@ -22,6 +22,8 @@ protected:
 	void loadSaveFiles(); // handles the loading of all save files
 	void setBackgroundSprites(vector<string> backgroundSpritesPath);
 	void clearTextures();
+	void initOptions(Theme::Regions region, int pos);
+	void initMenu();
 
 private:
 	bool loadMenu; // shows if player is in load menu

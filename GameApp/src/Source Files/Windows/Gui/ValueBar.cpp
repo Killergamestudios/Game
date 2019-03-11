@@ -19,7 +19,7 @@ ValueBar::~ValueBar()
 
 void ValueBar::init()
 {
-	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 600.f);
+	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 670.f);
 	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y);
 
 	padding = Vector2f(VIEW_WIDTH/20, VIEW_HEIGHT/20);

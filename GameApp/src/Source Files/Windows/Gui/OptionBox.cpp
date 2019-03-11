@@ -18,7 +18,7 @@ OptionBox::~OptionBox()
 
 void OptionBox::init()
 {
-	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 600.f);
+	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 670.f);
 	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y); // TODO : Add container
 	padding = Vector2f(VIEW_WIDTH / 20, VIEW_HEIGHT / 20);
 	selected.setString(options[(int)currentValue].first + " x " + options[(int)currentValue].second);

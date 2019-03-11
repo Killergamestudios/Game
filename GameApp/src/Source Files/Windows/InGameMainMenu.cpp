@@ -21,25 +21,6 @@ void InGameMainMenu::init()
 	initLayer(); // Initialize everything. Fresh start
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	totalTimePassed = 0;
-
-	vector<Vector2f> dimensions; // vector with dimensions of elements
-	dimensions.push_back(Vector2f(backgroundFillColor->getLocalBounds().width, backgroundFillColor->getLocalBounds().height));
-	for (unsigned int i = 0; i < menuTexts.size(); i++) {
-		dimensions.push_back(Vector2f(menuTexts[i]->getLocalBounds().width, menuTexts[i]->getLocalBounds().height));
-	}
-	// Render Window region
-	vector<Vector2f> newPositions = Theme::renderRegion(Theme::NewWindow, dimensions, 1);
-	// get position of camawra
-	Vector2f camOffset =Vector2f(m_window->getView().getCenter().x - m_window->getView().getSize().x / 2.f, 
-								m_window->getView().getCenter().y - m_window->getView().getSize().y / 2.f);
-	// set position of background
-	backgroundFillColor->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
-	backgroundSprites[0]->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
-	// set positioon of elements of menu
-	for (unsigned int i = 0; i < menuTexts.size(); i++) {	
-		newPositions[i + 1] = Vector2f(newPositions[i + 1].x + camOffset.x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f + camOffset.y);
-		menuTexts[i]->setPosition( newPositions[i + 1]);
-	}
 }
 
 void InGameMainMenu::update(float dtasSeconds)
@@ -50,12 +31,19 @@ void InGameMainMenu::update(float dtasSeconds)
 		Theme::clearRegion(Theme::NewWindow);
 		return;
 	}
-	cout << optionSelected << endl;
 	totalTimePassed += dtasSeconds;
 }
 
 void InGameMainMenu::actions()
 {
+	if (optionSelected == tabOrder.size() - 1) {
+		if (depth != 1) {
+			depth -= 1;
+			initLayer();
+			return;
+		}
+	}
+
 	if (loadMenu)
 	{
 		Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
@@ -73,24 +61,21 @@ void InGameMainMenu::initLayer()
 {
 	clearTextures();
 	loadMenu = false;
-	Theme::clearRegion(Theme::MainMenu);
-	//backButton[0] = "Back";
+	Theme::clearRegion(Theme::NewWindow);
 
 	if (depth == 1) {
 		loadTextGraphics(mainMenu);
 		setBackgroundSprites(backgroundSpritesPath);
+		initMenu();
 	}
 	else if (optionSelected == 0 && depth == 2) {
 		Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
-		Theme::clearRegion(Theme::NewWindow);
 	}
 	else if (optionSelected == 1 && depth == 2) {
 		loadSaveFiles();
 		loadMenu = true;
-
 	}
 	else if (optionSelected == 2 && depth == 2) {
-		Theme::clearRegion(Theme::NewWindow);
 		initOptions(Theme::NewWindow, 1);
 	}
 	else if (optionSelected == 3 && depth == 2) {
@@ -157,7 +142,74 @@ void InGameMainMenu::clearTextures()
 	drawStack.clear();
 	tabOrder.clear();
 	backgroundSprites.clear();
+	delete backgroundFillColor;
 }
 
+void InGameMainMenu::initOptions(Theme::Regions region, int pos)
+{
+
+	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, region, (float)Controller::getMusicVolume());
+	guiElements.push_back(buffer);
+	drawStack[2 + drawStack.size()] = buffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
+
+	vector<pair<string, string>> resolutions;
+	for (Vector2i res : Controller::getAvailableResolutions())
+	{
+		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
+	}
+	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, region, Controller::getResolutionID(), resolutions);
+	guiElements.push_back(opBuffer);
+	drawStack[2 + drawStack.size()] = opBuffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
+
+
+	backgroundFillColor = new RectangleShape(Vector2f(700.f, 200.f));
+	vector<Vector2f> dimensions;
+	const Color background = Color(121, 132, 202);
+	dimensions.push_back(backgroundFillColor->getSize());
+	backgroundFillColor->setFillColor(background);
+	drawStack[0] = backgroundFillColor;
+
+	for (GuiElement * ge : guiElements) {
+		dimensions.push_back(ge->getDimensions());
+	}
+	backButton[0] = "Back";
+	loadTextGraphics(backButton);
+	dimensions.push_back(Vector2f(menuTexts[0]->getLocalBounds().width, menuTexts[0]->getLocalBounds().height));
+	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
+	backgroundFillColor->setPosition(newPositions[0]);
+
+	for (unsigned int i = 0; i < guiElements.size(); i++) {
+		guiElements[i]->setPosition(newPositions[i + 1]);
+	}
+	menuTexts[0]->setPosition(newPositions[newPositions.size() - 1]);
+
+	optionSelected = 0;
+	guiElements[0]->setSelected();
+
+}
+
+void InGameMainMenu::initMenu()
+{
+	vector<Vector2f> dimensions; // vector with dimensions of elements
+	dimensions.push_back(Vector2f(backgroundFillColor->getLocalBounds().width, backgroundFillColor->getLocalBounds().height));
+	for (unsigned int i = 0; i < menuTexts.size(); i++) {
+		dimensions.push_back(Vector2f(menuTexts[i]->getLocalBounds().width, menuTexts[i]->getLocalBounds().height));
+	}
+	// Render Window region
+	vector<Vector2f> newPositions = Theme::renderRegion(Theme::NewWindow, dimensions, 1);
+	// get position of camawra
+	Vector2f camOffset = Vector2f(m_window->getView().getCenter().x - m_window->getView().getSize().x / 2.f,
+		m_window->getView().getCenter().y - m_window->getView().getSize().y / 2.f);
+	// set position of background
+	backgroundFillColor->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
+	backgroundSprites[0]->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
+	// set positioon of elements of menu
+	for (unsigned int i = 0; i < menuTexts.size(); i++) {
+		newPositions[i + 1] = Vector2f(newPositions[i + 1].x + camOffset.x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f + camOffset.y);
+		menuTexts[i]->setPosition(newPositions[i + 1]);
+	}
+}
 
 

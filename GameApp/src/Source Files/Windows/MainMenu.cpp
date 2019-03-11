@@ -34,7 +34,7 @@ void MainMenu::init()
 	backgroundMusic = new Music();
 	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
 	backgroundMusic->play();
-	backgroundMusic->setVolume(Controller::getMusicVolume());
+	backgroundMusic->setVolume((float)Controller::getMusicVolume());
 	backgroundMusic->setLoop(true);
 
 	Controller::setRunning(true);
@@ -303,8 +303,9 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 	for (GuiElement * ge : guiElements) {
 		dimensions.push_back(ge->getDimensions());
 	}
-	for (int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(Theme::renderRegion(region, dimensions, pos)[i]);
+	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
+	for (unsigned int i = 0; i < guiElements.size(); i++) {
+		guiElements[i]->setPosition(newPositions[i]);
 	}
 
 	optionSelected = 0;
