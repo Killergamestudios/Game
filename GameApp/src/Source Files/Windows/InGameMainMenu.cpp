@@ -154,7 +154,7 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
 
 	vector<pair<string, string>> resolutions;
-	for (Vector2i res : Controller::getAvailableResolutions())
+	for (Vector2i &res : Controller::getAvailableResolutions())
 	{
 		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
 	}
