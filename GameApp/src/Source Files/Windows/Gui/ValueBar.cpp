@@ -19,25 +19,13 @@ ValueBar::~ValueBar()
 
 void ValueBar::init()
 {
-	vector <Vector2f> dimensions;
-	dimensions.push_back(Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y));
-	offset = Theme::renderRegion(renderedRegion, dimensions)[0];
+	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 600.f);
+	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y);
 
-	const float VALUE_BAR_DEAD_ZONE = 30; // the x-limit of value point in value bar
 	padding = Vector2f(VIEW_WIDTH/20, VIEW_HEIGHT/20);
-	label.setPosition(sf::Vector2f(offset.x + padding.x, offset.y + padding.y));
-	
+
 	valueBar.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/ValueBar.png"));
 	valuePoint.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/ValuePointer.png"));
-
-	FloatRect valueBarDim = valueBar.getLocalBounds();
-	valueBar.setPosition(sf::Vector2f(VIEW_WIDTH - padding.x - offset.x - valueBarDim.width, offset.y + padding.y));
-	FloatRect valuePointDim = valuePoint.getLocalBounds();
-	valuePoint.setPosition(sf::Vector2f(VIEW_WIDTH - padding.x - offset.x - valueBarDim.width + currentValue*3 + VALUE_BAR_DEAD_ZONE - valuePointDim.width/2,
-										offset.y + padding.y + valueBarDim.height/2 - valuePointDim.height/2));
-
-	
-
 }
 
 void ValueBar::draw(RenderTarget& target, RenderStates states) const
@@ -54,6 +42,25 @@ void ValueBar::update(int direction)
 		valuePoint.setPosition(sf::Vector2f(valuePoint.getPosition().x + step * direction * 3, valuePoint.getPosition().y));
 		currentValue = (float) currentValue + step * direction;
 	}
+}
+
+void ValueBar::setPosition(Vector2f newPositions)
+{
+	const float VALUE_BAR_DEAD_ZONE = 30; // the x-limit of value point in value bar
+	offset = newPositions;
+	label.setPosition(sf::Vector2f(offset.x + padding.x, offset.y + padding.y));
+
+	FloatRect valueBarDim = valueBar.getLocalBounds();
+	valueBar.setPosition(sf::Vector2f(VIEW_WIDTH - padding.x - offset.x - valueBarDim.width, offset.y + padding.y));
+	
+	FloatRect valuePointDim = valuePoint.getLocalBounds();
+	valuePoint.setPosition(sf::Vector2f(VIEW_WIDTH - padding.x - offset.x - valueBarDim.width + currentValue * 3 + VALUE_BAR_DEAD_ZONE - valuePointDim.width / 2,
+		offset.y + padding.y + valueBarDim.height / 2 - valuePointDim.height / 2));
+}
+
+Vector2f ValueBar::getDimensions()
+{
+	return dimensions;
 }
 
 float ValueBar::getValue() {

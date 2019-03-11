@@ -9,49 +9,38 @@ Theme* Theme::m_s_Instance = nullptr;
 
 void Theme::initBackground()
 {
-	//counter[Background] = 0;
 	margin[Background] = Vector2f(0, 0);
-	elementSeperation[Background] = 0;
 	regionDimensions[Background] = Vector2f(VIEW_WIDTH, VIEW_HEIGHT);
 }
 
 void Theme::initLogo()
 {
-	//counter[Logo] = 0;
 	margin[Logo] = Vector2f(0, VIEW_HEIGHT * 0.03f);
-	elementSeperation[Logo] = 0;
-	regionDimensions[Logo] = Vector2f(0, 0);
+	regionDimensions[Logo] = Vector2f(VIEW_WIDTH, 0);
 }
 
 void Theme::initMainMenu()
 {
-	//counter[MainMenu] = 0;
 	margin[MainMenu] = Vector2f(0, 0);
-	elementSeperation[MainMenu] = 0;
-	regionDimensions[MainMenu] = Vector2f(0, 0);
+	regionDimensions[MainMenu] = Vector2f(VIEW_WIDTH, 0);
 	mainMenuFlag = 0;
 }
 
 void Theme::initBackButton()
 {
-	//counter[BackButton] = 0;
 	margin[BackButton] = Vector2f(VIEW_WIDTH*0.02f, VIEW_HEIGHT * 0.03f);
-	elementSeperation[BackButton] = 0;
 	regionDimensions[BackButton] = Vector2f(0, 0);
 }
 
 void Theme::initContent()
 {
-	//counter[Content] = 0;
 	margin[Content] = Vector2f(0, 0);
-	elementSeperation[Content] = 0;
 	regionDimensions[Content] = Vector2f(VIEW_WIDTH, VIEW_HEIGHT);
 }
 
 void Theme::initNewWindow()
 {
 	margin[NewWindow] = Vector2f(VIEW_WIDTH*0.02f, VIEW_HEIGHT * 0.05f);
-	elementSeperation[NewWindow] = 0;
 	regionDimensions[NewWindow] = Vector2f(0, 0);
 }
 
@@ -137,10 +126,9 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 		for (Vector2f element : elements) {		
 			renderedElements.push_back(Vector2f((LOCAL_VIEW_WIDTH - element.x) / 2,
 				m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y
-				+ flag * m_s_Instance->elementSeperation[MainMenu] + m_s_Instance->regionDimensions[MainMenu].y));
+				+ m_s_Instance->regionDimensions[MainMenu].y));
 			m_s_Instance->regionDimensions[MainMenu].x = LOCAL_VIEW_WIDTH;
-			m_s_Instance->regionDimensions[MainMenu].y +=  m_s_Instance->margin[MainMenu].y + element.y 
-											+ flag * m_s_Instance->elementSeperation[MainMenu];
+			m_s_Instance->regionDimensions[MainMenu].y +=  m_s_Instance->margin[MainMenu].y + element.y;
 			flag = 1;
 		}
 		break;
@@ -152,6 +140,7 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 			xOrg = (float)(position / 2); // if position is not center then change origin
 			yOrg = (float)(position % 2); // 
 		}
+
 		// get the new origin based on the dimensions of the first element (background - container)
 		Vector2f origin((LOCAL_VIEW_WIDTH - elements[0].x)*xOrg, (LOCAL_VIEW_HEIGHT - elements[0].y)*yOrg);  
 		renderedElements.push_back(origin);
@@ -169,5 +158,10 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 		break;
 	}
 	return renderedElements;
+}
+
+float Theme::getRegionXDimension(Regions region)
+{
+	return m_s_Instance->regionDimensions[region].x;
 }
 

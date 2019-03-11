@@ -34,7 +34,7 @@ void MainMenu::init()
 	backgroundMusic = new Music();
 	backgroundMusic->openFromFile("./music/MainMenu/Orchestral_Action_-_Last_Stand.ogg");
 	backgroundMusic->play();
-	backgroundMusic->setVolume(100.0f);
+	backgroundMusic->setVolume(Controller::getMusicVolume());
 	backgroundMusic->setLoop(true);
 
 	Controller::setRunning(true);
@@ -145,12 +145,13 @@ void MainMenu::initLayer()
 		
 	}
 	else if (optionSelected == 2 && depth == 2) {
-		initOptions();
+		initOptions(Theme::MainMenu, 0);
 	}
 	else if (optionSelected == 3 && depth == 2) {
 	}
 
 	optionSelected = 0;
+	totalTimePassed = 0;
 	loadTextGraphics(backButton, Theme::BackButton);
 }
 
@@ -161,6 +162,7 @@ void MainMenu::clearTextures()
 	drawStack.clear();
 	tabOrder.clear();
 	guiElements.clear();
+	dimensions.clear();
 }
 
 void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)
@@ -183,8 +185,7 @@ void MainMenu::setMenuSprites(Theme::Regions region)
 		Set Position of Sprites 
 		Add Sprites into drawStack and tabOrder sets
 	*/
-	vector<Vector2f> dimensions; // vector with dimensions of elements
-
+	vector<Vector2f> dimensions;
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
 		Sprite* buffer = new Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128));
@@ -204,8 +205,7 @@ void MainMenu::setMenuSprites(Theme::Regions region)
 
 void MainMenu::loadTextGraphics(vector<string> textsArray, Theme::Regions region)
 {
-
-	vector<Vector2f> dimensions; // vector with dimensions of elements
+	vector<Vector2f> dimensions;
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
 		Text* buffer = new Text(textsArray[i], font, 24);
 		menuTexts.push_back(buffer);
@@ -281,22 +281,33 @@ void MainMenu::loadSaveFiles() {
 
 }
 
-void MainMenu::initOptions()
+void MainMenu::initOptions(Theme::Regions region, int pos)
 {
 
-	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, Theme::MainMenu, (float)Controller::getMusicVolume());
+	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, region, (float)Controller::getMusicVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
+	
 	vector<pair<string, string>> resolutions; 
 	for (Vector2i res : Controller::getAvailableResolutions()) 
 	{
 		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
 	}
-	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, Theme::MainMenu, Controller::getResolutionID(), resolutions);
+	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, region, Controller::getResolutionID(), resolutions);
 	guiElements.push_back(opBuffer);
 	drawStack[2 + drawStack.size()] = opBuffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
+
+	vector<Vector2f> dimensions;
+	for (GuiElement * ge : guiElements) {
+		dimensions.push_back(ge->getDimensions());
+	}
+	for (int i = 0; i < guiElements.size(); i++) {
+		guiElements[i]->setPosition(Theme::renderRegion(region, dimensions, pos)[i]);
+	}
+
 	optionSelected = 0;
 	guiElements[0]->setSelected();
+
 }

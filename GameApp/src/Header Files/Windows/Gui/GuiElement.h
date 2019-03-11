@@ -15,6 +15,8 @@ public:
 	virtual void draw(RenderTarget& target, RenderStates states) const = 0;
 	virtual void update(int) = 0;
 
+	virtual Vector2f getDimensions() = 0;
+	virtual void setPosition(Vector2f newPosition) = 0;
 	virtual void setSelected() = 0;
 	virtual void unSelect() = 0;
 	virtual float getValue() = 0;
@@ -25,6 +27,7 @@ public:
 	Font font;
 	Vector2f offset;
 	RenderWindow* m_window; // DONT DELETE
+	Vector2f dimensions;
 
 	// pseudo constants
 	float VIEW_HEIGHT;

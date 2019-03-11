@@ -18,17 +18,12 @@ OptionBox::~OptionBox()
 
 void OptionBox::init()
 {
-	vector <Vector2f> dimensions;
-	dimensions.push_back(Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y)); 
-	offset = Theme::renderRegion(renderedRegion, dimensions)[0];
-
+	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 600.f);
+	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y); // TODO : Add container
 	padding = Vector2f(VIEW_WIDTH / 20, VIEW_HEIGHT / 20);
-	label.setPosition(Vector2f(offset.x + padding.x, offset.y + padding.y));
 	selected.setString(options[(int)currentValue].first + " x " + options[(int)currentValue].second);
 	selected.setCharacterSize(30);
 	selected.setFont(font);
-	float width = selected.getLocalBounds().width;
-	selected.setPosition(Vector2f(VIEW_WIDTH - padding.x - offset.x - width, offset.y + padding.y));
 }
 
 void OptionBox::draw(RenderTarget& target, RenderStates states) const
@@ -46,6 +41,20 @@ void OptionBox::update(int direction)
 		float width = selected.getLocalBounds().width;
 		selected.setPosition(Vector2f(VIEW_WIDTH - padding.x - offset.x - width, offset.y + padding.y));
 	}
+}
+
+void OptionBox::setPosition(Vector2f newPositions)
+{
+	offset = newPositions;
+
+	label.setPosition(Vector2f(offset.x + padding.x, offset.y + padding.y));
+	float width = selected.getLocalBounds().width;
+	selected.setPosition(Vector2f(VIEW_WIDTH - padding.x - offset.x - width, offset.y + padding.y));
+}
+
+Vector2f OptionBox::getDimensions()
+{
+	return dimensions;
 }
 
 float OptionBox::getValue() {

@@ -31,11 +31,10 @@ public:
 	// 3 : lower-right corner;
 	// 4 : center;
 	static vector<Vector2f> renderRegion(Regions region, vector<Vector2f> elements, int position = 4);
-
+	static float getRegionXDimension(Regions region);
 
 	//map<Regions,int> counter;
 	map<Regions, Vector2f> margin;
-	map<Regions, float> elementSeperation;
 	map<Regions, Vector2f> regionDimensions;
 
 	float VIEW_WIDTH;
