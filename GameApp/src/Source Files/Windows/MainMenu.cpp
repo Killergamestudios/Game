@@ -46,7 +46,7 @@ void MainMenu::draw()
 		m_window->draw(*dr.second);
 }
 
-void MainMenu::update(float dtasSeconds) {
+void MainMenu::update(float& dtasSeconds) {
 	if (!Controller::isRunning())
 	{
 		Controller::setState(Controller::LOADING);
@@ -56,7 +56,7 @@ void MainMenu::update(float dtasSeconds) {
 	}
 
 	totalTimePassed += dtasSeconds;
-	animate(totalTimePassed, optionSelected);
+	animate();
 	
 	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
 	{
@@ -222,13 +222,13 @@ void MainMenu::loadTextGraphics(vector<string> textsArray, Theme::Regions region
 		menuTexts[0]->setFillColor(Color::Red); //set as default selected
 }
 
-void MainMenu::animate(float &totaltimepassed, int optionSelected) {
+void MainMenu::animate() {
 	const float ANIMATION_SPEED = 0.3f;
 	if (menuSprites.size() != 0 && tabOrder[optionSelected].first=="SP")
 	{
-		if (totaltimepassed > ANIMATION_SPEED) 
+		if (totalTimePassed > ANIMATION_SPEED) 
 		{
-			totaltimepassed -= ANIMATION_SPEED;
+			totalTimePassed -= ANIMATION_SPEED;
 			int left = menuSprites[optionSelected]->getTextureRect().left; // get left position of previous selected texture
 			left = left == 256 ? 512 : 256;
 			menuSprites[optionSelected]->setTextureRect(IntRect(left, 0, 256, 128));

@@ -13,7 +13,7 @@ public:
 	~InGameMainMenu();
 
 	void init() override;
-	void update(float) override;
+	void update(float&) override;
 	void actions() override;
 
 protected:

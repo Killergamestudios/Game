@@ -23,7 +23,7 @@ void InGameMainMenu::init()
 	totalTimePassed = 0;
 }
 
-void InGameMainMenu::update(float dtasSeconds)
+void InGameMainMenu::update(float &dtasSeconds)
 {
 	if (!Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU))
 	{
