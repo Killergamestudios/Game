@@ -25,6 +25,8 @@ struct Resistance
 enum ElementType {none,fire,ice,poison,dark,nature,wind,light,harmony};
 enum WeaponType {longsword,halbert,knife,bow,scepter,staff,dagger};
 
+
+
 /****************************************************************************************************************************************/
 //                                                   The Component Class                                                                 //
 /****************************************************************************************************************************************/
@@ -202,10 +204,15 @@ class AbilityComponent :public component {
 public:
 	AbilityComponent(CharacterObject *Parent, String Name);
 	~AbilityComponent();
+	void ChangeParent(CharacterObject *prnt);
+	
+	string getName();
+
 	virtual void update() = 0;
 	virtual void use(Vector2i &position, CharacterObject *target) = 0;
 	virtual bool canUse(Vector2i & position, CharacterObject * target) = 0;
 	int getCost();
+
 
 protected:
 	CharacterObject *parent;
@@ -224,6 +231,7 @@ class Whirlwind : public AbilityComponent {
 public:
 	Whirlwind(CharacterObject *Parent);
 	~Whirlwind();
+	Whirlwind *copyself();
 
 	void update() override;
 	void use(Vector2i &position, CharacterObject *target = nullptr) override;
@@ -237,6 +245,7 @@ public:
 class Rally : public AbilityComponent {
 public:
 	Rally(CharacterObject *Parent);
+	Rally *copyself();
 
 	void update() override;
 	void use(Vector2i &position, CharacterObject *target = nullptr) override;
@@ -252,6 +261,8 @@ public:
 class Charge : public AbilityComponent {
 public:
 	Charge(CharacterObject *Parent);
+	Charge *copyself();
+	void setmastery();
 
 	void setNumOfTiles(int n);
 	void update() override;
@@ -262,3 +273,6 @@ private:
 	int mastery;
 
 };
+
+
+AbilityComponent *readAbility(string &s, CharacterObject *object);

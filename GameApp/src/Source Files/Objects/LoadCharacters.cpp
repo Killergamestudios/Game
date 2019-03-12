@@ -23,16 +23,7 @@ int getStringNumber(string &s) {
 	return ret;
 }
 
-AbilityComponent *readAbility(string &s, CharacterObject *object) {
-	AbilityComponent *ability = nullptr;
-	if (s == "whirldwind")
-		ability = new Whirlwind(object);
-	else if (s == "rally")
-		ability = new Rally(object);
-	else if (s == "charge")
-		ability = new Charge(object);
-	return ability;
-}
+
 
 
 CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,string Name, string Class) {

@@ -10,7 +10,16 @@ string CalculateBuffType(CharacterObject *obj) {
 
 }
 
-
+AbilityComponent *readAbility(string &s, CharacterObject *object) {
+	AbilityComponent *ability = nullptr;
+	if (s == "whirldwind")
+		ability = new Whirlwind(object);
+	else if (s == "rally")
+		ability = new Rally(object);
+	else if (s == "charge")
+		ability = new Charge(object);
+	return ability;
+}
 
 
 
@@ -54,6 +63,8 @@ WeaponComponent::~WeaponComponent()
 {
 	if (parent) parent = nullptr;
 }
+
+
 
 bool WeaponComponent::canEquip(CharacterObject * Parent)
 {
@@ -403,6 +414,16 @@ AbilityComponent::~AbilityComponent()
 	parent = nullptr;
 }
 
+void AbilityComponent::ChangeParent(CharacterObject * prnt)
+{
+	parent = prnt;
+}
+
+string AbilityComponent::getName()
+{
+	return name;
+}
+
 int AbilityComponent::getCost()
 {
 	return ActionCost;
@@ -419,6 +440,12 @@ Whirlwind::Whirlwind(CharacterObject * Parent) :AbilityComponent(Parent, "Whirlw
 Whirlwind::~Whirlwind()
 {
 	parent = nullptr;
+}
+
+Whirlwind * Whirlwind::copyself()
+{
+	Whirlwind *copy = new Whirlwind(parent);
+	return copy;
 }
 
 void Whirlwind::update()
@@ -552,6 +579,11 @@ Rally::Rally(CharacterObject * Parent) :AbilityComponent(Parent, "Rally")
 	ActionCost = 6;
 }
 
+Rally * Rally::copyself()
+{
+	return new Rally(parent);
+}
+
 void Rally::update()
 {
 }
@@ -588,6 +620,16 @@ bool Rally::canUse(Vector2i & position, CharacterObject * target)
 Charge::Charge(CharacterObject * Parent) :AbilityComponent(Parent, "charge")
 {
 	ActionCost = 4;
+	mastery = parent->getMastery();
+}
+
+Charge * Charge::copyself()
+{
+	return new Charge(parent);
+}
+
+void Charge::setmastery()
+{
 	mastery = parent->getMastery();
 }
 
@@ -675,7 +717,7 @@ bool Charge::canUse(Vector2i & position, CharacterObject * target)
 
 	//invalid target
 	vector<Vector3i> pathoptions = getStraightPath(m_position.x, m_position.y, 2 + mastery, *Controller::getMap());
-	for (int i = 0; i < pathoptions.size(); i++) {
+	for (unsigned int i = 0; i < pathoptions.size(); i++) {
 		if (position.x == pathoptions[i].x && position.y == pathoptions[i].y)
 			return true;
 	}

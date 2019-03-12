@@ -85,6 +85,7 @@ class CharacterObject : public object {
 public:
 	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture);
 	~CharacterObject();
+	CharacterObject *copyself();
 
 	//Draw and Update Functions
 	void Draw() override;
