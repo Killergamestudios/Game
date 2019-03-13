@@ -176,5 +176,8 @@
     <ClCompile Include="src\Source Files\Windows\MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="mouseControl.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
