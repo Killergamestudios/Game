@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Core/textureHolder.h"
 #include "../Core/Map.h"
-#include "component.h"
+#include "../../Header Files/Objects/component.h"
 
 using namespace sf;
 using namespace std;
@@ -47,6 +47,10 @@ struct Stats
 	int Health;
 	int Energy;
 	int actionsremaining;
+
+	//The max stats
+	int MaxAgility;
+	int MaxPrecision;
 };
 
 
@@ -81,6 +85,7 @@ class CharacterObject : public object {
 public:
 	CharacterObject(String Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture);
 	~CharacterObject();
+	CharacterObject *copyself();
 
 	//Draw and Update Functions
 	void Draw() override;
@@ -101,9 +106,11 @@ public:
 	String getType();
 	int getMastery();
 	int getPrecision();
+	int getMaxAgility();
+	int getWeaponDamage();
 
 	//setters
-	void UpdateStats(Stats &s);
+	void UpdateStats(int agi, int prec);
 	void addModifier(ModifierComponent *m);
 	void setAgility(int agi);
 	void setPrecision(int prec);
@@ -119,7 +126,8 @@ public:
 	void equipWeapon(WeaponComponent *weapon);
 	void equipArmor(ArmorComponent *armorcomponent);
 	void AddAbility1(AbilityComponent *ability);
-
+	void AddAbility2(AbilityComponent *ability);
+	void AddAbility3(AbilityComponent *ability);
 
 	//combat related functions
 	int Attack(CharacterObject *target, String place); // return the damage, -1 if attack dodged. place is body,head etc
@@ -135,7 +143,9 @@ public:
 	//Abilitys
 
 	void UseAbility1(Vector2i &position,CharacterObject *target);
-	
+	void UseAbility2(Vector2i &position, CharacterObject *target);
+	void UseAbility3(Vector2i &position, CharacterObject *target);
+
 
 private:
 	Move move;

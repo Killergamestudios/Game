@@ -7,6 +7,8 @@ MaxActions = 3
 Agility = 10
 Precision = 25
 Mastery = 1
+MaxAgility = 20
+MaxPrecision = 100
 
 StatGain:
 MaxHealthGain = 3

@@ -3,6 +3,26 @@
 #include "../../Header Files/Core/Algorithms.h"
 #include "../../Header Files/Core/Controller.h"
 
+
+string CalculateBuffType(CharacterObject *obj) {
+	if (obj->getCategory() == "enemy") return "buff";
+	else return "debuff";
+
+}
+
+AbilityComponent *readAbility(string &s, CharacterObject *object) {
+	AbilityComponent *ability = nullptr;
+	if (s == "whirldwind")
+		ability = new Whirlwind(object);
+	else if (s == "rally")
+		ability = new Rally(object);
+	else if (s == "charge")
+		ability = new Charge(object);
+	return ability;
+}
+
+
+
 /****************************************************************************************************************************************/
 //                                                   The Component Class                                                                 //
 /****************************************************************************************************************************************/
@@ -43,6 +63,8 @@ WeaponComponent::~WeaponComponent()
 {
 	if (parent) parent = nullptr;
 }
+
+
 
 bool WeaponComponent::canEquip(CharacterObject * Parent)
 {
@@ -392,6 +414,16 @@ AbilityComponent::~AbilityComponent()
 	parent = nullptr;
 }
 
+void AbilityComponent::ChangeParent(CharacterObject * prnt)
+{
+	parent = prnt;
+}
+
+string AbilityComponent::getName()
+{
+	return name;
+}
+
 int AbilityComponent::getCost()
 {
 	return ActionCost;
@@ -410,12 +442,19 @@ Whirlwind::~Whirlwind()
 	parent = nullptr;
 }
 
+Whirlwind * Whirlwind::copyself()
+{
+	Whirlwind *copy = new Whirlwind(parent);
+	return copy;
+}
+
 void Whirlwind::update()
 {
 }
 
 void Whirlwind::use(Vector2i & position, CharacterObject * target)
 {
+	int mastery = parent->getMastery();
 	Vector2i m_position = parent->getMyPosition();
 	if (position.x != m_position.x || position.y != m_position.y) throw std::exception("invalid position");
 	Map *map = Controller::getMap();
@@ -426,9 +465,25 @@ void Whirlwind::use(Vector2i & position, CharacterObject * target)
 			if ((i != 0 && j != 0) && map->getEnemyinPosition(Vector2i(i + m_position.x, j + m_position.y)) != 0)
 				enemysToHit.push_back(Vector2i(i + m_position.x, j + m_position.y));
 		}
+
 	for (unsigned int i = 0; i < enemysToHit.size(); i++) {
 		enemy = &map->getenemy(enemysToHit[i]);
-		parent->Attack(enemy, "body");
+		switch (mastery) {
+		case 1:
+		case 2:
+			parent->Attack(enemy, "body");
+			break;
+		case 3:
+		case 4:
+			parent->Attack(enemy, "body");
+			parent->Attack(enemy, "body");
+			break;
+		case 5:
+			parent->Attack(enemy, "body");
+			parent->Attack(enemy, "body");
+			parent->Attack(enemy, "body");
+			break;
+		}
 	}
 }
 
@@ -438,44 +493,95 @@ bool Whirlwind::canUse(Vector2i & position, CharacterObject * target)
 }
 
 /****************************************************************************************************************************************/
-//                                                   The Rally Class                                                                     //
+//                                                   The Rally  Modifier Class                                                           //
 /****************************************************************************************************************************************/
 
 
-/*
-RallyModifier::RallyModifier(CharacterObject * Prnt):ModifierComponent(Prnt,3)
+
+RallyModifier::RallyModifier(CharacterObject * Prnt,int mastery):ModifierComponent(Prnt,3,CalculateBuffType(Prnt))
 {
+	Mastery = mastery;
 }
 
 void RallyModifier::kill()
 {
-	if (!isdead) return;
-	Stats s;
-	if (Parent->getCategory() == "friendly") {
-		s = { 0,0,0,-1,-1,0,-3,-5,-1,0 ,0,0,0 };
+	if (Parent->getType() == "enemy") {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() + 1, Parent->getPrecision() + 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() + 2, Parent->getPrecision() + 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() + 3, Parent->getPrecision() + 3);
+			break;
+		}
 	}
-	else if (Parent->getCategory() == "enemy") {
-		s = { 0,0,0,1,1,0,3,5,1,0 ,0,0,0 };
+	else {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() - 1, Parent->getPrecision() - 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() - 2, Parent->getPrecision() - 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() - 3, Parent->getPrecision() - 3);
+			break;
+		}
 	}
-	Parent->UpdateStats(s);
 }
 void RallyModifier::aply()
 {
-	if (!(turnsToDie == 3)) return;
-	Stats s;
-	if (Parent->getCategory() == "friendly") {
-		s = { 0,0,0,1,1,0,3,5,1,0 ,0,0,0};
+	if (Parent->getType() == "friendly") {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() + 1 , Parent->getPrecision() + 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() + 2, Parent->getPrecision() + 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() + 3 , Parent->getPrecision() + 3);
+			break;
+		}
 	}
-	else if (Parent->getCategory() == "enemy") {
-		s = { 0,0,0,-1,-1,0,-3,-5,-1,0 ,0,0,0};
+	else {
+		switch (Mastery) {
+		case 1:
+		case 2:
+			Parent->UpdateStats(Parent->getAgility() - 1, Parent->getPrecision() - 1);
+			break;
+		case 3:
+		case 4:
+			Parent->UpdateStats(Parent->getAgility() - 2, Parent->getPrecision() - 2);
+			break;
+		case 5:
+			Parent->UpdateStats(Parent->getAgility() - 3, Parent->getPrecision() - 3);
+			break;
+		}
 	}
-	Parent->UpdateStats(s);
 }
 
+/****************************************************************************************************************************************/
+//                                                   The Rally Class                                                                     //
+/****************************************************************************************************************************************/
 
 Rally::Rally(CharacterObject * Parent) :AbilityComponent(Parent, "Rally")
 {
 	ActionCost = 6;
+}
+
+Rally * Rally::copyself()
+{
+	return new Rally(parent);
 }
 
 void Rally::update()
@@ -484,20 +590,17 @@ void Rally::update()
 
 void Rally::use(Vector2i & position, CharacterObject * target)
 {
-	Map * map = parent->getmap();
+	Map *map = Controller::getMap();
 	vector<CharacterObject> party = map->getparty();
-	RallyModifier * rally;
-
-	for (unsigned int i = 0; i < party.size(); i++) {
-		rally = new RallyModifier(&party[i]);
-		party[i].addModifier(rally);
-		rally = nullptr;
-	}
 	vector<CharacterObject> enemys = map->getenemys();
+	int Mastery = parent->getMastery();
+	for (unsigned int i = 0; i < party.size(); i++) {
+		RallyModifier *raly = new RallyModifier(&party[i], Mastery);
+		party[i].addModifier(raly);
+	}
 	for (unsigned int i = 0; i < enemys.size(); i++) {
-		rally = new RallyModifier(&enemys[i]);
-		enemys[i].addModifier(rally);
-		rally = nullptr;
+		RallyModifier *raly = new RallyModifier(&enemys[i], Mastery);
+		enemys[i].addModifier(raly);
 	}
 
 }
@@ -507,7 +610,7 @@ bool Rally::canUse(Vector2i & position, CharacterObject * target)
 	return (parent->getActionsRemaining() >= ActionCost);
 }
 
-*/
+
 
 /****************************************************************************************************************************************/
 //                                                   The Charge Class                                                                    //
@@ -517,6 +620,17 @@ bool Rally::canUse(Vector2i & position, CharacterObject * target)
 Charge::Charge(CharacterObject * Parent) :AbilityComponent(Parent, "charge")
 {
 	ActionCost = 4;
+	mastery = parent->getMastery();
+}
+
+Charge * Charge::copyself()
+{
+	return new Charge(parent);
+}
+
+void Charge::setmastery()
+{
+	mastery = parent->getMastery();
 }
 
 void Charge::setNumOfTiles(int n)
@@ -534,50 +648,54 @@ void Charge::use(Vector2i & position, CharacterObject * target)
 	Vector2i m_position = parent->getMyPosition();
 	int temp = 100;
 	Map *map = Controller::getMap();
-	path = getPath(m_position.x, m_position.y, position.x, position.y, temp, *map);
+	int range = 2 + mastery;
+	vector<Vector3i> strpath = getStraightPath(m_position.x, m_position.y, range , *map);
+
 	int travelcoordinate;//0 = up,1 = right, 2 = down, 3=left
 	if (m_position.x < position.x) travelcoordinate = 1;
 	else if (m_position.x > position.x) travelcoordinate = 3;
 	else if (m_position.y < position.y) travelcoordinate = 2;
 	else travelcoordinate = 0;
+	
+	int distanceTravelled = 0;
+
 	//attack the target
 	switch (travelcoordinate) {
 	case 0:
-		try {
-			CharacterObject* enemy = &map->getenemy(Vector2i(m_position.x, m_position.y - 1));
-			parent->Attack(enemy, "body");
+		distanceTravelled = abs(position.y - m_position.y);
+		for (int i = m_position.y - 1; i >= position.y; i++) {
+			path.push_back(Vector2i(m_position.x, i));
 		}
-		catch (String s) { break; }
+
 		break;
 	case 1:
-		try {
-			CharacterObject* enemy = &map->getenemy(Vector2i(m_position.x + 1, m_position.y));
-			parent->Attack(enemy, "body");
+		distanceTravelled = abs(position.x - m_position.x);
+		for (int i = m_position.x + 1; i <= position.x; i++) {
+			path.push_back(Vector2i(i, m_position.y));
 		}
-		catch (String s) { break; }
 		break;
 	case 2:
-		try {
-			CharacterObject* enemy = &map->getenemy(Vector2i(m_position.x, m_position.y + 1));
-			parent->Attack(enemy, "body");
+		distanceTravelled = abs(position.y - m_position.y);
+		for (int i = m_position.y + 1; i <= position.y; i++) {
+			path.push_back(Vector2i(m_position.x, i));
 		}
-		catch (String s) { break; }
 		break;
 	case 3:
-		try {
-			CharacterObject* enemy = &map->getenemy(Vector2i(m_position.x - 1, m_position.y));
-			parent->Attack(enemy, "body");
+		distanceTravelled = abs(position.x - m_position.x);
+		for (int i = m_position.x - 1; i >= position.x; i++) {
+			path.push_back(Vector2i(i, m_position.y));
 		}
-		catch (String s) { break; }
 		break;
 	}
+	int Damage = mastery * distanceTravelled * parent->getWeaponDamage();
+	target->loseHp(Damage);
 	//move there
 	parent->MoveToPosition(path);
 }
 
 bool Charge::canUse(Vector2i & position, CharacterObject * target)
 {
-	bool ret = true;
+	bool ret = false;
 	//has not enough action points
 	if (!(parent->getActionsRemaining() >= ActionCost))
 		ret = false;
@@ -586,12 +704,23 @@ bool Charge::canUse(Vector2i & position, CharacterObject * target)
 	if (m_position.x != position.x)
 		if (m_position.y != position.y)
 			ret = false;
-	//has not enough movement
-	int agility = parent->getAgility();
-	int movementcost = 10 / agility;
-	//needs more work
+	// position must be tile before the target
+	Vector2i targetPos = target->getMyPosition();
+	if (m_position.x < position.x && position.x + 1 != targetPos.x)
+		return false;
+	else if (m_position.x > position.x && position.x - 1 != targetPos.x)
+		return false;
+	else if (m_position.y < position.y && position.y + 1 != targetPos.y)
+		return false;
+	else if (m_position.y > position.y && position.y - 1 != targetPos.y)
+		return false;
 
-
+	//invalid target
+	vector<Vector3i> pathoptions = getStraightPath(m_position.x, m_position.y, 2 + mastery, *Controller::getMap());
+	for (unsigned int i = 0; i < pathoptions.size(); i++) {
+		if (position.x == pathoptions[i].x && position.y == pathoptions[i].y)
+			return true;
+	}
 	return ret;
 }
 /****************************************************************************************************************************************/
@@ -612,6 +741,4 @@ void DamageOverTimeModifier::aply()
 {
 	Parent->loseHp(amplitude);
 }
-
-
 
