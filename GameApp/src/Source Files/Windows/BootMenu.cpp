@@ -31,7 +31,7 @@ void BootMenu::init()
 	Controller::setRunning(true);
 }
 
-void BootMenu::update(float dtasSeconds)
+void BootMenu::update(float &dtasSeconds)
 {
 	if (!Controller::isRunning())
 	{

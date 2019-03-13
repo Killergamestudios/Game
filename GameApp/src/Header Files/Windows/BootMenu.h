@@ -13,7 +13,7 @@ public:
 
 	void init() override;
 	void draw() override;
-	void update(float) override;
+	void update(float&) override;
 	void actions() override;
 	void input() override;
 

@@ -12,11 +12,12 @@ public:
 	~GameMenu();
 
 	virtual void init() = 0;
-	virtual void update(float) = 0;
+	virtual void update(float&) = 0;
 	virtual void draw() = 0;
 	virtual void input() = 0;
 	virtual void actions() = 0;
-	
+
+protected:
 	Font font; // Global font for main menu text
 	RenderWindow* m_window; // DONT DELETE
 

@@ -58,6 +58,58 @@ CharacterObject::~CharacterObject()
 	if (m_ability2) delete m_ability2;
 	if (m_ability3) delete m_ability3;
 }
+CharacterObject * CharacterObject::copyself()
+{
+	CharacterObject *copy = new CharacterObject(name, *m_window, category, type, m_position, *m_texture);
+	Stats stats;
+	StatGain statGain;
+	stats.level = m_stats.level;
+	stats.exp = m_stats.exp;
+	stats.MaxHealth = m_stats.MaxHealth;
+	stats.MaxEnergy = m_stats.MaxEnergy;
+	stats.MaxActions = m_stats.MaxActions;
+	stats.Agility = m_stats.Agility;
+	stats.Mastery = m_stats.Mastery;
+	stats.Precision = m_stats.Precision;
+
+	stats.Health = m_stats.MaxHealth;
+	stats.Energy = m_stats.MaxEnergy;
+	stats.actionsremaining = m_stats.MaxActions;
+
+	statGain.MaxHealthGain = m_statGain.MaxHealthGain;
+	statGain.AgilityGain = m_statGain.AgilityGain;
+	statGain.PrecisionGain = m_statGain.PrecisionGain;
+	statGain.MaxActionsGain = m_statGain.MaxActionsGain;
+	statGain.MaxEnergyGain = m_statGain.MaxEnergyGain;
+
+	stats.MaxAgility = m_stats.MaxAgility;
+	stats.MaxActions = m_stats.MaxActions;
+
+	copy->spawn(stats, statGain);
+	
+	WeaponComponent *weapon = m_weapon->copySelf();
+	weapon->equip(copy);
+	copy->equipWeapon(weapon);
+	
+	ArmorComponent *armor = m_Armor->copySelf();
+	armor->equip(copy);
+	copy->equipArmor(armor);
+
+	string ability1 = m_ability1->getName();
+	AbilityComponent *ab1 = readAbility(ability1, copy);
+	copy->AddAbility1(ab1);
+
+	string ability2 = m_ability2->getName();
+	AbilityComponent *ab2 = readAbility(ability2, copy);
+	copy->AddAbility2(ab2);
+
+	string ability3 = m_ability3->getName();
+	AbilityComponent *ab3 = readAbility(ability3, copy);
+	copy->AddAbility3(ab3);
+
+	return copy;
+
+}
 /****************************************************************************************************************************************/
 //                                                   The Spawn Functions                                                                //
 /****************************************************************************************************************************************/
@@ -76,11 +128,15 @@ void CharacterObject::spawn(Stats & stats, StatGain &statgain)
 	m_stats.Energy = m_stats.MaxEnergy;
 	m_stats.actionsremaining = m_stats.MaxActions;
 
-	m_statGain.MaxHealthGain += statgain.MaxHealthGain;
-	m_statGain.AgilityGain += statgain.AgilityGain;
-	m_statGain.PrecisionGain += statgain.PrecisionGain;
-	m_statGain.MaxActionsGain += statgain.MaxActionsGain;
-	m_statGain.MaxEnergyGain += statgain.MaxEnergyGain;
+	m_statGain.MaxHealthGain = statgain.MaxHealthGain;
+	m_statGain.AgilityGain = statgain.AgilityGain;
+	m_statGain.PrecisionGain = statgain.PrecisionGain;
+	m_statGain.MaxActionsGain = statgain.MaxActionsGain;
+	m_statGain.MaxEnergyGain = statgain.MaxEnergyGain;
+
+	m_stats.MaxAgility = stats.MaxAgility;
+	m_stats.MaxActions = stats.MaxActions;
+
 }
 
 
@@ -99,6 +155,16 @@ void CharacterObject::equipArmor(ArmorComponent *armorcomponent)
 void CharacterObject::AddAbility1(AbilityComponent * ability)
 {
 	m_ability1 = ability;
+}
+
+void CharacterObject::AddAbility2(AbilityComponent * ability)
+{
+	m_ability2 = ability;
+}
+
+void CharacterObject::AddAbility3(AbilityComponent * ability)
+{
+	m_ability3 = ability;
 }
 
 
@@ -372,6 +438,16 @@ int CharacterObject::getPrecision()
 	return m_stats.Precision;
 }
 
+int CharacterObject::getMaxAgility()
+{
+	return m_stats.MaxAgility;
+}
+
+int CharacterObject::getWeaponDamage()
+{
+	return m_weapon->getDamage();
+}
+
 
 
 const Stats & CharacterObject::getM_stats()
@@ -382,11 +458,10 @@ const Stats & CharacterObject::getM_stats()
 //                                                   The Setters                                                                        //
 /****************************************************************************************************************************************/
 
-void CharacterObject::UpdateStats(Stats & stats)
+void CharacterObject::UpdateStats(int Agi, int Prec)
 {
-	m_stats.Agility = stats.Agility;
-	m_stats.Mastery = stats.Mastery;
-	m_stats.Precision = stats.Precision;
+	m_stats.Agility = Agi;
+	m_stats.Precision = Prec;
 }
 
 void CharacterObject::addModifier(ModifierComponent * m)
@@ -524,6 +599,23 @@ int CharacterObject::isAttackedPhysical(string place, int damage)
 	else armor = m_Armor->getPhysicalResistance();
 	int damageDealt;
 	damageDealt = damage - armor;
+	if (place == "body") BodyTimesHit++;
+	else if (place == "head") {
+		HeadTimesHit++;
+		damageDealt *= 2;
+	}
+	else if (place == "legs") {
+		LegsTimeHit++;
+		if (LegsTimeHit > MaxLegsTimesHit) LegsTimeHit = MaxLegsTimesHit;
+	}
+	else if (place == "rightHand") {
+		RightHandTimesHit++;
+		if (RightHandTimesHit > MaxRightHandTimesHit) RightHandTimesHit = MaxRightHandTimesHit;
+	}
+	else if (place == "leftHand") {
+		LeftHandTimesHit++;
+		if (LeftHandTimesHit > MaxLeftHandTimesHit) LeftHandTimesHit = MaxLegsTimesHit;
+	}
 	loseHp(damageDealt);
 	return damageDealt;
 }
@@ -640,5 +732,19 @@ void CharacterObject::UseAbility1(Vector2i & position, CharacterObject * target)
 	if (!m_ability1->canUse(position, target)) return;
 	m_ability1->use(position,target);
 	usedAction(m_ability1->getCost());
+}
+
+void CharacterObject::UseAbility2(Vector2i & position, CharacterObject * target)
+{
+	if (!m_ability2->canUse(position, target)) return;
+	m_ability2->use(position, target);
+	usedAction(m_ability2->getCost());
+}
+
+void CharacterObject::UseAbility3(Vector2i & position, CharacterObject * target)
+{
+	if (!m_ability3->canUse(position, target)) return;
+	m_ability3->use(position, target);
+	usedAction(m_ability3->getCost());
 }
 

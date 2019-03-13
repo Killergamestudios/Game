@@ -17,18 +17,16 @@ Engine::Engine() {
 	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
 	m_theme = new Theme(m_window);
+	m_map = new Map(m_window);
+	m_controller.setMap(m_map);
 	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png")); //For the mouse Texture
 	mouseTimePass = 0; //For the mouse animation
 	animState = 0; //For the mouse animation
-
 }
 
 void Engine::run() {
 	Clock clock;
-	m_map = new Map(m_window);
 	keyPressed = false;
-	m_controller.setMap(m_map);
-
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
 		GameTimeTotal = dt;

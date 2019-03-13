@@ -15,24 +15,25 @@ private:
 	enum SecondaryState { InGameMainMenu, None };
 	static Controller* m_s_Instance;
 
-	Map *map;
-
+	
+	// Primary Variables
 	const int numberOfSecondaryStates = 1;
 	State currentState, tmpCurrentState;
 	bool initialized, tmpInitialized;
 	bool running, tmpRunning;
-	bool loadFile, tmpLoadFile;
-	string saveFileDirectory, tmpSaveFileDirectory;
+	bool loadFile, tmpLoadFile; // TODO: change them to secondary
+	string saveFileDirectory, tmpSaveFileDirectory; // TODO: change them to secondary
 
 	bool executeSecondary[1], tmpExecuteSecondary[1];
 	bool secondaryInitialized[1], tmpSecondaryInitialized[1];
-	
+	// --------------
+	// Secondary Variables
+	Map *map;
 	int resolutionID;
 	int musicVolume;
 	int soundVolume;
 	IniReader* iniReader;
 	IniWriter* iniWriter;
-
 	vector<Vector2i> availableResolutions =
 	{
 		Vector2i(800,600),
@@ -45,6 +46,7 @@ private:
 		Vector2i(1920,1080),
 		Vector2i(1920,1200)
 	};
+	// --------------
 
 public: 
 	Controller();
@@ -78,7 +80,7 @@ public:
 	static void setSoundVolume(int);
 	static int getSoundVolume();
 	static vector<Vector2i> getAvailableResolutions();
-
+	static void quit(RenderWindow *window);
 	static void loadVars();
 	static void saveVars();
 

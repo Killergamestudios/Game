@@ -10,10 +10,13 @@ public:
 	void init() override;
 	void draw(RenderTarget& target, RenderStates states) const override;
 	void update(int) override;
+	void setPosition(Vector2f newPositions) override;
+	Vector2f getDimensions() override;
 	void setSelected() override;
 	void unSelect() override;
 	float getValue() override;
 
+private:
 	float currentValue;
 	Text selected;
 	vector<pair<string,string>> options;

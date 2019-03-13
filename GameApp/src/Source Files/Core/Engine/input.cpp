@@ -98,7 +98,7 @@ void Engine::input(float dtAsSeconds) {
 		//to close the window (for now)
 		if (evt.type == Event::KeyPressed)
 			if (Keyboard::isKeyPressed(Keyboard::BackSpace)) 
-				m_window.close();
+				Controller::quit(&m_window);
 
 	
 	}
