@@ -119,6 +119,9 @@
     <ClCompile Include="src\Source Files\Core\Engine\input.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source Files\Core\Engine\mouseControl.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
     <ClCompile Include="src\Source Files\Core\Engine\update.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
@@ -175,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="src\Source Files\Windows\MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="mouseControl.cpp">
-      <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
