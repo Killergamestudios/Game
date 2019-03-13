@@ -11,6 +11,7 @@ void Engine::draw() {
 		break;
 	case Controller::PLAYING:
 		m_map->draw();
+		m_window.draw(tile_sprite);
 		for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].Draw();
 		}

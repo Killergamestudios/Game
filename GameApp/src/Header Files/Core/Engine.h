@@ -55,6 +55,8 @@ private:
 	void draw();
 	void init();
 	void updateState();
+	sf::Vector2i mouseControl(float &totaltimepassed,int &animState);
+	
 
 	void cameraUpdate(int direction); // handles movement of camera
 	void cameraReset(); // resets camera. Useful for state transitions
@@ -64,6 +66,9 @@ private:
 	//CharacterObject *Warrior;//temp
 	//CharacterObject *mage;
 	vector<CharacterObject> party;
+	Sprite tile_sprite;
+	float mouseTimePass;
+	int animState;
 public:
 	Engine();
 	void run();
