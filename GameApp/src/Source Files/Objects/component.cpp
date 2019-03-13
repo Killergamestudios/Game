@@ -10,18 +10,6 @@ string CalculateBuffType(CharacterObject *obj) {
 
 }
 
-AbilityComponent *readAbility(string &s, CharacterObject *object) {
-	AbilityComponent *ability = nullptr;
-	if (s == "whirldwind")
-		ability = new Whirlwind(object);
-	else if (s == "rally")
-		ability = new Rally(object);
-	else if (s == "charge")
-		ability = new Charge(object);
-	return ability;
-}
-
-
 
 /****************************************************************************************************************************************/
 //                                                   The Component Class                                                                 //
@@ -502,7 +490,6 @@ RallyModifier::RallyModifier(CharacterObject * Prnt,int mastery):ModifierCompone
 {
 	Mastery = mastery;
 }
-
 void RallyModifier::kill()
 {
 	if (Parent->getType() == "enemy") {

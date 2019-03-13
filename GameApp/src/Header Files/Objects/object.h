@@ -110,7 +110,7 @@ public:
 	int getWeaponDamage();
 
 	//setters
-	void UpdateStats(int agi, int prec);
+	void UpdateStats(int Agi, int Prec);
 	void addModifier(ModifierComponent *m);
 	void setAgility(int agi);
 	void setPrecision(int prec);
