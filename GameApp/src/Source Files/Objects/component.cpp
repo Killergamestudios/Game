@@ -171,7 +171,7 @@ ArmorComponent::~ArmorComponent()
 	if (parent) parent = nullptr;
 }
 
-void ArmorComponent::spawn(pair<ElementType, float> Resistance[9], bool Isdropable, string description, pair<string, bool> Coverage[5], int mastery, string Class, int physicalresistance)
+void ArmorComponent::spawn(vector<pair<ElementType, int>> Resistance, bool Isdropable, string description, vector<pair<string, bool>> Coverage, int mastery, string Class, int physicalresistance,int upgradeSlots)
 {
 	for (int i = 0; i < 9; i++) {
 		elementResistance[i].first = Resistance[i].first;
@@ -186,6 +186,7 @@ void ArmorComponent::spawn(pair<ElementType, float> Resistance[9], bool Isdropab
 		coverage[i].first = Coverage[i].first;
 		coverage[i].second = Coverage[i].second;
 	}
+	upgrades = upgradeSlots;
 }
 
 bool ArmorComponent::canEquip(CharacterObject * Parent)
@@ -218,14 +219,14 @@ void ArmorComponent::update()
 ArmorComponent * ArmorComponent::copySelf()
 {
 	ArmorComponent* copy = new ArmorComponent(name, id, parent);
-	pair<ElementType, float> copyResistance[9];
+	vector<pair<ElementType, int>> copyResistance;
 	for (int i = 0; i < 9; i++) {
-		copyResistance[i] = pair<ElementType, float>(elementResistance[i]);
+		copyResistance[i] = pair<ElementType, int>(elementResistance[i]);
 	}
-	pair<string, bool> copyCoverage[5];
+	vector<pair<string, bool>> copyCoverage;
 	for (int i = 0; i < 5; i++)
 		copyCoverage[i] = pair<string, bool>(coverage[i]);
-	copy->spawn(copyResistance, isdropable, string(Description), copyCoverage, MasteryRequirment, string(ClassRequirment),physicalResistance);
+	copy->spawn(copyResistance, isdropable, string(Description), copyCoverage, MasteryRequirment, string(ClassRequirment),physicalResistance,upgrades);
 	return copy;
 }
 

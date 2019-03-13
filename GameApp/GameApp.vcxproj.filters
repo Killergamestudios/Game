@@ -146,9 +146,6 @@
     <ClCompile Include="src\Source Files\Objects\component.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Objects\DataBase.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="src\Source Files\Objects\LoadCharacters.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
@@ -178,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="src\Source Files\Windows\MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Objects\DataBase.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
