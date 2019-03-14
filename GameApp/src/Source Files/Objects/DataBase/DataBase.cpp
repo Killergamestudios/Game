@@ -8,6 +8,9 @@ DataBase::~DataBase()
 }
 DataBase::DataBase()
 {
+	/****************************************************************************************************************************************/
+	//                                                       CHARACTERS                                                                      //
+	/****************************************************************************************************************************************/
 	//Characters Stat Blocks: exp, maxHealth, Agility, Precision, MaxEnergy, Precision, Mastery, Actions Remaining
 
 	//Character ID: 0 - nullCharacter
@@ -32,6 +35,8 @@ DataBase::DataBase()
 	weaponDropChance.push_back(0);
 	armorDropChance.push_back(0);
 
+	//====================================================
+
 
 	//Character ID: 1 - Demorgan
 	charactersIndex.insert(pair<string, int>("Demorgan", 1));
@@ -54,6 +59,8 @@ DataBase::DataBase()
 	characterAttachments.push_back({ "Purple","Bag","Billabong","Billabong","Billabong" });
 	weaponDropChance.push_back(12);
 	armorDropChance.push_back(60);
+
+	//====================================================
 
 
 	//Character ID: 2 - Uko
@@ -78,6 +85,11 @@ DataBase::DataBase()
 	weaponDropChance.push_back(213);
 	armorDropChance.push_back(1);
 
+	//====================================================
+
+	/****************************************************************************************************************************************/
+	//                                                         WEAPONS                                                                        //
+	/****************************************************************************************************************************************/
 	//weapons.push_back(new WeaponComponent(Type, Name));
 	//weapons[id].spawn(element,amplitude,duration,damage,range,masteryReq,classReq,Description);
 
@@ -87,15 +99,18 @@ DataBase::DataBase()
 	weapons.push_back(WeaponComponent(halberd, "Purple", 1));
 	weapons[1].spawn(ice, 1, 3, 1, 1, 1, "Villain", "Wooow!");
 
+	/****************************************************************************************************************************************/
+	//                                                         ARMORS                                                                        //
+	/****************************************************************************************************************************************/
 	//Populating Armors DataBase
 	//Buffs/Debuffs haven't been included yet.
-	//Item ID : 0 - null
+	//Item ID: 0 - null
 	armors.push_back(ArmorComponent("null", 0));
 	bodyParts.push_back({ pair<string,bool>("legs",false),pair<string,bool>("rightArm",false),pair<string,bool>("leftArm",false),pair<string,bool>("Head",false) });
 	resistances.push_back({ pair<ElementType,int>(fire,0),pair<ElementType,int>(ice,0),pair<ElementType,int>(poison,0),pair<ElementType,int>(dark,0),pair<ElementType,int>(nature,0),pair<ElementType,int>(wind,0),pair<ElementType,int>(light,0),pair<ElementType,int>(harmony,0) });
 	armors[0].spawn(resistances[+0], false, "Null Armor Object", bodyParts[0], 1, "Villain", 1, 0);
 
-	//Item ID : 1 - Bag
+	//Item ID: 1 - Bag
 	armors.push_back(ArmorComponent("Bag", 1));
 	bodyParts.push_back({ pair<string,bool>("legs",false),pair<string,bool>("rightArm",false),pair<string,bool>("leftArm",false),pair<string,bool>("Head",false) });
 	resistances.push_back({ pair<ElementType,int>(fire,11),pair<ElementType,int>(ice,1),pair<ElementType,int>(poison,3),pair<ElementType,int>(dark,1),pair<ElementType,int>(nature,1),pair<ElementType,int>(wind,1),pair<ElementType,int>(light,1),pair<ElementType,int>(harmony,1) });

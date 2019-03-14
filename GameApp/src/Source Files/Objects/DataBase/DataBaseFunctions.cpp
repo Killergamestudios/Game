@@ -74,9 +74,9 @@ CharacterObject * DataBase::getCharacter(int ID, RenderWindow & window, String C
 	newCharacter->spawn(temp, statGainBlocks[id]);
 	newCharacter->equipWeapon(getWeapon(characterAttachments[id][0]));
 	newCharacter->equipArmor(getArmor(characterAttachments[id][1]));
-	// Somehow includes ability 1 (characterAttachments[id][2])
-	// Somehow includes ability 2 (characterAttachments[id][3])
-	// Somehow includes ability 3 (characterAttachments[id][4])
+	newCharacter->AddAbility1(readAbility(characterAttachments[id][2], newCharacter)); // Includes Ability 1
+	newCharacter->AddAbility1(readAbility(characterAttachments[id][3], newCharacter)); // Includes Ability 2
+	newCharacter->AddAbility1(readAbility(characterAttachments[id][4], newCharacter)); // Includes Ability 3
 
 
 
@@ -104,9 +104,9 @@ CharacterObject* DataBase::getCharacter(string Name, RenderWindow & window, Stri
 	newCharacter->spawn(temp, statGainBlocks[id]);
 	newCharacter->equipWeapon(getWeapon(characterAttachments[id][0]));
 	newCharacter->equipArmor(getArmor(characterAttachments[id][1]));
-	// Somehow includes ability 1 (characterAttachments[id][2])
-	// Somehow includes ability 2 (characterAttachments[id][3])
-	// Somehow includes ability 3 (characterAttachments[id][4])
+	newCharacter->AddAbility1(readAbility(characterAttachments[id][2], newCharacter)); // Includes Ability 1
+	newCharacter->AddAbility1(readAbility(characterAttachments[id][3], newCharacter)); // Includes Ability 2
+	newCharacter->AddAbility1(readAbility(characterAttachments[id][4], newCharacter)); // Includes Ability 3
 
 
 
