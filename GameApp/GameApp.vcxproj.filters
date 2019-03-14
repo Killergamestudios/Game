@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Windows\Gui">
       <UniqueIdentifier>{b63afb0c-bd10-49fb-9de9-3ff803ab4a95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\DataBase">
+      <UniqueIdentifier>{d4f1fedc-e7cd-47bc-839d-6e6c54c06fd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Header Files\Core\Algorithms.h">
@@ -146,8 +149,11 @@
     <ClCompile Include="src\Source Files\Objects\component.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source Files\Objects\DataBase.cpp">
-      <Filter>Source Files\Objects</Filter>
+    <ClCompile Include="src\Source Files\Objects\DataBase\DataBase.cpp">
+      <Filter>Source Files\Objects\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Objects\DataBase\DataBaseFunctions.cpp">
+      <Filter>Source Files\Objects\DataBase</Filter>
     </ClCompile>
     <ClCompile Include="src\Source Files\Objects\LoadCharacters.cpp">
       <Filter>Source Files\Objects</Filter>
