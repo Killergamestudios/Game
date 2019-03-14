@@ -43,7 +43,7 @@ WeaponComponent * DataBase::getWeapon(string Name)
   throw "404: not found";
   return nullptr;
 }
-CharacterObject DataBase::getCharacter(int ID, RenderWindow & window, String Category, String Type, Vector2i Position, Texture & texture, int level)
+CharacterObject * DataBase::getCharacter(int ID, RenderWindow & window, String Category, String Type, Vector2i Position, Texture & texture, int level)
 {
 	int id = ID;
 	string Name = "nullCharacter";
@@ -70,9 +70,10 @@ CharacterObject DataBase::getCharacter(int ID, RenderWindow & window, String Cat
 	temp.MaxActions = temp.actionsremaining;
 	temp.level = level;
 
-	CharacterObject  newCharacter(Name, window, Category, Type, Position, texture);
-	newCharacter.equipWeapon(getWeapon(characterAttachments[id][0]));
-	newCharacter.equipArmor(getArmor(characterAttachments[id][1]));
+	CharacterObject * newCharacter = new CharacterObject(Name, window, Category, Type, Position, texture);
+	newCharacter->spawn(temp, statGainBlocks[id]);
+	newCharacter->equipWeapon(getWeapon(characterAttachments[id][0]));
+	newCharacter->equipArmor(getArmor(characterAttachments[id][1]));
 	// Somehow includes ability 1 (characterAttachments[id][2])
 	// Somehow includes ability 2 (characterAttachments[id][3])
 	// Somehow includes ability 3 (characterAttachments[id][4])
@@ -81,7 +82,7 @@ CharacterObject DataBase::getCharacter(int ID, RenderWindow & window, String Cat
 
 	return newCharacter;
 }
-CharacterObject  DataBase::getCharacter(string Name, RenderWindow & window, String Category, String Type, Vector2i Position, Texture & texture,int level)
+CharacterObject* DataBase::getCharacter(string Name, RenderWindow & window, String Category, String Type, Vector2i Position, Texture & texture,int level)
 {
 	int id = charactersIndex.at(Name);
 	Stats temp;
@@ -99,9 +100,10 @@ CharacterObject  DataBase::getCharacter(string Name, RenderWindow & window, Stri
 	temp.MaxActions = temp.actionsremaining;
 	temp.level = level;
 
-	CharacterObject  newCharacter(Name, window, Category, Type, Position, texture);
-	newCharacter.equipWeapon(getWeapon(characterAttachments[id][0]));
-	newCharacter.equipArmor(getArmor(characterAttachments[id][1]));
+	CharacterObject * newCharacter = new CharacterObject(Name, window, Category, Type, Position, texture);
+	newCharacter->spawn(temp, statGainBlocks[id]);
+	newCharacter->equipWeapon(getWeapon(characterAttachments[id][0]));
+	newCharacter->equipArmor(getArmor(characterAttachments[id][1]));
 	// Somehow includes ability 1 (characterAttachments[id][2])
 	// Somehow includes ability 2 (characterAttachments[id][3])
 	// Somehow includes ability 3 (characterAttachments[id][4])

@@ -15,8 +15,8 @@ public:
 	WeaponComponent* getWeapon(int ID);
 	WeaponComponent* getWeapon(string Name);
 
-	CharacterObject getCharacter(int ID, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture, int level = 0); //Not Complete, creates character based on Database values.
-	CharacterObject getCharacter(string Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture, int level = 0); //Not Complete, creates character based on Database values.
+	CharacterObject* getCharacter(int ID, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture, int level = 0); //Not Complete, creates character based on Database values.
+	CharacterObject* getCharacter(string Name, RenderWindow &window, String Category, String Type, Vector2i Position, Texture &texture, int level = 0); //Not Complete, creates character based on Database values.
 
 
 private:
