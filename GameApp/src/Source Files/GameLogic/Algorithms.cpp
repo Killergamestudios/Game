@@ -42,10 +42,13 @@ int ** getTotalMap(Map currentMap) {
 		map[i] = new int[height];
 		for (int j = 0; j < height; j++)
 		{
-			if (enemyMap[i][j] != 0 || friendlyMap[i][j] != 0 || terrainMap[i][j] == -1) // which blocks are blocked
+			if (friendlyMap[i][j] != 0 || terrainMap[i][j] == -1) // which blocks are blocked
 				map[i][j] = -1; // tile is blocked
-			else
+			else {
 				map[i][j] = terrainMap[i][j]; // tile is not blocked
+				if(enemyMap[i][j] != 0)
+					map[i][j] = 1; // tile has enemy
+			}
 		}
 	}
 
