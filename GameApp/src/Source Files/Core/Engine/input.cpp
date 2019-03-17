@@ -52,8 +52,32 @@ void Engine::input(float dtAsSeconds) {
 				break;
 			case Controller::PLAYING:
 
+				mouseTimePass += dtAsSeconds;
+				mousePosition = mouseControl(mouseTimePass, animState);
+				SelectHighlight();
+
+
+
 				if (evt.type == Event::KeyReleased) {
 					keyPressed = false;
+				}
+				if (evt.type == Event::MouseButtonReleased) {
+					MousePressed = false;
+				}
+				if (!MousePressed) {
+					if (Mouse::isButtonPressed(Mouse::Left)) {
+						if (SelectedCharacter == nullptr) {
+							if(!CharacterMoving)
+								SelectedCharacter = HoveredCharacter;
+							SelectingCharacter = true;
+						}
+						else {
+							if (mousePosition.x >= 0 && mousePosition.y >= 0 && SelectedCharacter != nullptr) {
+								CharacterMoving = true;
+								SelectingCharacter = false;
+							}
+						}
+					}
 				}
 
 				if (!keyPressed || overrideKeyPressed > CAMERA_UPDATE_SPEED)
@@ -84,6 +108,10 @@ void Engine::input(float dtAsSeconds) {
 				if (evt.type == Event::KeyPressed) {
 
 					keyPressed = true;
+					
+				}
+				if (evt.type == Event::MouseButtonPressed) {
+					MousePressed = true;
 				}
 
 				break;

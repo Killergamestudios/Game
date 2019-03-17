@@ -46,6 +46,7 @@ private:
 		Vector2i(1920,1080),
 		Vector2i(1920,1200)
 	};
+
 	// --------------
 
 public: 

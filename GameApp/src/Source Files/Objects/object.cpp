@@ -201,6 +201,8 @@ void CharacterObject::MoveToPosition(vector<Vector2i> &path)
 		m_path[i] = path[i];
 	}
 	std::reverse(m_path.begin(), m_path.end());
+	previousPosition.x = m_position.x;
+	previousPosition.y = m_position.y;
 }
 /****************************************************************************************************************************************/
 //                                                   The update Functions                                                               //
@@ -211,7 +213,7 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 	drowpos.x = (float)(m_position.x * 64);
 	drowpos.y = (float)(m_position.y * 64);
 	if (!isMoving) {
-		if (!m_path.empty()) {
+		if (m_path.size() != 0) {
 			MoveAdj(m_path.back());
 			m_path.pop_back();
 		}
@@ -273,7 +275,10 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.y++;
 				facingdir = FacingDirection::front;
 				isMoving = false;
-				Controller::getMap()->swapPosition(category,Vector2i(m_position.x,m_position.y - 1),m_position);
+				if (m_path.size() == 0) 
+					justMoved = true;
+
+				//Controller::getMap()->swapPosition(category,Vector2i(m_position.x,m_position.y - 1),m_position);
 			}
 		}
 		break;
@@ -298,7 +303,9 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.y--;
 				facingdir = FacingDirection::back;
 				isMoving = false;
-				Controller::getMap()->swapPosition(category, Vector2i(m_position.x, m_position.y + 1), m_position);
+				if (m_path.size() == 0)
+					justMoved = true;
+				//Controller::getMap()->swapPosition(category, Vector2i(m_position.x, m_position.y + 1), m_position);
 
 			}
 		}
@@ -324,7 +331,10 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.x--;
 				facingdir = FacingDirection::fleft;
 				isMoving = false;
-				Controller::getMap()->swapPosition(category, Vector2i(m_position.x + 1, m_position.y), m_position);
+				if (m_path.size() == 0)
+					justMoved = true;
+
+				//Controller::getMap()->swapPosition(category, Vector2i(m_position.x + 1, m_position.y), m_position);
 
 			}
 		}
@@ -350,13 +360,19 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 				m_position.x++;
 				facingdir = FacingDirection::fright;
 				isMoving = false;
-				Controller::getMap()->swapPosition(category, Vector2i(m_position.x - 1, m_position.y), m_position);
+				if (m_path.size() == 0)
+					justMoved = true;
+
+				//Controller::getMap()->swapPosition(category, Vector2i(m_position.x - 1, m_position.y), m_position);
 
 			}
 		}
 		break;
 	}
-	
+	if (justMoved) {
+		justMoved = false;
+		Controller::getMap()->swapPosition(category, previousPosition, m_position);
+	}
 } 
 void CharacterObject::update(float dtAsseconds)
 {
@@ -370,7 +386,6 @@ void CharacterObject::update(float dtAsseconds)
 		m_modifiers[i]->update();
 	}*/
 	moveupdate(dtAsseconds); // here we handle the movement on a seperate function
-
 	
 	lastupdated += dtAsseconds;
 }
@@ -448,6 +463,17 @@ int CharacterObject::getWeaponDamage()
 	return m_weapon->getDamage();
 }
 
+int CharacterObject::getMovementCost()
+{
+	int agility =int( m_stats.Agility * (100 - 25 * LegsTimeHit) / 100);
+	return 20 / m_stats.Agility;
+}
+
+int CharacterObject::getWeaponRange()
+{
+	return m_weapon->getRange();
+}
+
 
 
 const Stats & CharacterObject::getM_stats()
@@ -478,6 +504,31 @@ void CharacterObject::setAgility(int agi)
 void CharacterObject::setPrecision(int prec)
 {
 	m_stats.Precision = prec;
+}
+
+void CharacterObject::SetPosition(Vector2i newPos)
+{
+	m_position.x = newPos.x;
+	m_position.y = newPos.y;
+}
+
+void CharacterObject::SetDirection(FacingDirection dir)
+{
+	switch (dir)
+	{
+	case front:
+		facingdir = FacingDirection::front;
+		break;
+	case back:
+		facingdir = FacingDirection::back;
+		break;
+	case fleft:
+		facingdir = FacingDirection::fleft;
+		break;
+	case fright:
+		facingdir = FacingDirection::fright;
+		break;
+	}
 }
 
 
@@ -531,7 +582,7 @@ int CharacterObject::Attack(CharacterObject *target, String place) // NEEDS WORK
 	ElementType element = m_weapon->getElement();
 	
 	int physicalDamageDealt = target->isAttackedPhysical(place, damagetodeal);
-	float amplitude;
+	int amplitude;
 	int duration;
 	int elementdamage;
 	switch (element) {
@@ -620,7 +671,7 @@ int CharacterObject::isAttackedPhysical(string place, int damage)
 	return damageDealt;
 }
 
-int CharacterObject::isAttackedMagic(float amplitude, ElementType element, int duration, int PhysicalDamage)
+int CharacterObject::isAttackedMagic(int amplitude, ElementType element, int duration, int PhysicalDamage)
 {
 	int damage;
 	int Amplitude;
@@ -632,7 +683,7 @@ int CharacterObject::isAttackedMagic(float amplitude, ElementType element, int d
 		break;
 	case ice:
 	{
-		Amplitude = int(m_stats.Agility * 0.1f * std::max(amplitude - m_Armor->getResistance(ice), 0.0f));// agility * 10/100 * amplitude - resistance.negative not allowed
+		Amplitude = int(m_stats.Agility * 0.1f * std::max(amplitude - m_Armor->getResistance(ice), 0));// agility * 10/100 * amplitude - resistance.negative not allowed
 		if (Amplitude == 0) return 0; //dont create a debuff with 0 amplitude
 		BuffModifierComponent* icedebuff = new BuffModifierComponent(this, duration, "agility", Amplitude, "debuff");
 		addModifier(icedebuff);
@@ -641,7 +692,7 @@ int CharacterObject::isAttackedMagic(float amplitude, ElementType element, int d
 		break;
 	case wind:
 	{
-		Amplitude = int(m_stats.Precision * 0.1f * std::max(amplitude - m_Armor->getResistance(wind), 0.0f));// Precision * 10/100 * amplitude - resistance.negative not allowed
+		Amplitude = int(m_stats.Precision * 0.1f * std::max(amplitude - m_Armor->getResistance(wind), 0));// Precision * 10/100 * amplitude - resistance.negative not allowed
 		if (Amplitude == 0) return 0; //dont create a debuff with 0 amplitude
 		BuffModifierComponent* winddebuff = new BuffModifierComponent(this, duration, "precision", Amplitude, "debuff");
 		addModifier(winddebuff);
@@ -650,7 +701,7 @@ int CharacterObject::isAttackedMagic(float amplitude, ElementType element, int d
 		break;
 	case poison:
 	{
-		Amplitude = int(std::max(amplitude - m_Armor->getResistance(poison), 0.0f));
+		Amplitude = int(std::max(amplitude - m_Armor->getResistance(poison), 0));
 		if (Amplitude == 0) return 0;
 		DamageOverTimeModifier *poison = new DamageOverTimeModifier(this, duration, "poison", Amplitude);
 		addModifier(poison);
@@ -658,11 +709,11 @@ int CharacterObject::isAttackedMagic(float amplitude, ElementType element, int d
 	}
 		break;
 	case dark:
-		Amplitude = int(0.1f * PhysicalDamage * std::max(0.0f, amplitude - m_Armor->getResistance(dark)));
+		Amplitude = int(0.1f * PhysicalDamage * std::max(0, amplitude - m_Armor->getResistance(dark)));
 		return Amplitude;
 		break;
 	case nature:
-		Amplitude = int(0.1f * PhysicalDamage * std::max(0.0f, amplitude - m_Armor->getResistance(nature)));
+		Amplitude = int(0.1f * PhysicalDamage * std::max(0, amplitude - m_Armor->getResistance(nature)));
 		return Amplitude;
 		break;
 	}

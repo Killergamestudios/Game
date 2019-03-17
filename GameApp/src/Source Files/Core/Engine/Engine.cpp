@@ -22,11 +22,18 @@ Engine::Engine() {
 	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png")); //For the mouse Texture
 	mouseTimePass = 0; //For the mouse animation
 	animState = 0; //For the mouse animation
+
+	SelectingCharacter = false;
+	SelectedCharacter = nullptr;
+	HoveredCharacter = nullptr;
+	HoveringCharacter = false;
+	CharacterMoving = false;
 }
 
 void Engine::run() {
 	Clock clock;
 	keyPressed = false;
+	party = Controller::getMap()->getparty();
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
 		GameTimeTotal = dt;
