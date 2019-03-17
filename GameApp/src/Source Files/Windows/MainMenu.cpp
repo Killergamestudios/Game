@@ -59,19 +59,10 @@ void MainMenu::update(float& dtasSeconds) {
 	totalTimePassed += dtasSeconds;
 	animate();
 	
+	backgroundMusic->setVolume((float)Controller::getMusicVolume());
 	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
 	{
-		for (unsigned int i = 0; i < guiElements.size(); i++) 
-		{
-			if (guiElements[i]->label.getString() == "Music Volume")
-			{	
-				Controller::setMusicVolume((int)guiElements[i]->getValue());
-				backgroundMusic->setVolume((float)Controller::getMusicVolume());
-			}
-			else if (guiElements[i]->label.getString() == "Resolution") {
-				Controller::setResolutionID((int)guiElements[i]->getValue());
-			}
-		}
+		checkGuiChangeState();
 	}
 }
 
@@ -164,6 +155,20 @@ void MainMenu::clearTextures()
 	tabOrder.clear();
 	guiElements.clear();
 	dimensions.clear();
+}
+
+void MainMenu::checkGuiChangeState()
+{
+	for (unsigned int i = 0; i < guiElements.size(); i++)
+	{
+		if (guiElements[i]->label.getString() == "Music Volume")
+		{
+			Controller::setMusicVolume((int)guiElements[i]->getValue());
+		}
+		else if (guiElements[i]->label.getString() == "Resolution") {
+			Controller::setResolutionID((int)guiElements[i]->getValue());
+		}
+	}
 }
 
 void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)

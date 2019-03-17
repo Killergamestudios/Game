@@ -22,6 +22,7 @@ public:
 	void input() override;
 
 protected:
+	void checkGuiChangeState();
 	void initFileNamesToLoad(vector<string> fileNames, Theme::Regions region); // get the files names for sprites
 	void setMenuSprites(Theme::Regions region); // set the sprites for main menu textures
 	void loadTextGraphics(vector<string> textsArray, Theme::Regions region); // load and set main menu texts

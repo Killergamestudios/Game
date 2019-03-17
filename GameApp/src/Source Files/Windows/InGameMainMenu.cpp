@@ -35,6 +35,10 @@ void InGameMainMenu::update(float &dtasSeconds)
 		return;
 	}
 	totalTimePassed += dtasSeconds;
+	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
+	{
+		checkGuiChangeState();
+	}
 }
 
 void InGameMainMenu::actions()
@@ -65,7 +69,7 @@ void InGameMainMenu::initLayer()
 	clearTextures();
 	loadMenu = false;
 	Theme::clearRegion(Theme::NewWindow);
-
+	
 	if (depth == 1) {
 		loadTextGraphics(mainMenu);
 		setBackgroundSprites(backgroundSpritesPath);
@@ -145,6 +149,7 @@ void InGameMainMenu::clearTextures()
 	drawStack.clear();
 	tabOrder.clear();
 	backgroundSprites.clear();
+	guiElements.clear();
 	delete backgroundFillColor;
 }
 
