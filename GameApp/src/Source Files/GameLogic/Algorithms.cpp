@@ -91,6 +91,12 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 		if (x == endPosX && y == endPosY)  // check if we found the end
 		{
 			energy -= gScore[endPosX][endPosY];
+			openSet.clear();
+			cameFrom.clear();
+			closedSet.clear();
+			for (int i = 0; i < mapWidth; i++)
+				delete gScore[i];
+			delete gScore;
 			return reconstructPath(cameFrom,endPosX,endPosY);
 		}
 		openSet.erase(openSet.begin()); // erase first item from openSet (this with the least weight)
@@ -212,11 +218,18 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 		}
 	}
 
+	openSet.clear();
+	closedSet.clear();
 	// create finalTilesSet in order to return a vector and not a set
 	for (Pair p : tiles)
 	{
 		finalTilesSet.push_back(Vector3i(p.first,p.second, energyCost[p.first][p.second]));
 	}
+
+	for (int i = 0; i < mapWidth; i++)
+		delete energyCost[i];
+	delete energyCost;
+	tiles.clear();
 	return finalTilesSet;
 }
 
