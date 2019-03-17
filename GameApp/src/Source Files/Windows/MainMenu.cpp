@@ -28,6 +28,9 @@ MainMenu::~MainMenu()
 
 void MainMenu::init() 
 {
+	tempLogo = new RectangleShape(Vector2f(m_window->getView().getSize().x, 0.25f*m_window->getView().getSize().y));
+	tempLogo->setPosition(Theme::renderRegion(Theme::Logo, vector<Vector2f>{tempLogo->getSize()}, 0)[0]);
+
 	initLayer(); // Initialize everything. Fresh start
 	Controller::setInitialized(true);
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits

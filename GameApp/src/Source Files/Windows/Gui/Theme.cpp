@@ -129,9 +129,10 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 		LOCAL_VIEW_HEIGHT = min(LOCAL_VIEW_HEIGHT - m_s_Instance->regionDimensions[Logo].y - m_s_Instance->margin[Logo].y, LOCAL_VIEW_HEIGHT*0.7f);
 		elementSeperation = (LOCAL_VIEW_HEIGHT - elements.size() * elements[0].y) / (elements.size() - 1); // calculate element sepearation
 		for (Vector2f element : elements) {		
-			renderedElements.push_back(Vector2f(ceil((LOCAL_VIEW_WIDTH - element.x) / 2), ceil(flag*elementSeperation + m_s_Instance->regionDimensions[MainMenu].y)));
+			renderedElements.push_back(Vector2f(ceil((LOCAL_VIEW_WIDTH - element.x) / 2), 
+				ceil((1-flag)*(m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y) + flag*elementSeperation + m_s_Instance->regionDimensions[MainMenu].y)));
 			m_s_Instance->regionDimensions[MainMenu].x = LOCAL_VIEW_WIDTH;
-			m_s_Instance->regionDimensions[MainMenu].y += flag * elementSeperation + m_s_Instance->margin[MainMenu].y + element.y;
+			m_s_Instance->regionDimensions[MainMenu].y += (1 - flag)*(m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y) + flag * elementSeperation + m_s_Instance->margin[MainMenu].y + element.y;
 			flag = 1;
 		}
 		break;

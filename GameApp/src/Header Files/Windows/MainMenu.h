@@ -54,6 +54,8 @@ private:
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
 	Sprite *title; // used for emblem and game title
+
+	RectangleShape *tempLogo; // temporary logo
 	float opacity; // nedded for fade in animation
 	
 	bool loadMenu; // shows if player is in load menu
