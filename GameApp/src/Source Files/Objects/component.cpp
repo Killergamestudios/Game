@@ -107,7 +107,7 @@ ElementType WeaponComponent::getElement()
 	return element;
 }
 
-float WeaponComponent::getAmplitude()
+int WeaponComponent::getAmplitude()
 {
 	return elementAmplitude;
 }
@@ -139,7 +139,7 @@ int WeaponComponent::getid()
 
 
 
-void WeaponComponent::spawn(ElementType Element, float amplitude, int duration, int damage, int Range, int mastery, string classrequirment, string description)
+void WeaponComponent::spawn(ElementType Element, int amplitude, int duration, int damage, int Range, int mastery, string classrequirment, string description)
 {
 	element = Element;
 	elementAmplitude = amplitude;
@@ -171,7 +171,7 @@ ArmorComponent::~ArmorComponent()
 	if (parent) parent = nullptr;
 }
 
-void ArmorComponent::spawn(pair<ElementType, float> Resistance[9], bool Isdropable, string description, pair<string, bool> Coverage[5], int mastery, string Class, int physicalresistance)
+void ArmorComponent::spawn(pair<ElementType, int> Resistance[9], bool Isdropable, string description, pair<string, bool> Coverage[5], int mastery, string Class, int physicalresistance)
 {
 	for (int i = 0; i < 9; i++) {
 		elementResistance[i].first = Resistance[i].first;
@@ -218,9 +218,9 @@ void ArmorComponent::update()
 ArmorComponent * ArmorComponent::copySelf()
 {
 	ArmorComponent* copy = new ArmorComponent(name, id, parent);
-	pair<ElementType, float> copyResistance[9];
+	pair<ElementType, int> copyResistance[9];
 	for (int i = 0; i < 9; i++) {
-		copyResistance[i] = pair<ElementType, float>(elementResistance[i]);
+		copyResistance[i] = pair<ElementType, int>(elementResistance[i]);
 	}
 	pair<string, bool> copyCoverage[5];
 	for (int i = 0; i < 5; i++)
@@ -234,7 +234,7 @@ string ArmorComponent::getname()
 	return name;
 }
 
-float ArmorComponent::getResistance(ElementType element)
+int ArmorComponent::getResistance(ElementType element)
 {
 	for (int i = 0; i < 8; i++) {
 		if (elementResistance[i].first == element)
@@ -467,7 +467,7 @@ void Whirlwind::use(Vector2i & position, CharacterObject * target)
 		}
 
 	for (unsigned int i = 0; i < enemysToHit.size(); i++) {
-		enemy = &map->getenemy(enemysToHit[i]);
+		enemy = map->getenemy(enemysToHit[i]);
 		switch (mastery) {
 		case 1:
 		case 2:

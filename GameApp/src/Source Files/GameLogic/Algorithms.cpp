@@ -42,10 +42,13 @@ int ** getTotalMap(Map currentMap) {
 		map[i] = new int[height];
 		for (int j = 0; j < height; j++)
 		{
-			if (enemyMap[i][j] != 0 || friendlyMap[i][j] != 0 || terrainMap[i][j] == -1) // which blocks are blocked
+			if (friendlyMap[i][j] != 0 || terrainMap[i][j] == -1) // which blocks are blocked
 				map[i][j] = -1; // tile is blocked
-			else
+			else {
 				map[i][j] = terrainMap[i][j]; // tile is not blocked
+				if(enemyMap[i][j] != 0)
+					map[i][j] = 1; // tile has enemy
+			}
 		}
 	}
 
@@ -67,8 +70,8 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 	map<pair<int,int>,pair<int,int>> cameFrom; // list keeping track of the optimal path
 	int ** gScore;  // the weight to get to a certain node from the start
 	int ** totalMap = getTotalMap(currentMap); // map containing all the weights and blocked tiles
-	int mapWidth = currentMap.getMapWidth(); // width of map array
-	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int mapWidth = currentMap.getMapWidth() / 64; // width of map array
+	int mapHeight = currentMap.getMapHeight() / 64; // height of map array
 
 	openSet.insert(start);
 	// initialize gscore
@@ -91,6 +94,14 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 		if (x == endPosX && y == endPosY)  // check if we found the end
 		{
 			energy -= gScore[endPosX][endPosY];
+			openSet.clear();
+			closedSet.clear();
+			for (int i = 0; i < mapWidth; i++)
+				delete gScore[i];
+			delete gScore;
+			for (int i = 0; i < mapWidth; i++)
+				delete totalMap[i];
+			delete totalMap;
 			return reconstructPath(cameFrom,endPosX,endPosY);
 		}
 		openSet.erase(openSet.begin()); // erase first item from openSet (this with the least weight)
@@ -142,8 +153,8 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	vector<pPair> openSet; // tiles that are to be processed
 	vector<Vector3i> finalTilesSet; // the final set of tiles to return
 	set<pair<int, int>> tiles; // array keeping track of tiles. Needs to be set in order not to accept duplicates
-	int mapWidth = currentMap.getMapWidth(); // width of map array
-	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int mapWidth = currentMap.getMapWidth() / 64; // width of map array
+	int mapHeight = currentMap.getMapHeight() / 64; // height of map array
 	int ** energyCost;
 	
 	energyCost = new int *[mapWidth];
@@ -212,11 +223,21 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 		}
 	}
 
+	openSet.clear();
+	closedSet.clear();
 	// create finalTilesSet in order to return a vector and not a set
 	for (Pair p : tiles)
 	{
 		finalTilesSet.push_back(Vector3i(p.first,p.second, energyCost[p.first][p.second]));
 	}
+
+	for (int i = 0; i < mapWidth; i++)
+		delete energyCost[i];
+	delete energyCost;
+	for (int i = 0; i < mapWidth; i++)
+		delete totalMap[i];
+	delete totalMap;
+	tiles.clear();
 	return finalTilesSet;
 }
 
@@ -224,8 +245,8 @@ vector<Vector3i> getStraightPath(int startPosX, int startPosY, int range, Map & 
 {
 	Pair start = make_pair(startPosX, startPosY); // the starting point without weight
 	vector<Vector3i> finalTilesSet; // the final set of tiles to return
-	int mapWidth = currentMap.getMapWidth(); // width of map array
-	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int mapWidth = currentMap.getMapWidth() / 64; // width of map array
+	int mapHeight = currentMap.getMapHeight() / 64; // height of map array
 	int ** totalMap = getTotalMap(currentMap); // get the whole map for calculating energy cost
 	int energyConsumed = 0; // total energy consumed 
 
@@ -247,6 +268,9 @@ vector<Vector3i> getStraightPath(int startPosX, int startPosY, int range, Map & 
 			finalTilesSet.push_back(Vector3i(startPosX, j, energyConsumed));
 		}
 	}
+	for (int i = 0; i < mapWidth; i++)
+		delete totalMap[i];
+	delete totalMap;
 	return finalTilesSet;
 }
 

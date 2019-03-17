@@ -145,29 +145,34 @@ int Map::getTerainPropertiesinPosition(Vector2i position)
 
 int Map::getEnemyinPosition(Vector2i position)
 {
-	
+	if (position.x < 0 || position.y < 0) std::exception("out of bounds");
 	return m_enemyCharacters[position.x][position.y];
 }
 
 int Map::getFriendlyinPosition(Vector2i position)
 {
+	if (position.x < 0 || position.y < 0) std::exception("out of bounds");
 	return m_friendlyCharacters[position.x][position.y];
 }
 
 int Map::getMiscinPosition(Vector2i position)
 {
+	if (position.x < 0 || position.y < 0) std::exception("out of bounds");
 	return m_misc[position.x][position.y];
 }
 
 void Map::swapPosition(string maptype, Vector2i Startingpos, Vector2i Destination)
 {
 	int temp;
-	cout << Startingpos.x << Startingpos.y << endl;
-	cout << Destination.x << Destination.y << endl;
 	if (maptype == "friendly") {
+
 		temp = m_friendlyCharacters[Startingpos.x][Startingpos.y];
 		m_friendlyCharacters[Startingpos.x][Startingpos.y] = m_friendlyCharacters[Destination.x][Destination.y];
 		m_friendlyCharacters[Destination.x][Destination.y] = temp;
+		for (unsigned int i = 0; i < party.size(); i++) {
+			if (Startingpos.x == party[i].getMyPosition().x && Startingpos.y == party[i].getMyPosition().y)
+				party[i].SetPosition(Destination);
+		}
 	}
 	else if (maptype == "enemy") {
 		temp = m_enemyCharacters[Startingpos.x][Startingpos.y];
@@ -176,12 +181,33 @@ void Map::swapPosition(string maptype, Vector2i Startingpos, Vector2i Destinatio
 	}
 }
 
-CharacterObject Map::getenemy(Vector2i position)
+CharacterObject *Map::getenemy(Vector2i position)
 {
 	for (unsigned int i = 0; i < m_enemys.size(); i++) {
-		if (position.x == m_enemys[i].getMyPosition().x &&position.y == m_enemys[i].getMyPosition().y) return m_enemys[i];
+		if (position.x == m_enemys[i].getMyPosition().x &&position.y == m_enemys[i].getMyPosition().y) return &m_enemys[i];
 	}
 	throw std::exception("Invalid Search");
+}
+
+CharacterObject * Map::getAlly(Vector2i position)
+{
+	CharacterObject *ally = nullptr;
+	for (unsigned int i = 0; i < party.size(); i++) {
+		if (position.x == party[i].getMyPosition().x && position.y == party[i].getMyPosition().y)
+			ally = &party[i];
+	}
+	return ally;
+
+	//throw std::exception("Invalid Search");
+}
+
+int Map::getAllyVectorPosition(Vector2i position)
+{
+	for (unsigned int i = 0; i < party.size(); i++) {
+		if (position.x == party[i].getMyPosition().x && position.y == party[i].getMyPosition().y)
+			return i;
+	}
+	return -1;
 }
 
 int ** Map::getTerrainMap() 

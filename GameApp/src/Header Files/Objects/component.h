@@ -52,7 +52,7 @@ public:
 	WeaponComponent(WeaponType type, String name, int ID, CharacterObject * Parent = nullptr);
 	~WeaponComponent();
 	
-	void spawn(ElementType Element, float amplitude, int duration, int damage, int range, int mastery, string classrequirment, string Description);
+	void spawn(ElementType Element, int amplitude, int duration, int damage, int range, int mastery, string classrequirment, string Description);
 	bool canEquip(CharacterObject * Parent);
 	void equip(CharacterObject * Parent);
 
@@ -62,7 +62,7 @@ public:
 	WeaponType Gettype();
 	String Getname();
 	ElementType getElement();
-	float getAmplitude();
+	int getAmplitude();
 	int getDamage();
 	int getRange();
 	int getduration();
@@ -73,7 +73,7 @@ private:
 	WeaponType type; //sword bow staff etc
 	String name;// GreatSword , a special sword that a character has etc
 	ElementType element;
-	float elementAmplitude;
+	int elementAmplitude;
 	int elementDuration;
 	int Damage;
 	int range;
@@ -93,7 +93,7 @@ class ArmorComponent :public component {
 public:
 	ArmorComponent(String name, int id = 0, CharacterObject *Parent = nullptr);
 	~ArmorComponent();
-	void spawn(pair< ElementType, float> Resistance[9] , bool Isdropable, string description, pair<string,bool> coverage[5], int mastery, string Class, int physicalresistance);
+	void spawn(pair< ElementType, int> Resistance[9] , bool Isdropable, string description, pair<string,bool> coverage[5], int mastery, string Class, int physicalresistance);
 	bool canEquip(CharacterObject * Parent);
 
 	void equip(CharacterObject * Parent);
@@ -103,7 +103,7 @@ public:
 	ArmorComponent* copySelf(); // NOT READY YET Modifier not ready
 
 	string getname();
-	float getResistance(ElementType element);
+	int getResistance(ElementType element);
 	bool isDropable();
 	string getDescription();
 	bool getcoverage(string place);
@@ -114,7 +114,7 @@ private:
 	CharacterObject *parent;
 	int id;
 	String name; // chainmail, platemail etc
-	pair<ElementType, float> elementResistance[9];
+	pair<ElementType, int> elementResistance[9];
 	bool isdropable;
 	string Description;
 	pair<string, bool> coverage[5];
