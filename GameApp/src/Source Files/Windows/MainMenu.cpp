@@ -169,6 +169,10 @@ void MainMenu::checkGuiChangeState()
 		if (guiElements[i]->label.getString() == "Music Volume")
 		{
 			Controller::setMusicVolume((int)guiElements[i]->getValue());
+		} 
+		else if (guiElements[i]->label.getString() == "Sound Volume")
+		{
+			Controller::setSoundVolume((int)guiElements[i]->getValue());
 		}
 		else if (guiElements[i]->label.getString() == "Resolution") {
 			Controller::setResolutionID((int)guiElements[i]->getValue());
@@ -298,6 +302,11 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 {
 
 	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, region, (float)Controller::getMusicVolume());
+	guiElements.push_back(buffer);
+	drawStack[2 + drawStack.size()] = buffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
+
+	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, region, (float)Controller::getSoundVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);

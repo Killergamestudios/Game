@@ -161,6 +161,11 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
 
+	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, region, (float)Controller::getSoundVolume());
+	guiElements.push_back(buffer);
+	drawStack[2 + drawStack.size()] = buffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
+
 	vector<pair<string, string>> resolutions;
 	for (Vector2i &res : Controller::getAvailableResolutions())
 	{
@@ -171,11 +176,11 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	drawStack[2 + drawStack.size()] = opBuffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
 
-
-	backgroundFillColor = new RectangleShape(Vector2f(700.f, 200.f));
+	const float CONTENT_PADDING = 40.f;
+	backgroundFillColor = new RectangleShape(Vector2f(700.f, 250.f));
 	vector<Vector2f> dimensions;
 	const Color background = Color(121, 132, 202);
-	dimensions.push_back(backgroundFillColor->getSize());
+	dimensions.push_back(Vector2f(backgroundFillColor->getSize().x, backgroundFillColor->getSize().y - CONTENT_PADDING));
 	backgroundFillColor->setFillColor(background);
 	drawStack[0] = backgroundFillColor;
 
@@ -189,7 +194,7 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
 	Vector2f camOffset = Controller::getCameraOffset();
 
-	backgroundFillColor->setPosition(Vector2f(newPositions[0].x +camOffset.x , newPositions[0].y + camOffset.y));
+	backgroundFillColor->setPosition(Vector2f(newPositions[0].x +camOffset.x , newPositions[0].y + camOffset.y - CONTENT_PADDING));
 
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
 		guiElements[i]->setPosition(newPositions[i + 1],camOffset);
