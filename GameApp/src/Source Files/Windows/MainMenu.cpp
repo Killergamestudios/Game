@@ -120,11 +120,10 @@ void MainMenu::initLayer()
 	clearTextures();
 	loadMenu = false;
 	Theme::clearRegion(Theme::MainMenu);
-	backButton[0] = "Back";
+	Theme::clearRegion(Theme::BackButton);
 
 	if (depth == 1) {
 		initFileNamesToLoad(mainMenu, Theme::MainMenu);
-		backButton[0] = "Quit";
 	}
 	else if (optionSelected == 0 && depth == 2) {
 		Controller::setRunning(false);
@@ -134,17 +133,21 @@ void MainMenu::initLayer()
 	else if (optionSelected == 1 && depth == 2) {
 		loadSaveFiles();
 		loadMenu = true;
-		
+		backButton.push_back("Back");
+		loadTextGraphics(backButton, Theme::BackButton);
 	}
 	else if (optionSelected == 2 && depth == 2) {
 		initOptions(Theme::MainMenu, 0);
+		backButton.push_back("Back");
+		loadTextGraphics(backButton, Theme::BackButton);
 	}
 	else if (optionSelected == 3 && depth == 2) {
+		backButton.push_back("Back");
+		loadTextGraphics(backButton, Theme::BackButton);
 	}
 
 	optionSelected = 0;
-	totalTimePassed = 0;
-	loadTextGraphics(backButton, Theme::BackButton);
+	totalTimePassed = 0;	
 }
 
 void MainMenu::clearTextures()
@@ -155,6 +158,8 @@ void MainMenu::clearTextures()
 	tabOrder.clear();
 	guiElements.clear();
 	dimensions.clear();
+	backButton.clear();
+	loadFilePath.clear();
 }
 
 void MainMenu::checkGuiChangeState()
@@ -283,7 +288,9 @@ void MainMenu::loadSaveFiles() {
 		loadFilePath.push_back(pathOfSaveFile);
 	}
 
+	saveFile.close();
 	loadTextGraphics(saveFilesArray, Theme::MainMenu);
+	saveFilesArray.clear();
 
 }
 

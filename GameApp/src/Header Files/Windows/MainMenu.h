@@ -66,14 +66,9 @@ private:
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/LoadGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/OptionsButtons-Sheet.png",
-		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
+		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png",
+		"./graphics/interfaces/MainMenu/QuitButton-Sheet.png"
 	};    // paths of mainMenuButtons (depth = 0)
 
-	const vector<string> optionsMenu =
-	{
-		"Resolution",
-		"Music Volume",
-		"Sound Volume"
-	};		// options menu
 };
 
