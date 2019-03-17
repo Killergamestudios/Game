@@ -89,7 +89,11 @@ void Map::load(int mapIndex)
 			for (int x = 0; x < width; x++) // x goes from colum to column starting from 0 and reaching the final column.
 			{
 				//lineReader[x] -> The Symbol of the Item in Column- x and Row - y.
-				if (lineReader[x] >= 'a'&& lineReader[x] <= 'z')
+				if (lineReader[x] == 'z')
+				{
+					dummy[x][y] = -1;
+				}
+				else if (lineReader[x] >= 'a'&& lineReader[x] < 'z')
 				{
 					dummy[x][y] = (int)(lineReader[x] - 'a' + 10);
 				}
