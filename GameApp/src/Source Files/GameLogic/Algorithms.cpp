@@ -97,6 +97,9 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 			for (int i = 0; i < mapWidth; i++)
 				delete gScore[i];
 			delete gScore;
+			for (int i = 0; i < mapWidth; i++)
+				delete totalMap[i];
+			delete totalMap;
 			return reconstructPath(cameFrom,endPosX,endPosY);
 		}
 		openSet.erase(openSet.begin()); // erase first item from openSet (this with the least weight)
@@ -229,6 +232,9 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	for (int i = 0; i < mapWidth; i++)
 		delete energyCost[i];
 	delete energyCost;
+	for (int i = 0; i < mapWidth; i++)
+		delete totalMap[i];
+	delete totalMap;
 	tiles.clear();
 	return finalTilesSet;
 }
@@ -260,6 +266,9 @@ vector<Vector3i> getStraightPath(int startPosX, int startPosY, int range, Map & 
 			finalTilesSet.push_back(Vector3i(startPosX, j, energyConsumed));
 		}
 	}
+	for (int i = 0; i < mapWidth; i++)
+		delete totalMap[i];
+	delete totalMap;
 	return finalTilesSet;
 }
 
