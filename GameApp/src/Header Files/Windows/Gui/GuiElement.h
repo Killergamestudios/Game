@@ -16,7 +16,7 @@ public:
 	virtual void update(int) = 0;
 
 	virtual Vector2f getDimensions() = 0;
-	virtual void setPosition(Vector2f newPosition) = 0;
+	virtual void setPosition(Vector2f newPosition, Vector2f camOffset) = 0;
 	virtual void setSelected() = 0;
 	virtual void unSelect() = 0;
 	virtual float getValue() = 0;

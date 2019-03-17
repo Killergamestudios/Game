@@ -43,13 +43,13 @@ void OptionBox::update(int direction)
 	}
 }
 
-void OptionBox::setPosition(Vector2f newPositions)
+void OptionBox::setPosition(Vector2f newPositions, Vector2f camOffset)
 {
 	offset = newPositions;
 
-	label.setPosition(Vector2f(offset.x + padding.x, offset.y + padding.y));
+	label.setPosition(Vector2f(offset.x + padding.x + camOffset.x, offset.y + padding.y + camOffset.y));
 	float width = selected.getLocalBounds().width;
-	selected.setPosition(Vector2f(VIEW_WIDTH - padding.x - offset.x - width, offset.y + padding.y));
+	selected.setPosition(Vector2f(VIEW_WIDTH - padding.x - offset.x - width + camOffset.x, offset.y + padding.y + camOffset.y));
 }
 
 Vector2f OptionBox::getDimensions()

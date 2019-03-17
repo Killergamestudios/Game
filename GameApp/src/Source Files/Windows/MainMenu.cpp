@@ -305,7 +305,7 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 	}
 	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(newPositions[i]);
+		guiElements[i]->setPosition(newPositions[i], Vector2f(0,0));
 	}
 
 	optionSelected = 0;

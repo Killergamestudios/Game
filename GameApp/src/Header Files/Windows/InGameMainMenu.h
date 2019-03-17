@@ -26,6 +26,8 @@ protected:
 	void initMenu();
 
 private:
+	Vector2f getCameraOffset();
+
 	bool loadMenu; // shows if player is in load menu
 	unsigned const int NUMBER_OF_ENTRIES_PER_PAGE = 4; // TODO
 	RectangleShape *backgroundFillColor;

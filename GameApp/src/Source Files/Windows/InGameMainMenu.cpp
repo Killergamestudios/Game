@@ -176,14 +176,17 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	}
 	backButton[0] = "Back";
 	loadTextGraphics(backButton);
+	
 	dimensions.push_back(Vector2f(menuTexts[0]->getLocalBounds().width, menuTexts[0]->getLocalBounds().height));
 	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
-	backgroundFillColor->setPosition(newPositions[0]);
+	Vector2f camOffset = getCameraOffset();
+
+	backgroundFillColor->setPosition(Vector2f(newPositions[0].x +camOffset.x , newPositions[0].y + camOffset.y));
 
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(newPositions[i + 1]);
+		guiElements[i]->setPosition(newPositions[i + 1],camOffset);
 	}
-	menuTexts[0]->setPosition(newPositions[newPositions.size() - 1]);
+	menuTexts[0]->setPosition(newPositions[newPositions.size() - 1] + camOffset);
 
 	optionSelected = 0;
 	guiElements[0]->setSelected();
@@ -199,17 +202,28 @@ void InGameMainMenu::initMenu()
 	}
 	// Render Window region
 	vector<Vector2f> newPositions = Theme::renderRegion(Theme::NewWindow, dimensions, 1);
-	// get position of camawra
-	Vector2f camOffset = Vector2f(m_window->getView().getCenter().x - m_window->getView().getSize().x / 2.f,
-		m_window->getView().getCenter().y - m_window->getView().getSize().y / 2.f);
+	Vector2f camOffset = getCameraOffset();
+
+	for (int i = 0; i < newPositions.size(); i++) {
+		newPositions[i] = Vector2f(newPositions[i].x + camOffset.x, newPositions[i].y + camOffset.y);
+	}
+
 	// set position of background
-	backgroundFillColor->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
-	backgroundSprites[0]->setPosition(Vector2f(newPositions[0].x + camOffset.x, newPositions[0].y + camOffset.y));
+	backgroundFillColor->setPosition(Vector2f(newPositions[0].x, newPositions[0].y));
+	backgroundSprites[0]->setPosition(Vector2f(newPositions[0].x, newPositions[0].y));
 	// set positioon of elements of menu
 	for (unsigned int i = 0; i < menuTexts.size(); i++) {
-		newPositions[i + 1] = Vector2f(newPositions[i + 1].x + camOffset.x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f + camOffset.y);
+		newPositions[i + 1] = Vector2f(newPositions[i + 1].x, newPositions[i + 1].y - dimensions[i + 1].y / 2.f);
 		menuTexts[i]->setPosition(newPositions[i + 1]);
 	}
+}
+
+Vector2f InGameMainMenu::getCameraOffset()
+{
+	Vector2f camOffset = Vector2f(m_window->getView().getCenter().x - m_window->getView().getSize().x / 2.f,
+		m_window->getView().getCenter().y - m_window->getView().getSize().y / 2.f);
+
+	return camOffset;
 }
 
 
