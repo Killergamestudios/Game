@@ -23,7 +23,7 @@ struct Resistance
 };
 
 enum ElementType {none,fire,ice,poison,dark,nature,wind,light,harmony};
-enum WeaponType {longsword,halbert,knife,bow,scepter,staff,dagger};
+enum WeaponType {longsword,halberd,knife,bow,scepter,staff,dagger};
 
 
 
@@ -93,7 +93,8 @@ class ArmorComponent :public component {
 public:
 	ArmorComponent(String name, int id = 0, CharacterObject *Parent = nullptr);
 	~ArmorComponent();
-	void spawn(pair< ElementType, int> Resistance[9] , bool Isdropable, string description, pair<string,bool> coverage[5], int mastery, string Class, int physicalresistance);
+
+	void spawn(vector<pair< ElementType, int>> Resistance , bool Isdropable, string description, vector<pair<string,bool>> coverage, int mastery, string Class, int physicalresistance,int upgradeSlots);
 	bool canEquip(CharacterObject * Parent);
 
 	void equip(CharacterObject * Parent);
@@ -120,6 +121,7 @@ private:
 	pair<string, bool> coverage[5];
 	vector<ModifierComponent*> Modifiers;
 	int physicalResistance;
+	int upgrades;
 
 	int MasteryRequirment;
 	string ClassRequirment;

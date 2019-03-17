@@ -5,6 +5,7 @@
 #include "IniWriter.h"
 #include "Map.h"
 
+
 using namespace sf;
 using namespace std;
 
@@ -97,5 +98,7 @@ public:
 	static const SecondaryState IN_GAME_MAIN_MENU = SecondaryState::InGameMainMenu;
 	static const SecondaryState NONE = SecondaryState::None;
 
+	
 };
+
 

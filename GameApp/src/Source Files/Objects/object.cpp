@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "../../Header Files/Core/controller.h"
 
+
 /****************************************************************************************************************************************/
 //                                                   The Object Class                                                                   //
 /****************************************************************************************************************************************/
@@ -210,8 +211,8 @@ void CharacterObject::MoveToPosition(vector<Vector2i> &path)
 void CharacterObject::moveupdate(float dtAsSeconds) {
 	const float timeatframe = 0.10f;
 	Vector2f drowpos;
-	drowpos.x = (float)(m_position.x * 64);
-	drowpos.y = (float)(m_position.y * 64);
+	drowpos.x = (float)(m_position.x * TILE_SIZE);
+	drowpos.y = (float)(m_position.y * TILE_SIZE);
 	if (!isMoving) {
 		if (m_path.size() != 0) {
 			MoveAdj(m_path.back());
@@ -221,34 +222,34 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 	switch (move) {
 	case Move::standing:
 		vertarr[0].position = drowpos;
-		vertarr[1].position = Vector2f(drowpos.x + 63, drowpos.y);
-		vertarr[2].position = Vector2f(drowpos.x + 63, drowpos.y + 63);
-		vertarr[3].position = Vector2f(drowpos.x, drowpos.y + 63);
+		vertarr[1].position = Vector2f(drowpos.x + TILE_SIZE-1, drowpos.y);
+		vertarr[2].position = Vector2f(drowpos.x + TILE_SIZE-1, drowpos.y + TILE_SIZE-1);
+		vertarr[3].position = Vector2f(drowpos.x, drowpos.y + TILE_SIZE-1);
 		switch (facingdir)
 		{
 		case FacingDirection::front:
-			vertarr[0].texCoords = Vector2f(63, 0);
-			vertarr[1].texCoords = Vector2f(127, 0);
-			vertarr[2].texCoords = Vector2f(127, 63);
-			vertarr[3].texCoords = Vector2f(63, 63);
+			vertarr[0].texCoords = Vector2f(TILE_SIZE-1, 0);
+			vertarr[1].texCoords = Vector2f(2*TILE_SIZE-1, 0);
+			vertarr[2].texCoords = Vector2f(2*TILE_SIZE-1, TILE_SIZE-1);
+			vertarr[3].texCoords = Vector2f(TILE_SIZE-1, TILE_SIZE-1);
 			break;
 		case FacingDirection::back:
-			vertarr[0].texCoords = Vector2f(63, 127);
-			vertarr[1].texCoords = Vector2f(127, 127);
-			vertarr[2].texCoords = Vector2f(127, 191);
-			vertarr[3].texCoords = Vector2f(63, 191);
+			vertarr[0].texCoords = Vector2f(TILE_SIZE-1, 2*TILE_SIZE-1);
+			vertarr[1].texCoords = Vector2f(2 * TILE_SIZE - 1, 2 * TILE_SIZE - 1);
+			vertarr[2].texCoords = Vector2f(2 * TILE_SIZE - 1, 3 * TILE_SIZE - 1);
+			vertarr[3].texCoords = Vector2f(TILE_SIZE-1, 3 * TILE_SIZE - 1);
 			break;
 		case FacingDirection::fright:
-			vertarr[0].texCoords = Vector2f(63, 191);
-			vertarr[1].texCoords = Vector2f(127, 191);
-			vertarr[2].texCoords = Vector2f(127, 255);
-			vertarr[3].texCoords = Vector2f(63, 255);
+			vertarr[0].texCoords = Vector2f(TILE_SIZE-1, 3 * TILE_SIZE - 1);
+			vertarr[1].texCoords = Vector2f(2 * TILE_SIZE - 1, 3 * TILE_SIZE - 1);
+			vertarr[2].texCoords = Vector2f(2 * TILE_SIZE - 1, 4 * TILE_SIZE - 1);
+			vertarr[3].texCoords = Vector2f(TILE_SIZE -1, 4 * TILE_SIZE - 1);
 			break;
 		case FacingDirection::fleft:
-			vertarr[0].texCoords = Vector2f(63, 63);
-			vertarr[1].texCoords = Vector2f(127, 63);
-			vertarr[2].texCoords = Vector2f(127, 127);
-			vertarr[3].texCoords = Vector2f(63, 127);
+			vertarr[0].texCoords = Vector2f(TILE_SIZE - 1, TILE_SIZE - 1);
+			vertarr[1].texCoords = Vector2f(2 * TILE_SIZE - 1, TILE_SIZE - 1);
+			vertarr[2].texCoords = Vector2f(2 * TILE_SIZE - 1, 2 * TILE_SIZE - 1);
+			vertarr[3].texCoords = Vector2f(TILE_SIZE - 1, 2 * TILE_SIZE - 1);
 			break;
 		}
 
@@ -256,20 +257,20 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 		break;
 	case Move::down:
 		vertarr[0].position = Vector2f(drowpos.x, drowpos.y + pixelscrossed);
-		vertarr[1].position = Vector2f(drowpos.x + 63, drowpos.y + pixelscrossed);
-		vertarr[2].position = Vector2f(drowpos.x + 63, drowpos.y + 63 + pixelscrossed);
-		vertarr[3].position = Vector2f(drowpos.x, drowpos.y + 63 + pixelscrossed);
+		vertarr[1].position = Vector2f(drowpos.x + TILE_SIZE - 1, drowpos.y + pixelscrossed);
+		vertarr[2].position = Vector2f(drowpos.x + TILE_SIZE - 1, drowpos.y + TILE_SIZE - 1 + pixelscrossed);
+		vertarr[3].position = Vector2f(drowpos.x, drowpos.y + TILE_SIZE - 1 + pixelscrossed);
 		if (lastupdated >= timeatframe) {
 			lastupdated = 0.0f;
 
 			pixelscrossed += 8;
-			vertarr[0].texCoords = Vector2f((float)(0 + 64 * movingquad), 0);
-			vertarr[1].texCoords = Vector2f((float)(64 + 64 * movingquad), 0);
-			vertarr[2].texCoords = Vector2f((float)(64 + 64 * movingquad), 63);
-			vertarr[3].texCoords = Vector2f((float)(0 + 64 * movingquad), 63);
+			vertarr[0].texCoords = Vector2f((float)(0 + TILE_SIZE* movingquad), 0);
+			vertarr[1].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), 0);
+			vertarr[2].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), TILE_SIZE-1);
+			vertarr[3].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), TILE_SIZE -1);
 			movingquad++;
 			movingquad %= 4;
-			if (pixelscrossed == 64) {
+			if (pixelscrossed == TILE_SIZE) {
 				pixelscrossed = 0;
 				move = Move::standing;
 				m_position.y++;
@@ -284,20 +285,20 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 		break;
 	case Move::up:
 		vertarr[0].position = Vector2f(drowpos.x, drowpos.y - pixelscrossed);
-		vertarr[1].position = Vector2f(drowpos.x + 63, drowpos.y - pixelscrossed);
-		vertarr[2].position = Vector2f(drowpos.x + 63, drowpos.y + 63 - pixelscrossed);
-		vertarr[3].position = Vector2f(drowpos.x, drowpos.y + 63 - pixelscrossed);
+		vertarr[1].position = Vector2f(drowpos.x + TILE_SIZE - 1, drowpos.y - pixelscrossed);
+		vertarr[2].position = Vector2f(drowpos.x + TILE_SIZE - 1, drowpos.y + TILE_SIZE - 1 - pixelscrossed);
+		vertarr[3].position = Vector2f(drowpos.x, drowpos.y + TILE_SIZE - 1 - pixelscrossed);
 		if (lastupdated >= timeatframe) {
 			lastupdated = 0.0f;
 
 			pixelscrossed += 8;
-			vertarr[0].texCoords = Vector2f((float)(0 + 64 * movingquad), 127);
-			vertarr[1].texCoords = Vector2f((float)(64 + 64 * movingquad), 127);
-			vertarr[2].texCoords = Vector2f((float)(64 + 64 * movingquad), 191);
-			vertarr[3].texCoords = Vector2f((float)(0 + 64 * movingquad), 191);
+			vertarr[0].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), 2 * TILE_SIZE - 1);
+			vertarr[1].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), 2 * TILE_SIZE - 1);
+			vertarr[2].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), 3 * TILE_SIZE - 1);
+			vertarr[3].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), 3 * TILE_SIZE - 1);
 			movingquad++;
 			movingquad %= 4;
-			if (pixelscrossed == 64) {
+			if (pixelscrossed == TILE_SIZE) {
 				pixelscrossed = 0;
 				move = Move::standing;
 				m_position.y--;
@@ -312,20 +313,20 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 		break;
 	case Move::left:
 		vertarr[0].position = Vector2f(drowpos.x - pixelscrossed, drowpos.y);
-		vertarr[1].position = Vector2f(drowpos.x + 63 - pixelscrossed, drowpos.y);
-		vertarr[2].position = Vector2f(drowpos.x + 63 - pixelscrossed, drowpos.y + 63);
-		vertarr[3].position = Vector2f(drowpos.x - pixelscrossed, drowpos.y + 63);
+		vertarr[1].position = Vector2f(drowpos.x + TILE_SIZE-1 - pixelscrossed, drowpos.y);
+		vertarr[2].position = Vector2f(drowpos.x + TILE_SIZE-1 - pixelscrossed, drowpos.y + TILE_SIZE-1);
+		vertarr[3].position = Vector2f(drowpos.x - pixelscrossed, drowpos.y + TILE_SIZE-1);
 		if (lastupdated >= timeatframe) {
 			lastupdated = 0.0f;
 
 			pixelscrossed += 8;
-			vertarr[0].texCoords = Vector2f((float)(0 + 64 * movingquad), 63);
-			vertarr[1].texCoords = Vector2f((float)(64 + 64 * movingquad), 63);
-			vertarr[2].texCoords = Vector2f((float)(64 + 64 * movingquad), 127);
-			vertarr[3].texCoords = Vector2f((float)(0 + 64 * movingquad), 127);
+			vertarr[0].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), TILE_SIZE - 1);
+			vertarr[1].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), TILE_SIZE - 1);
+			vertarr[2].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), 2*TILE_SIZE - 1);
+			vertarr[3].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), 2*TILE_SIZE - 1);
 			movingquad++;
 			movingquad %= 4;
-			if (pixelscrossed == 64) {
+			if (pixelscrossed == TILE_SIZE) {
 				pixelscrossed = 0;
 				move = Move::standing;
 				m_position.x--;
@@ -341,20 +342,20 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 		break;
 	case Move::right:
 		vertarr[0].position = Vector2f(drowpos.x + pixelscrossed, drowpos.y);
-		vertarr[1].position = Vector2f(drowpos.x + 63 + pixelscrossed, drowpos.y);
-		vertarr[2].position = Vector2f(drowpos.x + 63 + pixelscrossed, drowpos.y + 63);
-		vertarr[3].position = Vector2f(drowpos.x + pixelscrossed, drowpos.y + 63);
+		vertarr[1].position = Vector2f(drowpos.x + TILE_SIZE - 1 + pixelscrossed, drowpos.y);
+		vertarr[2].position = Vector2f(drowpos.x + TILE_SIZE - 1 + pixelscrossed, drowpos.y + TILE_SIZE - 1);
+		vertarr[3].position = Vector2f(drowpos.x + pixelscrossed, drowpos.y + TILE_SIZE - 1);
 		if (lastupdated >= timeatframe) {
 			lastupdated = 0.0f;
 
 			pixelscrossed += 8;
-			vertarr[0].texCoords = Vector2f((float)(0 + 64 * movingquad), 191);
-			vertarr[1].texCoords = Vector2f((float)(64 + 64 * movingquad), 191);
-			vertarr[2].texCoords = Vector2f((float)(64 + 64 * movingquad), 63 + 191);
-			vertarr[3].texCoords = Vector2f((float)(0 + 64 * movingquad), 63 + 191);
+			vertarr[0].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), 3*TILE_SIZE-1);
+			vertarr[1].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), 3 * TILE_SIZE - 1);
+			vertarr[2].texCoords = Vector2f((float)(TILE_SIZE + TILE_SIZE * movingquad), TILE_SIZE-1 + 3 * TILE_SIZE - 1);
+			vertarr[3].texCoords = Vector2f((float)(0 + TILE_SIZE * movingquad), TILE_SIZE-1 + 3 * TILE_SIZE - 1);
 			movingquad++;
 			movingquad %= 4;
-			if (pixelscrossed == 64) {
+			if (pixelscrossed == TILE_SIZE) {
 				pixelscrossed = 0;
 				move = Move::standing;
 				m_position.x++;
@@ -377,7 +378,8 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 void CharacterObject::update(float dtAsseconds)
 {
 	
-	const int tileSize = 64, vertsinquad = 4;
+	const int tileSize = TILE_SIZE; 
+	const int vertsinquad = 4;
 	/*for (unsigned int i = 0; i < m_modifiers.size(); i++)
 	{
 		//	if (m_modifiers[i].getIsDead) {
