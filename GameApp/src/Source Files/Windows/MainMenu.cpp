@@ -70,7 +70,7 @@ void MainMenu::actions()
 {
 	if (optionSelected == tabOrder.size() - 1) {
 		if (depth == 1) {
-			Controller::quit(m_window);
+			Controller::quit();
 		}
 		else if (depth != 1) {
 			depth -= 1;
@@ -311,7 +311,7 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 	}
 	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(newPositions[i], Vector2f(0,0));
+		guiElements[i]->setPosition(newPositions[i], Controller::getCameraOffset());
 	}
 
 	optionSelected = 0;
