@@ -67,8 +67,8 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 	map<pair<int,int>,pair<int,int>> cameFrom; // list keeping track of the optimal path
 	int ** gScore;  // the weight to get to a certain node from the start
 	int ** totalMap = getTotalMap(currentMap); // map containing all the weights and blocked tiles
-	int mapWidth = currentMap.getMapWidth(); // width of map array
-	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int mapWidth = currentMap.getMapWidth() / 64; // width of map array
+	int mapHeight = currentMap.getMapHeight() / 64; // height of map array
 
 	openSet.insert(start);
 	// initialize gscore
@@ -151,8 +151,8 @@ vector<Vector3i> getAllAvailableTiles(int startPosX, int startPosY, int range, M
 	vector<pPair> openSet; // tiles that are to be processed
 	vector<Vector3i> finalTilesSet; // the final set of tiles to return
 	set<pair<int, int>> tiles; // array keeping track of tiles. Needs to be set in order not to accept duplicates
-	int mapWidth = currentMap.getMapWidth(); // width of map array
-	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int mapWidth = currentMap.getMapWidth() / 64; // width of map array
+	int mapHeight = currentMap.getMapHeight() / 64; // height of map array
 	int ** energyCost;
 	
 	energyCost = new int *[mapWidth];
@@ -243,8 +243,8 @@ vector<Vector3i> getStraightPath(int startPosX, int startPosY, int range, Map & 
 {
 	Pair start = make_pair(startPosX, startPosY); // the starting point without weight
 	vector<Vector3i> finalTilesSet; // the final set of tiles to return
-	int mapWidth = currentMap.getMapWidth(); // width of map array
-	int mapHeight = currentMap.getMapHeight(); // height of map array
+	int mapWidth = currentMap.getMapWidth() / 64; // width of map array
+	int mapHeight = currentMap.getMapHeight() / 64; // height of map array
 	int ** totalMap = getTotalMap(currentMap); // get the whole map for calculating energy cost
 	int energyConsumed = 0; // total energy consumed 
 
