@@ -54,7 +54,7 @@ void Map::load(int mapIndex)
 	int y; // Current Row that is being checked.
 	//int printX; // X coordinate to print.
 	//int printY; // Y coordinate to print.
-	const int TILE_SIZE = 64;
+	
 	
 	backgroundImageAddress = "./graphics/maps/backgrounds/map_" + to_string(mapIndex) +".png";
 	init(); //Initialises the arrays, emptying them up and creating them again.
@@ -134,12 +134,12 @@ void Map::draw()
 
 int Map::getMapWidth()
 {
-	return width * 64;
+	return width * TILE_SIZE;
 }
 
 int Map::getMapHeight()
 {
-	return height * 64;
+	return height * TILE_SIZE;
 }
 
 int Map::getTerainPropertiesinPosition(Vector2i position)

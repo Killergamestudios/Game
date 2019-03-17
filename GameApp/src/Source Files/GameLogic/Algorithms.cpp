@@ -33,8 +33,8 @@ int ** getTotalMap(Map currentMap) {
 	int ** enemyMap = currentMap.getEnemyMap();
 	int ** friendlyMap = currentMap.getFriendlyMap();
 	int ** miscMap = currentMap.getMiscMap();
-	int width = (currentMap.getMapWidth()) / 64;
-	int height = (currentMap.getMapHeight()) / 64;
+	int width = (currentMap.getMapWidth()) / TILE_SIZE;
+	int height = (currentMap.getMapHeight()) / TILE_SIZE;
 	int ** map = new int*[width];
 
 	for (int i = 0; i < width; i++)

@@ -6,6 +6,7 @@
 Controller* Controller::m_s_Instance = nullptr;
 Controller::Controller()
 {
+	
 	assert(m_s_Instance == nullptr);
 	m_s_Instance = this;
 	tmpCurrentState = State::Booting;

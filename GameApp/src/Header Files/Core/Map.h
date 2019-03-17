@@ -2,6 +2,7 @@
 #include "textureHolder.h"
 #include <SFML/Graphics.hpp>
 #include "../Objects/object.h"
+#include "Controller.h"
 
 class CharacterObject;
 using namespace sf;
@@ -24,7 +25,7 @@ public:
 	int getFriendlyinPosition(Vector2i position);
 	int getMiscinPosition(Vector2i position);
 	void swapPosition(string maptype, Vector2i Startingpos, Vector2i Destination);
-
+	
 
 
 	CharacterObject getenemy(Vector2i);
