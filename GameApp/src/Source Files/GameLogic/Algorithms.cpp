@@ -92,7 +92,7 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 		{
 			energy -= gScore[endPosX][endPosY];
 			openSet.clear();
-			cameFrom.clear();
+			//cameFrom.clear();
 			closedSet.clear();
 			for (int i = 0; i < mapWidth; i++)
 				delete gScore[i];
