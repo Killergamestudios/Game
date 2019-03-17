@@ -13,6 +13,9 @@ InGameMainMenu::~InGameMainMenu()
 	menuTexts.clear();
 	menuSprites.clear();
 	backgroundSprites.clear();
+	drawStack.clear();
+	tabOrder.clear();
+	backButton.clear();
 }
 
 void InGameMainMenu::init()

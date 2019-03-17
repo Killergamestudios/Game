@@ -23,6 +23,7 @@ MainMenu::~MainMenu()
 	backgroundSprites.clear();
 	drawStack.clear();
 	tabOrder.clear();
+	backButton.clear();
 }
 
 void MainMenu::init() 
