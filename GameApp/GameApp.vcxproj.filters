@@ -113,6 +113,9 @@
     <ClCompile Include="src\Source Files\Core\Engine\Engine.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source Files\Core\Engine\Highlight.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
     <ClCompile Include="src\Source Files\Core\Engine\init.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>

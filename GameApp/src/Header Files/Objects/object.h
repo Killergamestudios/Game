@@ -108,12 +108,18 @@ public:
 	int getPrecision();
 	int getMaxAgility();
 	int getWeaponDamage();
+	int getMovementCost();
+	int getWeaponRange();
+
 
 	//setters
 	void UpdateStats(int Agi, int Prec);
 	void addModifier(ModifierComponent *m);
 	void setAgility(int agi);
 	void setPrecision(int prec);
+	void SetPosition(Vector2i newPos);
+	void SetDirection(FacingDirection dir);
+
 
 	//Leveling up
 	void LevelUp();	
@@ -132,7 +138,7 @@ public:
 	//combat related functions
 	int Attack(CharacterObject *target, String place); // return the damage, -1 if attack dodged. place is body,head etc
 	int isAttackedPhysical(string place, int damage);
-	int isAttackedMagic(float amplitude, ElementType element, int duration, int PhysicalDamage = 0);
+	int isAttackedMagic(int amplitude, ElementType element, int duration, int PhysicalDamage = 0);
 	void loseHp(int HpLoss);
 	void gainHp(int HpGain, CharacterObject *target = nullptr);
 	void gainActions(int ActionGain);
@@ -160,6 +166,9 @@ private:
 	int movingquad = 0;
 	FacingDirection facingdir = FacingDirection::front;
 	bool isMoving = false;
+	bool justMoved = false;
+	bool Moving = false;
+	Vector2i previousPosition;
 	vector<Vector2i> m_path;
 	void moveupdate(float dtAsSeconds);
 	//end of movement variables

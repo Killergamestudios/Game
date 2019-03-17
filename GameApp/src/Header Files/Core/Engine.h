@@ -39,6 +39,8 @@ private:
 	const float CHANGE_SELECTION_SPEED = 0.5f; // Change speed for faster or slower option transition
 	// -------------------------------------------------
 
+	bool MousePressed;
+
 	// game constancts
 	float viewWidth;
 	float viewHeight;
@@ -55,8 +57,12 @@ private:
 	void draw();
 	void init();
 	void updateState();
+
 	sf::Vector2i mouseControl(float &totaltimepassed,int &animState);
-	
+	vector<Vector3i> HighlightSpaces(CharacterObject *character);
+	void UnHiglightSpaces();
+	void SelectHighlight();
+	void CharacterDiraction();
 
 	void cameraUpdate(int direction); // handles movement of camera
 	void cameraReset(); // resets camera. Useful for state transitions
@@ -67,8 +73,22 @@ private:
 	//CharacterObject *mage;
 	vector<CharacterObject> party;
 	Sprite tile_sprite;
+	Vector2i mousePosition;
+	CharacterObject *HoveredCharacter;
+	CharacterObject *SelectedCharacter;
+	bool HoveringCharacter;
+	bool SelectingCharacter;
+	bool CharacterMoving;
+	vector<Vector3i> availableSpaces; // a vector with all the positions the selected Character can go and the cost
+	void MoveCharacter();
+	bool CanMoveThere();
+
+
+	vector <Sprite> Highlighted_Tyles;// the tyles that get HighLighted when we select a character
+
 	float mouseTimePass;
 	int animState;
+
 public:
 	Engine();
 	void run();
