@@ -2,7 +2,7 @@
 #include "textureHolder.h"
 #include <SFML/Graphics.hpp>
 #include "../Objects/object.h"
-#include "Controller.h"
+#define TILE_SIZE 64
 
 class CharacterObject;
 using namespace sf;

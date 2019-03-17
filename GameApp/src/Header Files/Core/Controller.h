@@ -4,7 +4,7 @@
 #include "IniReader.h"
 #include "IniWriter.h"
 #include "Map.h"
-#define TILE_SIZE 64
+
 
 using namespace sf;
 using namespace std;
@@ -68,8 +68,7 @@ public:
 	
 	static void applyChanges();
 	static void clearState(bool hardFlush = false, bool secondary = false, SecondaryState state = SecondaryState::None);
-	
-	static Map * getMap();
+	static Map* getMap();
 	void setMap(Map *mp);
 
 	static void setResolutionID(int);
@@ -92,5 +91,8 @@ public:
 	static const State IN_CUT_SCENE = State::Incutscene;
 	static const SecondaryState IN_GAME_MAIN_MENU = SecondaryState::InGameMainMenu;
 	static const SecondaryState NONE = SecondaryState::None;
+
+	
 };
+
 

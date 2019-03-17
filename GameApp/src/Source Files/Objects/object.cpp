@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "../../Header Files/Core/controller.h"
 
+
 /****************************************************************************************************************************************/
 //                                                   The Object Class                                                                   //
 /****************************************************************************************************************************************/
@@ -361,7 +362,8 @@ void CharacterObject::moveupdate(float dtAsSeconds) {
 void CharacterObject::update(float dtAsseconds)
 {
 	
-	const int tileSize = TILE_SIZE, vertsinquad = 4;
+	const int tileSize = TILE_SIZE; 
+	const int vertsinquad = 4;
 	/*for (unsigned int i = 0; i < m_modifiers.size(); i++)
 	{
 		//	if (m_modifiers[i].getIsDead) {
