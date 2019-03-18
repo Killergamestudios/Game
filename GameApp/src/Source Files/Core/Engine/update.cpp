@@ -34,6 +34,7 @@ void Engine::update(float dtAsSeconds) {
 }
 
 void Engine::CharacterDiraction() {
+	if (!SelectedCharacter) return;
 	Vector2i pos = SelectedCharacter->getMyPosition();
 	int dx = pos.x - mousePosition.x;
 	int dy = pos.y - mousePosition.y;

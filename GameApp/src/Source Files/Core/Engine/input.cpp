@@ -69,7 +69,8 @@ void Engine::input(float dtAsSeconds) {
 						if (SelectedCharacter == nullptr) {
 							if(!CharacterMoving)
 								SelectedCharacter = HoveredCharacter;
-							SelectingCharacter = true;
+							if(SelectedCharacter)
+								SelectingCharacter = true;
 						}
 						else {
 							if (mousePosition.x >= 0 && mousePosition.y >= 0 && SelectedCharacter != nullptr) {
