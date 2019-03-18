@@ -2,6 +2,7 @@
 #include "../../../Header Files/Windows/Gui/Theme.h"
 #include <assert.h>
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 Theme* Theme::m_s_Instance = nullptr;
@@ -102,34 +103,36 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 	float LOCAL_VIEW_WIDTH = m_s_Instance->VIEW_WIDTH;
 	float LOCAL_VIEW_HEIGHT = m_s_Instance->VIEW_HEIGHT;
 	int flag = m_s_Instance->mainMenuFlag;
+	float elementSeperation;
 	switch (region) {
 	case Background:
 		for (Vector2f element: elements) {
-			renderedElements.push_back(Vector2f((LOCAL_VIEW_WIDTH - element.x) / 2,
-								(LOCAL_VIEW_HEIGHT - element.y) / 2));
+			renderedElements.push_back(Vector2f(ceil((LOCAL_VIEW_WIDTH - element.x) / 2),
+								ceil((LOCAL_VIEW_HEIGHT - element.y) / 2)));
 		}
 		break;
 	case BackButton:
 		for (Vector2f element : elements) {
-			renderedElements.push_back(Vector2f(LOCAL_VIEW_WIDTH - element.x - m_s_Instance->margin[BackButton].x,
-				LOCAL_VIEW_HEIGHT - element.y - m_s_Instance->margin[BackButton].y));
+			renderedElements.push_back(Vector2f(ceil((LOCAL_VIEW_WIDTH - element.x) / 2.f),
+				ceil(LOCAL_VIEW_HEIGHT - element.y - m_s_Instance->margin[BackButton].y)));
 			
 			m_s_Instance->regionDimensions[BackButton] = Vector2f(LOCAL_VIEW_WIDTH, element.y + m_s_Instance->margin[BackButton].y);
 		}
 		break;
 	case Logo:
 		for (Vector2f element : elements) {
-			renderedElements.push_back(Vector2f((LOCAL_VIEW_WIDTH - element.x) / 2, m_s_Instance->margin[Logo].y));
+			renderedElements.push_back(Vector2f(ceil((LOCAL_VIEW_WIDTH - element.x) / 2), ceil(m_s_Instance->margin[Logo].y)));
 			m_s_Instance->regionDimensions[Logo] = Vector2f(LOCAL_VIEW_WIDTH, element.y + m_s_Instance->margin[Logo].y);
 		}
 		break;
 	case MainMenu:
+		LOCAL_VIEW_HEIGHT = min(LOCAL_VIEW_HEIGHT - m_s_Instance->regionDimensions[Logo].y - m_s_Instance->margin[Logo].y, LOCAL_VIEW_HEIGHT*0.7f);
+		elementSeperation = (LOCAL_VIEW_HEIGHT - elements.size() * elements[0].y) / (elements.size() - 1); // calculate element sepearation
 		for (Vector2f element : elements) {		
-			renderedElements.push_back(Vector2f((LOCAL_VIEW_WIDTH - element.x) / 2,
-				m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y
-				+ m_s_Instance->regionDimensions[MainMenu].y));
+			renderedElements.push_back(Vector2f(ceil((LOCAL_VIEW_WIDTH - element.x) / 2), 
+				ceil((1-flag)*(m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y) + flag*elementSeperation + m_s_Instance->regionDimensions[MainMenu].y)));
 			m_s_Instance->regionDimensions[MainMenu].x = LOCAL_VIEW_WIDTH;
-			m_s_Instance->regionDimensions[MainMenu].y +=  m_s_Instance->margin[MainMenu].y + element.y;
+			m_s_Instance->regionDimensions[MainMenu].y += (1 - flag)*(m_s_Instance->regionDimensions[Logo].y + m_s_Instance->margin[Logo].y) + flag * elementSeperation + m_s_Instance->margin[MainMenu].y + element.y;
 			flag = 1;
 		}
 		break;
@@ -148,10 +151,10 @@ vector<Vector2f> Theme::renderRegion(Regions region, vector<Vector2f> elements, 
 		LOCAL_VIEW_WIDTH = elements[0].x; // save dimenstion of container
 		LOCAL_VIEW_HEIGHT = elements[0].y; // 
 		elements.erase(elements.begin()); // erase the background from the list in order to have only elements to process
-		float elementSeperation = (LOCAL_VIEW_HEIGHT - elements.size() * elements[0].y) / (elements.size() + 1) ; // calculate element sepearation
+		elementSeperation = (LOCAL_VIEW_HEIGHT - elements.size() * elements[0].y) / (elements.size() + 1) ; // calculate element sepearation
 		for (Vector2f element : elements) {
-			renderedElements.push_back(Vector2f((origin.x + LOCAL_VIEW_WIDTH - element.x) / 2,
-				origin.y + elementSeperation + m_s_Instance->regionDimensions[NewWindow].y));
+			renderedElements.push_back(Vector2f(ceil((origin.x + LOCAL_VIEW_WIDTH - element.x) / 2),
+				ceil(origin.y + elementSeperation + m_s_Instance->regionDimensions[NewWindow].y)));
 			m_s_Instance->regionDimensions[NewWindow].x = LOCAL_VIEW_WIDTH;
 			m_s_Instance->regionDimensions[NewWindow].y += element.y + elementSeperation;
 		}

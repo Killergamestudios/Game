@@ -11,14 +11,16 @@ Engine::Engine() {
 	windowWidth = (float)VideoMode::getDesktopMode().width;
 	windowHeight = (float)VideoMode::getDesktopMode().height;
 	m_window.create(VideoMode((unsigned int)windowWidth, (unsigned int)windowHeight), "Game Name", Style::Fullscreen);
+
 	camera.setViewport(FloatRect((windowWidth - viewWidth) / 2 / windowWidth, (windowHeight - viewHeight) / 2 / windowHeight,
 		viewWidth / windowWidth, viewHeight / windowHeight));
 	camera.setCenter(Vector2f(viewWidth / 2, viewHeight / 2));
 	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
+	Controller::setWindow(&m_window);
 	m_theme = new Theme(m_window);
 	m_map = new Map(m_window);
-	m_controller.setMap(m_map);
+	Controller::setMap(m_map);
 	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png")); //For the mouse Texture
 	mouseTimePass = 0; //For the mouse animation
 	animState = 0; //For the mouse animation

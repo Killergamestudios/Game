@@ -20,10 +20,8 @@ ValueBar::~ValueBar()
 void ValueBar::init()
 {
 	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 670.f);
+	padding = Vector2f(VIEW_WIDTH / 20, VIEW_HEIGHT / 20);
 	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y);
-
-	padding = Vector2f(VIEW_WIDTH/20, VIEW_HEIGHT/20);
-
 	valueBar.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/ValueBar.png"));
 	valuePoint.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/ValuePointer.png"));
 }
@@ -44,18 +42,18 @@ void ValueBar::update(int direction)
 	}
 }
 
-void ValueBar::setPosition(Vector2f newPositions)
+void ValueBar::setPosition(Vector2f newPositions, Vector2f camOffset)
 {
 	const float VALUE_BAR_DEAD_ZONE = 30; // the x-limit of value point in value bar
 	offset = newPositions;
-	label.setPosition(sf::Vector2f(offset.x + padding.x, offset.y + padding.y));
+	label.setPosition(sf::Vector2f(offset.x + camOffset.x, offset.y + camOffset.y));
 
 	FloatRect valueBarDim = valueBar.getLocalBounds();
-	valueBar.setPosition(sf::Vector2f(VIEW_WIDTH - padding.x - offset.x - valueBarDim.width, offset.y + padding.y));
+	valueBar.setPosition(sf::Vector2f(VIEW_WIDTH - offset.x - valueBarDim.width + camOffset.x, camOffset.y + offset.y));
 	
 	FloatRect valuePointDim = valuePoint.getLocalBounds();
-	valuePoint.setPosition(sf::Vector2f(VIEW_WIDTH - padding.x - offset.x - valueBarDim.width + currentValue * 3 + VALUE_BAR_DEAD_ZONE - valuePointDim.width / 2,
-		offset.y + padding.y + valueBarDim.height / 2 - valuePointDim.height / 2));
+	valuePoint.setPosition(sf::Vector2f(VIEW_WIDTH - offset.x + camOffset.x - valueBarDim.width + currentValue * 3 + VALUE_BAR_DEAD_ZONE - valuePointDim.width / 2,
+		offset.y + camOffset.y + valueBarDim.height / 2 - valuePointDim.height / 2));
 }
 
 Vector2f ValueBar::getDimensions()

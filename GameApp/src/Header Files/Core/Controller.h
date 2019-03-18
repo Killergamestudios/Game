@@ -5,6 +5,7 @@
 #include "IniWriter.h"
 #include "Map.h"
 
+
 using namespace sf;
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
 	bool secondaryInitialized[1], tmpSecondaryInitialized[1];
 	// --------------
 	// Secondary Variables
+	RenderWindow * window;
 	Map *map;
 	int resolutionID;
 	int musicVolume;
@@ -69,8 +71,11 @@ public:
 	static void applyChanges();
 	static void clearState(bool hardFlush = false, bool secondary = false, SecondaryState state = SecondaryState::None);
 	
+	static Vector2f getCameraCenter();
+	static Vector2f getCameraOffset();
+	static void setWindow(RenderWindow * window);
 	static Map * getMap();
-	void setMap(Map *mp);
+	static void setMap(Map *mp);
 
 	static void setResolutionID(int);
 	static int getResolutionID();
@@ -81,7 +86,7 @@ public:
 	static void setSoundVolume(int);
 	static int getSoundVolume();
 	static vector<Vector2i> getAvailableResolutions();
-	static void quit(RenderWindow *window);
+	static void quit();
 	static void loadVars();
 	static void saveVars();
 
@@ -93,5 +98,7 @@ public:
 	static const SecondaryState IN_GAME_MAIN_MENU = SecondaryState::InGameMainMenu;
 	static const SecondaryState NONE = SecondaryState::None;
 
+	
 };
+
 

@@ -6,6 +6,7 @@
 Controller* Controller::m_s_Instance = nullptr;
 Controller::Controller()
 {
+	
 	assert(m_s_Instance == nullptr);
 	m_s_Instance = this;
 	tmpCurrentState = State::Booting;
@@ -149,6 +150,24 @@ void Controller::clearState(bool hardFlush, bool secondary, SecondaryState state
 
 }
 
+Vector2f Controller::getCameraOffset()
+{
+	Vector2f camOffset = Vector2f(m_s_Instance->window->getView().getCenter().x - m_s_Instance->window->getView().getSize().x / 2.f,
+		m_s_Instance->window->getView().getCenter().y - m_s_Instance->window->getView().getSize().y / 2.f);
+	
+	return camOffset;
+}
+
+Vector2f Controller::getCameraCenter()
+{
+	return m_s_Instance->window->getView().getCenter();
+}
+
+void Controller::setWindow(RenderWindow * window)
+{
+	m_s_Instance->window = window;
+}
+
 Map * Controller::getMap()
 {
 	return m_s_Instance->map;
@@ -156,7 +175,7 @@ Map * Controller::getMap()
 
 void Controller::setMap(Map * mp)
 {
-	map = mp;
+	m_s_Instance->map = mp;
 }
 
 void Controller::setResolutionID(int value)
@@ -204,9 +223,9 @@ vector<Vector2i> Controller::getAvailableResolutions()
 	return m_s_Instance->availableResolutions;
 }
 
-void Controller::quit(RenderWindow * window)
+void Controller::quit()
 {
-	window->close();
+	m_s_Instance->window->close();
 	saveVars();
 }
 

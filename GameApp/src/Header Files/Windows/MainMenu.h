@@ -22,6 +22,7 @@ public:
 	void input() override;
 
 protected:
+	void checkGuiChangeState();
 	void initFileNamesToLoad(vector<string> fileNames, Theme::Regions region); // get the files names for sprites
 	void setMenuSprites(Theme::Regions region); // set the sprites for main menu textures
 	void loadTextGraphics(vector<string> textsArray, Theme::Regions region); // load and set main menu texts
@@ -53,6 +54,8 @@ private:
 	// necessary globals
 	Music *backgroundMusic; // Background music for menu
 	Sprite *title; // used for emblem and game title
+
+	RectangleShape *tempLogo; // temporary logo
 	float opacity; // nedded for fade in animation
 	
 	bool loadMenu; // shows if player is in load menu
@@ -65,14 +68,9 @@ private:
 		"./graphics/interfaces/MainMenu/NewGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/LoadGameButtons-Sheet.png",
 		"./graphics/interfaces/MainMenu/OptionsButtons-Sheet.png",
-		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png"
+		"./graphics/interfaces/MainMenu/CreditsButtons-Sheet.png",
+		"./graphics/interfaces/MainMenu/QuitButton-Sheet.png"
 	};    // paths of mainMenuButtons (depth = 0)
 
-	const vector<string> optionsMenu =
-	{
-		"Resolution",
-		"Music Volume",
-		"Sound Volume"
-	};		// options menu
 };
 

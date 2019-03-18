@@ -33,8 +33,8 @@ int ** getTotalMap(Map currentMap) {
 	int ** enemyMap = currentMap.getEnemyMap();
 	int ** friendlyMap = currentMap.getFriendlyMap();
 	int ** miscMap = currentMap.getMiscMap();
-	int width = (currentMap.getMapWidth()) / 64;
-	int height = (currentMap.getMapHeight()) / 64;
+	int width = (currentMap.getMapWidth()) / TILE_SIZE;
+	int height = (currentMap.getMapHeight()) / TILE_SIZE;
 	int ** map = new int*[width];
 
 	for (int i = 0; i < width; i++)
@@ -42,10 +42,13 @@ int ** getTotalMap(Map currentMap) {
 		map[i] = new int[height];
 		for (int j = 0; j < height; j++)
 		{
-			if (enemyMap[i][j] != 0 || friendlyMap[i][j] != 0 || terrainMap[i][j] == -1) // which blocks are blocked
+			if (friendlyMap[i][j] != 0 || terrainMap[i][j] == -1) // which blocks are blocked
 				map[i][j] = -1; // tile is blocked
-			else
+			else {
 				map[i][j] = terrainMap[i][j]; // tile is not blocked
+				if(enemyMap[i][j] != 0)
+					map[i][j] = 1; // tile has enemy
+			}
 		}
 	}
 
@@ -92,7 +95,6 @@ vector<Vector2i> getPath(int startPosX, int startPosY, int endPosX, int endPosY,
 		{
 			energy -= gScore[endPosX][endPosY];
 			openSet.clear();
-			//cameFrom.clear();
 			closedSet.clear();
 			for (int i = 0; i < mapWidth; i++)
 				delete gScore[i];

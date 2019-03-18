@@ -23,10 +23,14 @@ MainMenu::~MainMenu()
 	backgroundSprites.clear();
 	drawStack.clear();
 	tabOrder.clear();
+	backButton.clear();
 }
 
 void MainMenu::init() 
 {
+	tempLogo = new RectangleShape(Vector2f(m_window->getView().getSize().x, 0.25f*m_window->getView().getSize().y));
+	tempLogo->setPosition(Theme::renderRegion(Theme::Logo, vector<Vector2f>{tempLogo->getSize()}, 0)[0]);
+
 	initLayer(); // Initialize everything. Fresh start
 	Controller::setInitialized(true);
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
@@ -58,19 +62,10 @@ void MainMenu::update(float& dtasSeconds) {
 	totalTimePassed += dtasSeconds;
 	animate();
 	
+	backgroundMusic->setVolume((float)Controller::getMusicVolume());
 	if (guiElements.size() != 0) // TODO: maybe include an event (onChangeState)
 	{
-		for (unsigned int i = 0; i < guiElements.size(); i++) 
-		{
-			if (guiElements[i]->label.getString() == "Music Volume")
-			{	
-				Controller::setMusicVolume((int)guiElements[i]->getValue());
-				backgroundMusic->setVolume((float)Controller::getMusicVolume());
-			}
-			else if (guiElements[i]->label.getString() == "Resolution") {
-				Controller::setResolutionID((int)guiElements[i]->getValue());
-			}
-		}
+		checkGuiChangeState();
 	}
 }
 
@@ -78,7 +73,7 @@ void MainMenu::actions()
 {
 	if (optionSelected == tabOrder.size() - 1) {
 		if (depth == 1) {
-			Controller::quit(m_window);
+			Controller::quit();
 		}
 		else if (depth != 1) {
 			depth -= 1;
@@ -128,11 +123,10 @@ void MainMenu::initLayer()
 	clearTextures();
 	loadMenu = false;
 	Theme::clearRegion(Theme::MainMenu);
-	backButton[0] = "Back";
+	Theme::clearRegion(Theme::BackButton);
 
 	if (depth == 1) {
 		initFileNamesToLoad(mainMenu, Theme::MainMenu);
-		backButton[0] = "Quit";
 	}
 	else if (optionSelected == 0 && depth == 2) {
 		Controller::setRunning(false);
@@ -142,17 +136,21 @@ void MainMenu::initLayer()
 	else if (optionSelected == 1 && depth == 2) {
 		loadSaveFiles();
 		loadMenu = true;
-		
+		backButton.push_back("Back");
+		loadTextGraphics(backButton, Theme::BackButton);
 	}
 	else if (optionSelected == 2 && depth == 2) {
 		initOptions(Theme::MainMenu, 0);
+		backButton.push_back("Back");
+		loadTextGraphics(backButton, Theme::BackButton);
 	}
 	else if (optionSelected == 3 && depth == 2) {
+		backButton.push_back("Back");
+		loadTextGraphics(backButton, Theme::BackButton);
 	}
 
 	optionSelected = 0;
-	totalTimePassed = 0;
-	loadTextGraphics(backButton, Theme::BackButton);
+	totalTimePassed = 0;	
 }
 
 void MainMenu::clearTextures()
@@ -163,6 +161,26 @@ void MainMenu::clearTextures()
 	tabOrder.clear();
 	guiElements.clear();
 	dimensions.clear();
+	backButton.clear();
+	loadFilePath.clear();
+}
+
+void MainMenu::checkGuiChangeState()
+{
+	for (unsigned int i = 0; i < guiElements.size(); i++)
+	{
+		if (guiElements[i]->label.getString() == "Music Volume")
+		{
+			Controller::setMusicVolume((int)guiElements[i]->getValue());
+		} 
+		else if (guiElements[i]->label.getString() == "Sound Volume")
+		{
+			Controller::setSoundVolume((int)guiElements[i]->getValue());
+		}
+		else if (guiElements[i]->label.getString() == "Resolution") {
+			Controller::setResolutionID((int)guiElements[i]->getValue());
+		}
+	}
 }
 
 void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)
@@ -277,7 +295,9 @@ void MainMenu::loadSaveFiles() {
 		loadFilePath.push_back(pathOfSaveFile);
 	}
 
+	saveFile.close();
 	loadTextGraphics(saveFilesArray, Theme::MainMenu);
+	saveFilesArray.clear();
 
 }
 
@@ -285,6 +305,11 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 {
 
 	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, region, (float)Controller::getMusicVolume());
+	guiElements.push_back(buffer);
+	drawStack[2 + drawStack.size()] = buffer;
+	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
+
+	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, region, (float)Controller::getSoundVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
@@ -305,7 +330,7 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 	}
 	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(newPositions[i]);
+		guiElements[i]->setPosition(newPositions[i], Controller::getCameraOffset());
 	}
 
 	optionSelected = 0;
