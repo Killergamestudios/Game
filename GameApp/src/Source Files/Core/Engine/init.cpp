@@ -28,7 +28,8 @@ void Engine::init() {
 		initGameVariables(0); // Needs to be replaced!!!!
 		cameraReset();
 		m_map->load(mapIndex);
-		m_map->loadParty(m_map, Controller::getSaveFileDirectory());
+		m_map->loadParty(m_map, "saveFile 1/");
+		//m_map->loadParty(m_map, Controller::getSaveFileDirectory());
 		party = Controller::getMap()->getparty();
 		Controller::clearState();
 		Controller::setState(Controller::PLAYING);

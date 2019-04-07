@@ -32,7 +32,7 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,stri
 	CharacterObject *Character = new CharacterObject(Name, *m_window, "friendly", "warrior", position, TextureHolder::GetTexture(texture));
 	string filename;
 	ifstream myfile;
-	filename = savefilename + "Characters/" + Name + ".txt";
+	filename = "savefiles/" + savefilename + "Characters/" + Class + ".txt";
 	myfile.open(filename);
 	
 	// read the stats and call the spawn func
@@ -44,6 +44,7 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,stri
 	for (int i = 0; i < 10; i++) {
 		getline(myfile, line);
 		filereadints[i] = getStringNumber(line);
+		//std::cout << filereadints[i] << endl;
 	}
 	Stats stats = {filereadints[0],filereadints[1] ,filereadints[2] ,filereadints[3] ,filereadints[4] ,filereadints[5] 
 					,filereadints[6] ,filereadints[7],filereadints[2],filereadints[3],filereadints[4],filereadints[8],filereadints[9]};

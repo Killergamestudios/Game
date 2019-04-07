@@ -11,8 +11,8 @@ vector<Vector3i> InputController::HighlightSpaces(CharacterObject * character)
 	int ActionsRemaining = character->getActionsRemaining();
 
 	Vector2i CurrentTyle;// the tyle that we want to highlight
-	//int MovementRange = ActionsRemaining / MovementCost; // get movementrange
-	int MovementRange = 2;
+	int MovementRange = ActionsRemaining / MovementCost; // get movementrange
+	//int MovementRange = 2;
 	//int attackRange = character->getWeaponRange();
 	int attackRange = 1;
 	vector<Vector3i> availableTyles = getAllAvailableTiles(myPos.x, myPos.y, MovementRange + attackRange, *Controller::getMap()); //get all the available tyles
