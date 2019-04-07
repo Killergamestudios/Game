@@ -2,6 +2,7 @@
 #include "../../../Header Files/Core/Engine.h"
 void Engine::draw() {
 	m_window.clear();
+	vector<Sprite> Highlighted_tyles = InputController::getHighlighted_tyles();
 	switch (Controller::getState()) {
 	case Controller::BOOTING:
 		mainmenu->draw();
@@ -12,13 +13,14 @@ void Engine::draw() {
 	case Controller::PLAYING:
 		m_map->draw();
 		m_window.draw(tile_sprite);
-		if (Highlighted_Tyles.size() != 0) {
-			for (unsigned int i = 0; i < Highlighted_Tyles.size(); i++)
-				m_window.draw(Highlighted_Tyles[i]);
+		if (Highlighted_tyles.size() != 0) {
+			for (unsigned int i = 0; i < Highlighted_tyles.size(); i++)
+				m_window.draw(Highlighted_tyles[i]);
 		}
-		for (unsigned int i = 0; i < party.size(); i++) {
+		/*for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].Draw();
-		}
+		}*/
+		InputController::drowParty();
 
 		break;
 	case Controller::LOADING:

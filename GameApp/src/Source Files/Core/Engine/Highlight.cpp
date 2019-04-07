@@ -1,10 +1,10 @@
 #pragma once
-#include "../../../Header Files/Core/Engine.h"
+#include "../../../Header Files/Core/InputCotroller.h"
 #include "../../../Header Files/Objects/object.h"
 #include "../../../Header Files/Core/Algorithms.h"
 #include "../../../Header Files/Core/Controller.h"
 
-vector<Vector3i> Engine::HighlightSpaces(CharacterObject * character)
+vector<Vector3i> InputController::HighlightSpaces(CharacterObject * character)
 {
 	Vector2i myPos = character->getMyPosition();
 	int MovementCost = character->getMovementCost();
@@ -16,23 +16,7 @@ vector<Vector3i> Engine::HighlightSpaces(CharacterObject * character)
 	//int attackRange = character->getWeaponRange();
 	int attackRange = 1;
 	vector<Vector3i> availableTyles = getAllAvailableTiles(myPos.x, myPos.y, MovementRange + attackRange, *Controller::getMap()); //get all the available tyles
-	/*vector<Vector3i> availableTyles;
-	availableTyles.push_back(Vector3i(myPos.x, myPos.y, 0));
 
-	availableTyles.push_back(Vector3i(myPos.x + 1, myPos.y, 1));
-	availableTyles.push_back(Vector3i(myPos.x, myPos.y + 1, 1));
-	availableTyles.push_back(Vector3i(myPos.x - 1, myPos.y , 1));
-	availableTyles.push_back(Vector3i(myPos.x, myPos.y - 1, 1));
-
-	availableTyles.push_back(Vector3i(myPos.x + 2, myPos.y, 2));
-	availableTyles.push_back(Vector3i(myPos.x - 2, myPos.y, 2));
-	availableTyles.push_back(Vector3i(myPos.x, myPos.y + 2, 2));
-	availableTyles.push_back(Vector3i(myPos.x, myPos.y - 2, 2));
-	availableTyles.push_back(Vector3i(myPos.x + 1, myPos.y + 1, 2));
-	availableTyles.push_back(Vector3i(myPos.x + 1, myPos.y - 1, 2));
-	availableTyles.push_back(Vector3i(myPos.x - 1, myPos.y + 1, 2));
-	availableTyles.push_back(Vector3i(myPos.x - 1, myPos.y - 1, 2));
-	*/
 	vector<Vector3i> ret;
 	for (unsigned int i = 0; i < availableTyles.size(); i++) {
 		CurrentTyle.x = availableTyles[i].x; CurrentTyle.y = availableTyles[i].y; // get the tyle to highlight
@@ -43,14 +27,14 @@ vector<Vector3i> Engine::HighlightSpaces(CharacterObject * character)
 				sprite.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MovementTyles.png"));
 				sprite.setTextureRect(sf::IntRect(0, 64, 64, 64)); //Set it to red
 				sprite.setPosition((float)(CurrentTyle.x * 64), (float)(CurrentTyle.y * 64));// set position of the sprite
-				Highlighted_Tyles.push_back(sprite);
+				m_s_Instance->Highlighted_Tyles.push_back(sprite);
 			}
 			else if (Controller::getMap()->getFriendlyinPosition(CurrentTyle)) { // there is a friendly there
 				Sprite sprite;
 				sprite.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MovementTyles.png"));
 				sprite.setTextureRect(sf::IntRect(0, 128, 64, 64)); //Set it to green
 				sprite.setPosition((float)(CurrentTyle.x * 64), (float)(CurrentTyle.y * 64));// set position of the sprite
-				Highlighted_Tyles.push_back(sprite);
+				m_s_Instance->Highlighted_Tyles.push_back(sprite);
 			}
 			else {
 				if (availableTyles[i].z > MovementRange && availableTyles[i].z <= attackRange + MovementRange) { // cant move there but can attack
@@ -58,7 +42,7 @@ vector<Vector3i> Engine::HighlightSpaces(CharacterObject * character)
 					sprite.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MovementTyles.png"));
 					sprite.setTextureRect(sf::IntRect(0, 64, 64, 64)); //Set it to red
 					sprite.setPosition((float)(CurrentTyle.x * 64), (float)(CurrentTyle.y * 64));// set position of the sprite
-					Highlighted_Tyles.push_back(sprite);
+					m_s_Instance->Highlighted_Tyles.push_back(sprite);
 
 				}
 				else {
@@ -66,7 +50,7 @@ vector<Vector3i> Engine::HighlightSpaces(CharacterObject * character)
 					sprite.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MovementTyles.png"));
 					sprite.setTextureRect(sf::IntRect(0, 0, 64, 64)); //Set it to blue
 					sprite.setPosition((float)(CurrentTyle.x * 64), (float)(CurrentTyle.y * 64));// set position of the sprite
-					Highlighted_Tyles.push_back(sprite);
+					m_s_Instance->Highlighted_Tyles.push_back(sprite);
 					ret.push_back(availableTyles[i]);
 				}
 			}
@@ -75,26 +59,27 @@ vector<Vector3i> Engine::HighlightSpaces(CharacterObject * character)
 	return ret;
 }
 
-void Engine::UnHiglightSpaces()
+void InputController::UnHiglightSpaces()
 {
-	for (int i = Highlighted_Tyles.size() - 1; i >= 0; i--)
-		Highlighted_Tyles.pop_back();
+	for (int i = m_s_Instance->Highlighted_Tyles.size() - 1; i >= 0; i--)
+		m_s_Instance->Highlighted_Tyles.pop_back();
 }
 
-void Engine::SelectHighlight()
+void InputController::SelectHighlight()
 {
-	if (mousePosition.x < 0 || mousePosition.y < 0 || mousePosition.x >= mapWidth/64 || mousePosition.y >= mapHeight/64) return;
-	if (Controller::getMap()->getFriendlyinPosition(mousePosition) != 0) {
-		if (!SelectingCharacter) {
-			UnHiglightSpaces();
-			int i = Controller::getMap()->getAllyVectorPosition(mousePosition);
+	if (m_s_Instance->mousePosition.x < 0 || m_s_Instance->mousePosition.y < 0 || m_s_Instance->mousePosition.x >= m_s_Instance->mapWidth/64 || m_s_Instance->mousePosition.y >= m_s_Instance->mapHeight/64) return;
+	if (Controller::getMap()->getFriendlyinPosition(m_s_Instance->mousePosition) != 0) {
+		if (!m_s_Instance->SelectingCharacter) {
+			m_s_Instance->UnHiglightSpaces();
+			int i = Controller::getMap()->getAllyVectorPosition(m_s_Instance->mousePosition);
 			if (i != -1)
-				HoveredCharacter = &party[i];
-			if (!HoveredCharacter) {
+				m_s_Instance->HoveredCharacter = &m_s_Instance->party[i];
+
+			if (!m_s_Instance->HoveredCharacter) {
 				return;
 			}
-			availableSpaces = HighlightSpaces(HoveredCharacter);
-			HoveringCharacter = true;
+			m_s_Instance->availableSpaces = m_s_Instance->HighlightSpaces(m_s_Instance->HoveredCharacter);
+			m_s_Instance->HoveringCharacter = true;
 		}
 	}
 	/*else if (Controller::getMap()->getEnemyinPosition(mousePosition) != 0) {
@@ -104,14 +89,46 @@ void Engine::SelectHighlight()
 	}
 	*/
 	else {
-		if (!SelectingCharacter) {
-			HoveringCharacter = false;
-			HoveredCharacter = nullptr;
-			UnHiglightSpaces();
+		if (!m_s_Instance->SelectingCharacter) {
+			m_s_Instance->HoveringCharacter = false;
+			m_s_Instance->HoveredCharacter = nullptr;
+			m_s_Instance->UnHiglightSpaces();
 
-			for (int i = availableSpaces.size() - 1; i >= 0; i--)
-				availableSpaces.pop_back();
+			for (int i = m_s_Instance->availableSpaces.size() - 1; i >= 0; i--)
+				m_s_Instance->availableSpaces.pop_back();
 		}
 	}
 
+}
+
+void InputController::CharacterDiraction()
+{
+	if (!m_s_Instance->SelectedCharacter) return;
+	Vector2i pos = m_s_Instance->SelectedCharacter->getMyPosition();
+	int dx = pos.x - m_s_Instance->mousePosition.x;
+	int dy = pos.y - m_s_Instance->mousePosition.y;
+	if (dx < 0 && dy > 0) { 
+		if (abs(dx) > abs(dy))
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fright);
+		else
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::back);
+	}
+	else if (dx < 0 && dy < 0) {
+		if (abs(dx) > abs(dy))
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fright);
+		else
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::front);
+	}
+	else if (dx > 0 && dy < 0) {
+		if (abs(dx) > abs(dy))
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fleft);
+		else
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::front);
+	}
+	else if (dx > 0 && dy > 0) {
+		if (abs(dx) > abs(dy))
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fleft);
+		else
+			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::back);
+	}
 }
