@@ -12,6 +12,8 @@ void Engine::update(float dtAsSeconds) {
 		mainmenu->update(dtAsSeconds);
 		break;
 	case Controller::PLAYING:
+		mouseTimePass += dtAsSeconds;
+		mouseAnimation(mouseTimePass, animState, mousePosition);
 		if(SelectingCharacter)
 			CharacterDiraction();
 		if (CharacterMoving)

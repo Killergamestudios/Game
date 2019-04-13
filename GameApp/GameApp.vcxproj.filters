@@ -125,6 +125,9 @@
     <ClCompile Include="src\Source Files\Core\Engine\input.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source Files\Core\Engine\mouseAnimation.cpp">
+      <Filter>Source Files\Core\Engine</Filter>
+    </ClCompile>
     <ClCompile Include="src\Source Files\Core\Engine\mouseControl.cpp">
       <Filter>Source Files\Core\Engine</Filter>
     </ClCompile>
