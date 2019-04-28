@@ -4,7 +4,7 @@
 #include "../Core/textureHolder.h"
 #include "fstream"
 #include "../Core/Controller.h"
-#include "Gui/Theme.h"
+#include "Theme/Theme.h"
 class GameMenu
 {
 public:

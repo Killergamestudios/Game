@@ -2,7 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "../../Core/textureHolder.h"
 #include "../../Core/Controller.h"
-#include "Theme.h"
+#include "../Theme/Theme.h"
 
 using namespace sf;
 class GuiElement : public Drawable

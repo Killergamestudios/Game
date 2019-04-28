@@ -7,7 +7,7 @@
 #include "../Windows/InGameMainMenu.h"
 #include "../Objects/object.h"
 #include "Controller.h"
-#include "../Windows/Gui/Theme.h"
+#include "../Windows/Theme/Theme.h"
 
 using namespace sf;
 //enum State{Booting,Playing, Loading, InMenu, Incutscene};
