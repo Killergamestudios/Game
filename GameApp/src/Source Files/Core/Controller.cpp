@@ -150,12 +150,15 @@ void Controller::clearState(bool hardFlush, bool secondary, SecondaryState state
 
 }
 
+Vector2f Controller::getViewSize() 
+{
+	return m_s_Instance->window->getView().getSize();
+}
+
 Vector2f Controller::getCameraOffset()
 {
-	Vector2f camOffset = Vector2f(m_s_Instance->window->getView().getCenter().x - m_s_Instance->window->getView().getSize().x / 2.f,
+	return Vector2f(m_s_Instance->window->getView().getCenter().x - m_s_Instance->window->getView().getSize().x / 2.f,
 		m_s_Instance->window->getView().getCenter().y - m_s_Instance->window->getView().getSize().y / 2.f);
-	
-	return camOffset;
 }
 
 Vector2f Controller::getCameraCenter()

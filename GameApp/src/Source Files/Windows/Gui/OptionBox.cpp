@@ -2,9 +2,9 @@
 #include "../../../Header Files/Windows/Gui/OptionBox.h"
 
 
-OptionBox::OptionBox(RenderWindow *window, Text label, Font font, Theme::Regions region,
+OptionBox::OptionBox(RenderWindow *window, Text label, Font font, Theme *theme,
 	int currentValue, vector<pair<string,string>> options)
-	:GuiElement(window, label, font, region)
+	:GuiElement(window, label, font, theme)
 {
 	this->currentValue = (float)currentValue;
 	this->options = options;
@@ -18,7 +18,7 @@ OptionBox::~OptionBox()
 
 void OptionBox::init()
 {
-	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 670.f);
+	VIEW_WIDTH = max(theme->getRegionDimension().x, 670.f);
 	padding = Vector2f(VIEW_WIDTH / 20, VIEW_HEIGHT / 20);
 	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y);
 	selected.setString(options[(int)currentValue].first + " x " + options[(int)currentValue].second);

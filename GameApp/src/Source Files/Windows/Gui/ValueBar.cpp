@@ -1,9 +1,9 @@
 #pragma once
 #include "../../../Header Files/Windows/Gui/ValueBar.h"
 
-ValueBar::ValueBar(RenderWindow *window, Text label, Font font, Theme::Regions region,
+ValueBar::ValueBar(RenderWindow *window, Text label, Font font, Theme* theme,
 	float currentValue,float max, float min, float step)
-	:GuiElement(window,label,font,region)
+	:GuiElement(window,label,font,theme)
 {
 	this->currentValue = currentValue;
 	this->maxValue = max;
@@ -19,7 +19,7 @@ ValueBar::~ValueBar()
 
 void ValueBar::init()
 {
-	VIEW_WIDTH = max(Theme::getRegionXDimension(renderedRegion), 670.f);
+	VIEW_WIDTH = max(theme->getRegionDimension().x, 670.f);
 	padding = Vector2f(VIEW_WIDTH / 20, VIEW_HEIGHT / 20);
 	dimensions = Vector2f(VIEW_WIDTH, (float)label.getCharacterSize() + padding.y);
 	valueBar.setTexture(TextureHolder::GetTexture("./graphics/interfaces/MainMenu/ValueBar.png"));

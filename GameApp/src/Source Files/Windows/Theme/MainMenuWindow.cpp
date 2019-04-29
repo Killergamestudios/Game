@@ -5,8 +5,8 @@ MainMenuWindow::MainMenuWindow(bool center, bool relativeToCamera)
 {
 	this->alignment = center;
 	this->relative = relativeToCamera;
-	regionDimension = Vector2f(0, 0);
 	viewSize = Controller::getViewSize();
+	regionDimension = Vector2f(viewSize.x*0.9f, 0);
 }
 
 MainMenuWindow::~MainMenuWindow()
@@ -15,7 +15,7 @@ MainMenuWindow::~MainMenuWindow()
 
 void MainMenuWindow::clear()
 {
-	regionDimension = Vector2f(0,0);
+	regionDimension = Vector2f(viewSize.x*0.9f,0);
 }
 
 vector<Vector2f> MainMenuWindow::renderRegion(vector<Vector2f> elements)
@@ -31,7 +31,7 @@ vector<Vector2f> MainMenuWindow::renderRegion(vector<Vector2f> elements)
 		renderedElements.push_back(Vector2f(ceil((viewSize.x - container.x) / 2), ceil(viewSize.y * 0.3f + regionDimension.y)));
 	regionDimension.x = elements[0].x; 
 	regionDimension.y = elements[0].y;
-	
+	elements.erase(elements.begin());
 	for (Vector2f& element : elements) {
 		if (alignment)
 			renderedElements.push_back(Vector2f(ceil((container.x - element.x) / 2), ceil(viewSize.y * 0.3f + regionDimension.y)));
@@ -40,7 +40,6 @@ vector<Vector2f> MainMenuWindow::renderRegion(vector<Vector2f> elements)
 		regionDimension.x = max(elements[0].x, regionDimension.x);
 		regionDimension.y += elements[0].y;
 	}
-
 
 	if (relative) {
 		Vector2f offset = Controller::getCameraOffset();

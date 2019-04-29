@@ -8,6 +8,7 @@ public:
 	~BackButton();
 	void clear() override;
 	Vector2f renderRegion(Vector2f) override;
+	vector<Vector2f> renderRegion(vector<Vector2f>) override;
 	Vector2f getRegionDimension() override;
 
 	bool alignment, relative;

@@ -71,6 +71,7 @@ public:
 	static void applyChanges();
 	static void clearState(bool hardFlush = false, bool secondary = false, SecondaryState state = SecondaryState::None);
 	
+	static Vector2f getViewSize();
 	static Vector2f getCameraCenter();
 	static Vector2f getCameraOffset();
 	static void setWindow(RenderWindow * window);

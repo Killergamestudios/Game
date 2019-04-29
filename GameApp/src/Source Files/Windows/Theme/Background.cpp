@@ -27,10 +27,11 @@ Vector2f Background::renderRegion(Vector2f background)
 		offset = Controller::getCameraOffset();
 	}
 	if (alignment) {
-		return Vector2f(ceil(offset.x + viewSize.x / 2), ceil(offset.y + viewSize.y / 2));
+		return Vector2f(ceil(offset.x + (viewSize.x - background.x) / 2),
+			ceil(offset.y + (viewSize.y - background.y) / 2));	
 	}
 	else {
-		return Vector2f(ceil(offset.x + background.x / 2), ceil(offset.y + background.y / 2));
+		return Vector2f(ceil(offset.x), ceil(offset.y));
 	}
 	cout << "Incorrect Alignment Parameter" << endl;
 }

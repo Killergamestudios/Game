@@ -4,6 +4,7 @@
 #include "../Core/textureHolder.h"
 #include "fstream"
 #include "MainMenu.h"
+#include "Theme/NewWindow.h"
 using namespace sf;
 
 class InGameMainMenu : public MainMenu
@@ -22,7 +23,7 @@ protected:
 	void loadSaveFiles(); // handles the loading of all save files
 	void setBackgroundSprites(vector<string> backgroundSpritesPath);
 	void clearTextures();
-	void initOptions(Theme::Regions region, int pos);
+	void initOptions(Theme* theme);
 	void initMenu();
 
 private:

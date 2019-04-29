@@ -18,7 +18,6 @@ Engine::Engine() {
 	camera.setSize(Vector2f(viewWidth, viewHeight));
 	m_window.setView(camera);
 	Controller::setWindow(&m_window);
-	m_theme = new Theme(m_window);
 	m_map = new Map(m_window);
 	Controller::setMap(m_map);
 	tile_sprite = Sprite(TextureHolder::GetTexture("./graphics/interfaces/tileSelectorAnimated.png")); //For the mouse Texture

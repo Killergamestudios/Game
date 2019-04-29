@@ -34,6 +34,11 @@ Vector2f BackButton::renderRegion(Vector2f element)
 	
 }
 
+vector<Vector2f> BackButton::renderRegion(vector<Vector2f> elements)
+{
+	return vector<Vector2f>{renderRegion(elements[0])};
+}
+
 Vector2f BackButton::getRegionDimension()
 {
 	return Vector2f();

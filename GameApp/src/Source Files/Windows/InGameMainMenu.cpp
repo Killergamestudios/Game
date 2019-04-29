@@ -31,7 +31,6 @@ void InGameMainMenu::update(float &dtasSeconds)
 	if (!Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU))
 	{
 		Controller::setSecondaryInitialized(Controller::IN_GAME_MAIN_MENU, false);
-		Theme::clearRegion(Theme::NewWindow);
 		return;
 	}
 	totalTimePassed += dtasSeconds;
@@ -68,7 +67,6 @@ void InGameMainMenu::initLayer()
 {
 	clearTextures();
 	loadMenu = false;
-	Theme::clearRegion(Theme::NewWindow);
 	
 	if (depth == 1) {
 		loadTextGraphics(mainMenu);
@@ -83,7 +81,7 @@ void InGameMainMenu::initLayer()
 		loadMenu = true;
 	}
 	else if (optionSelected == 2 && depth == 2) {
-		initOptions(Theme::NewWindow, 1);
+		initOptions(new NewWindow(1,true));
 	}
 	else if (optionSelected == 3 && depth == 2) {
 		Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, false);
@@ -153,15 +151,15 @@ void InGameMainMenu::clearTextures()
 	delete backgroundFillColor;
 }
 
-void InGameMainMenu::initOptions(Theme::Regions region, int pos)
+void InGameMainMenu::initOptions(Theme *theme)
 {
 
-	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, region, (float)Controller::getMusicVolume());
+	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, theme, (float)Controller::getMusicVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
 
-	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, region, (float)Controller::getSoundVolume());
+	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, theme, (float)Controller::getSoundVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
@@ -171,7 +169,7 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	{
 		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
 	}
-	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, region, Controller::getResolutionID(), resolutions);
+	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, theme, Controller::getResolutionID(), resolutions);
 	guiElements.push_back(opBuffer);
 	drawStack[2 + drawStack.size()] = opBuffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
@@ -191,7 +189,7 @@ void InGameMainMenu::initOptions(Theme::Regions region, int pos)
 	loadTextGraphics(backButton);
 	
 	dimensions.push_back(Vector2f(menuTexts[0]->getLocalBounds().width, menuTexts[0]->getLocalBounds().height));
-	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
+	vector<Vector2f> newPositions = theme -> renderRegion(dimensions);
 	Vector2f camOffset = Controller::getCameraOffset();
 
 	backgroundFillColor->setPosition(Vector2f(newPositions[0].x +camOffset.x , newPositions[0].y + camOffset.y - CONTENT_PADDING));
@@ -214,7 +212,7 @@ void InGameMainMenu::initMenu()
 		dimensions.push_back(Vector2f(menuTexts[i]->getLocalBounds().width, menuTexts[i]->getLocalBounds().height));
 	}
 	// Render Window region
-	vector<Vector2f> newPositions = Theme::renderRegion(Theme::NewWindow, dimensions, 1);
+	vector<Vector2f> newPositions = (new NewWindow(1, true))->renderRegion(dimensions);
 	Vector2f camOffset = Controller::getCameraOffset();
 
 	for (unsigned int i = 0; i < newPositions.size(); i++) {

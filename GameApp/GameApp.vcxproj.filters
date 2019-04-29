@@ -108,6 +108,24 @@
     <ClInclude Include="src\Header Files\Windows\MainMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\Theme\BackButton.h">
+      <Filter>Header Files\Windows\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\Theme\Background.h">
+      <Filter>Header Files\Windows\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\Theme\CharacterWindow.h">
+      <Filter>Header Files\Windows\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\Theme\Logo.h">
+      <Filter>Header Files\Windows\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\Theme\MainMenuWindow.h">
+      <Filter>Header Files\Windows\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\Theme\NewWindow.h">
+      <Filter>Header Files\Windows\Theme</Filter>
+    </ClInclude>
     <ClInclude Include="src\Header Files\Windows\Theme\Theme.h">
       <Filter>Header Files\Windows\Theme</Filter>
     </ClInclude>
@@ -196,6 +214,24 @@
     </ClCompile>
     <ClCompile Include="src\Source Files\Windows\MainMenu.cpp">
       <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\Theme\BackButton.cpp">
+      <Filter>Source Files\Windows\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\Theme\Background.cpp">
+      <Filter>Source Files\Windows\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\Theme\CharacterWindow.cpp">
+      <Filter>Source Files\Windows\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\Theme\Logo.cpp">
+      <Filter>Source Files\Windows\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\Theme\MainMenuWindow.cpp">
+      <Filter>Source Files\Windows\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\Theme\NewWindow.cpp">
+      <Filter>Source Files\Windows\Theme</Filter>
     </ClCompile>
     <ClCompile Include="src\Source Files\Windows\Theme\Theme.cpp">
       <Filter>Source Files\Windows\Theme</Filter>
