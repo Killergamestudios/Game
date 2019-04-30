@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "../../Header Files/Objects/object.h"
 #include "../../Header Files/Core/Engine.h"
+#include "../../Header Files//Objects/ObjectContainer.h"
 #include "fstream"
 #include <iostream>
 #include <sstream>
@@ -44,7 +45,6 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,stri
 	for (int i = 0; i < 10; i++) {
 		getline(myfile, line);
 		filereadints[i] = getStringNumber(line);
-		//std::cout << filereadints[i] << endl;
 	}
 	Stats stats = {filereadints[0],filereadints[1] ,filereadints[2] ,filereadints[3] ,filereadints[4] ,filereadints[5] 
 					,filereadints[6] ,filereadints[7],filereadints[2],filereadints[3],filereadints[4],filereadints[8],filereadints[9]};
@@ -95,6 +95,7 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,stri
 void Map::loadParty(Map *map, string savefilename){
 	//get the position of every character.
     vector<Vector3i> pos;
+	vector<CharacterObject> party;
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			if (m_friendlyCharacters[i][j] != 0) {
@@ -124,12 +125,13 @@ void Map::loadParty(Map *map, string savefilename){
 			}
 		}
 	}
+	ObjectContainer::SetParty(party);
 
 }
 
-vector<CharacterObject> & Map::getparty() {
+/*vector<CharacterObject> & Map::getparty() {
 	return party;
-}
+}*/
 
 vector<CharacterObject>& Map::getenemys()
 {

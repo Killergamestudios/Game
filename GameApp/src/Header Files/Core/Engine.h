@@ -9,6 +9,7 @@
 #include "Controller.h"
 #include "../Windows/Gui/Theme.h"
 #include "../../Header Files/Core/InputCotroller.h"
+#include "../../Header Files/Objects/ObjectContainer.h"
 
 using namespace sf;
 //enum State{Booting,Playing, Loading, InMenu, Incutscene};
@@ -24,6 +25,7 @@ private:
 	TextureHolder m_textureHolder;
 	Controller m_controller;
 	InputController m_InputController;
+	ObjectContainer objectcontainer;
 	Map *m_map;
 	GameMenu *mainmenu;
 	Theme *m_theme;
@@ -71,7 +73,6 @@ private:
 	//CharacterObject *mage;
 
 	Sprite tile_sprite;
-	vector<CharacterObject> party;
 
 
 

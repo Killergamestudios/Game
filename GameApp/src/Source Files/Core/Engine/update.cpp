@@ -14,10 +14,9 @@ void Engine::update(float dtAsSeconds) {
 	case Controller::PLAYING:
 		InputController::MovingCharacterUpdate();
 		
-		/*for (unsigned int i = 0; i < party.size(); i++) {
-			party[i].update(dtAsSeconds);
-		}*/
-		InputController::UpdateParty(dtAsSeconds);
+		
+		//InputController::UpdateParty(dtAsSeconds);
+		ObjectContainer::UpdateParty(dtAsSeconds);
 		break;
 	case Controller::LOADING:
 		break;

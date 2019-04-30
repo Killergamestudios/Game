@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Header Files/Core/Map.h"
+#include "../../Header Files/Objects/ObjectContainer.h"
 #include "fstream"
 #include <iostream>
 #include <sstream>
@@ -173,10 +174,12 @@ void Map::swapPosition(string maptype, Vector2i Startingpos, Vector2i Destinatio
 		temp = m_friendlyCharacters[Startingpos.x][Startingpos.y];
 		m_friendlyCharacters[Startingpos.x][Startingpos.y] = m_friendlyCharacters[Destination.x][Destination.y];
 		m_friendlyCharacters[Destination.x][Destination.y] = temp;
+		/*
 		for (unsigned int i = 0; i < party.size(); i++) {
 			if (Startingpos.x == party[i].getMyPosition().x && Startingpos.y == party[i].getMyPosition().y)
 				party[i].SetPosition(Destination);
 		}
+		*/
 	}
 	else if (maptype == "enemy") {
 		temp = m_enemyCharacters[Startingpos.x][Startingpos.y];
@@ -193,7 +196,7 @@ CharacterObject *Map::getenemy(Vector2i position)
 	throw std::exception("Invalid Search");
 }
 
-CharacterObject * Map::getAlly(Vector2i position)
+/*CharacterObject * Map::getAlly(Vector2i position)
 {
 	CharacterObject *ally = nullptr;
 	for (unsigned int i = 0; i < party.size(); i++) {
@@ -204,14 +207,11 @@ CharacterObject * Map::getAlly(Vector2i position)
 
 	//throw std::exception("Invalid Search");
 }
-
+*/
 int Map::getAllyVectorPosition(Vector2i position)
 {
-	for (unsigned int i = 0; i < party.size(); i++) {
-		if (position.x == party[i].getMyPosition().x && position.y == party[i].getMyPosition().y)
-			return i;
-	}
-	return -1;
+
+	return ObjectContainer::getAllyVectorInPosition(position);
 }
 
 int ** Map::getTerrainMap() 

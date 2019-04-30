@@ -3,6 +3,7 @@
 #include "../../../Header Files/Objects/object.h"
 #include "../../../Header Files/Core/Algorithms.h"
 #include "../../../Header Files/Core/Controller.h"
+#include "../../../Header Files/Objects/ObjectContainer.h"
 
 vector<Vector3i> InputController::HighlightSpaces(CharacterObject * character)
 {
@@ -72,8 +73,11 @@ void InputController::SelectHighlight()
 		if (!m_s_Instance->SelectingCharacter) {
 			m_s_Instance->UnHiglightSpaces();
 			int i = Controller::getMap()->getAllyVectorPosition(m_s_Instance->mousePosition);
-			if (i != -1)
-				m_s_Instance->HoveredCharacter = &m_s_Instance->party[i];
+			if (i != -1) {
+				//m_s_Instance->HoveredCharacter = &m_s_Instance->party[i];
+				m_s_Instance->HoveredCharacter = ObjectContainer::GetPartyMember(i);
+				m_s_Instance->CharacterIndex = i;
+			}
 
 			if (!m_s_Instance->HoveredCharacter) {
 				return;
@@ -93,6 +97,7 @@ void InputController::SelectHighlight()
 			m_s_Instance->HoveringCharacter = false;
 			m_s_Instance->HoveredCharacter = nullptr;
 			m_s_Instance->UnHiglightSpaces();
+			m_s_Instance->CharacterIndex = -1;
 
 			for (int i = m_s_Instance->availableSpaces.size() - 1; i >= 0; i--)
 				m_s_Instance->availableSpaces.pop_back();

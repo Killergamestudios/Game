@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "../../Header Files/Core/Algorithms.h"
 #include "../../Header Files/Core/Controller.h"
+#include "../../Header Files/Objects/ObjectContainer.h"
 
 InputController* InputController::m_s_Instance = nullptr;
 
@@ -28,7 +29,9 @@ void InputController::MoveCharacter()
 	vector<Vector2i> path = getPath(pos.x, pos.y, m_s_Instance->mousePosition.x, m_s_Instance->mousePosition.y, temp, *Controller::getMap());
 	path.pop_back();
 	std::reverse(path.begin(), path.end());
-	m_s_Instance->SelectedCharacter->MoveToPosition(path);
+
+	ObjectContainer::MovePartyMember(m_s_Instance->CharacterIndex, path);
+	//m_s_Instance->SelectedCharacter->MoveToPosition(path);
 	m_s_Instance->SelectedCharacter = nullptr;
 	m_s_Instance->CharacterMoving = false;
 
@@ -76,11 +79,11 @@ void InputController::Init()
 	m_s_Instance->CharacterMoving = false;
 }
 
-void InputController::SetParty()
+/*void InputController::SetParty()
 {
 	m_s_Instance->party = Controller::getMap()->getparty();
 }
-
+*/
 void InputController::setPlayerClicked()
 {
 	if (!m_s_Instance->PlayerClicked) m_s_Instance->PlayerClicked = true;
@@ -110,7 +113,7 @@ vector<Sprite> InputController::getHighlighted_tyles()
 	return m_s_Instance->Highlighted_Tyles;
 }
 
-void InputController::drowParty()
+/*void InputController::drowParty()
 {
 	for (unsigned int i = 0; i < m_s_Instance->party.size(); i++) {
 		m_s_Instance->party[i].Draw();
@@ -123,4 +126,4 @@ void InputController::UpdateParty(float dtasseconds)
 		m_s_Instance->party[i].update(dtasseconds);
 	}
 }
-
+*/

@@ -30,7 +30,7 @@ void Engine::init() {
 		m_map->load(mapIndex);
 		m_map->loadParty(m_map, "saveFile 1/");
 		//m_map->loadParty(m_map, Controller::getSaveFileDirectory());
-		party = Controller::getMap()->getparty();
+		//party = Controller::getMap()->getparty();
 		Controller::clearState();
 		Controller::setState(Controller::PLAYING);
 		Controller::setInitialized(true);
@@ -38,7 +38,7 @@ void Engine::init() {
 		mapHeight = (float)m_map->getMapHeight();
 		InputController::Init();
 		InputController::setMapDementions(Vector2f(mapWidth, mapHeight));
-		InputController::SetParty();
+		//InputController::SetParty();
 		break;
 	case Controller::IN_CUT_SCENE:
 		//play the cutscene

@@ -2,6 +2,7 @@
 #include "../../Header Files/Objects/component.h"
 #include "../../Header Files/Core/Algorithms.h"
 #include "../../Header Files/Core/Controller.h"
+#include "../../Header Files/Objects/ObjectContainer.h"
 
 
 string CalculateBuffType(CharacterObject *obj) {
@@ -594,12 +595,12 @@ void Rally::update()
 void Rally::use(Vector2i & position, CharacterObject * target)
 {
 	Map *map = Controller::getMap();
-	vector<CharacterObject> party = map->getparty();
+	vector<CharacterObject> *party = ObjectContainer::getParty();
 	vector<CharacterObject> enemys = map->getenemys();
 	int Mastery = parent->getMastery();
-	for (unsigned int i = 0; i < party.size(); i++) {
-		RallyModifier *raly = new RallyModifier(&party[i], Mastery);
-		party[i].addModifier(raly);
+	for (unsigned int i = 0; i < party->size(); i++) {
+		RallyModifier *raly = new RallyModifier(&(*party)[i], Mastery);
+		(*party)[i].addModifier(raly);
 	}
 	for (unsigned int i = 0; i < enemys.size(); i++) {
 		RallyModifier *raly = new RallyModifier(&enemys[i], Mastery);

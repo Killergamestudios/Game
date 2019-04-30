@@ -20,8 +20,8 @@ void Engine::draw() {
 		/*for (unsigned int i = 0; i < party.size(); i++) {
 			party[i].Draw();
 		}*/
-		InputController::drowParty();
-
+		//InputController::drowParty();
+		ObjectContainer::drowParty();
 		break;
 	case Controller::LOADING:
 		break;

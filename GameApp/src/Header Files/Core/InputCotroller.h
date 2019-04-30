@@ -21,25 +21,26 @@ public:
 
 	static void MovingCharacterUpdate();
 	static void Init();
-	static void SetParty();
+	//static void SetParty();
 	static void setPlayerClicked();
 	static void HandlePlayerInput();
 	static vector<Sprite> getHighlighted_tyles();
 
-	static void drowParty();
-	static void UpdateParty(float dtasseconds);
+	//static void drowParty();
+	//static void UpdateParty(float dtasseconds);
 private:
 	static InputController *m_s_Instance;
 	
 	bool PlayerClicked;
 	float mapWidth;
 	float mapHeight;
-	vector<CharacterObject> party;
+	//vector<CharacterObject> party;
 
 
 	Vector2i mousePosition;
 	CharacterObject *HoveredCharacter;
 	CharacterObject *SelectedCharacter;
+	int CharacterIndex;
 	bool HoveringCharacter;
 	bool SelectingCharacter;
 	bool CharacterMoving;
