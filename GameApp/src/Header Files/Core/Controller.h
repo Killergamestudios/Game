@@ -36,17 +36,17 @@ private:
 	int soundVolume;
 	IniReader* iniReader;
 	IniWriter* iniWriter;
-	vector<Vector2i> availableResolutions =
+	vector<Vector2u> availableResolutions =
 	{
-		Vector2i(800,600),
-		Vector2i(1024,768),
-		Vector2i(1280,1024),
-		Vector2i(1366,768),
-		Vector2i(1600,900),
-		Vector2i(1600,1200),
-		Vector2i(1680,1050),
-		Vector2i(1920,1080),
-		Vector2i(1920,1200)
+		Vector2u(800,600),
+		Vector2u(1024,768),
+		Vector2u(1280,1024),
+		Vector2u(1366,768),
+		Vector2u(1600,900),
+		Vector2u(1600,1200),
+		Vector2u(1680,1050),
+		Vector2u(1920,1080),
+		Vector2u(1920,1200)
 	};
 
 	// --------------
@@ -86,7 +86,7 @@ public:
 	static int getMusicVolume();
 	static void setSoundVolume(int);
 	static int getSoundVolume();
-	static vector<Vector2i> getAvailableResolutions();
+	static vector<Vector2u> getAvailableResolutions();
 	static void quit();
 	static void loadVars();
 	static void saveVars();
@@ -99,7 +99,8 @@ public:
 	static const SecondaryState IN_GAME_MAIN_MENU = SecondaryState::InGameMainMenu;
 	static const SecondaryState NONE = SecondaryState::None;
 
-	
+private:
+	void checkVars();
 };
 
 

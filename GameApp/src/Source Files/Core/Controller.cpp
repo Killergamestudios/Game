@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <windows.h>
 
+using namespace sf;
+
 Controller* Controller::m_s_Instance = nullptr;
 Controller::Controller()
 {
@@ -221,7 +223,7 @@ int Controller::getSoundVolume()
 	return m_s_Instance->soundVolume;
 }
 
-vector<Vector2i> Controller::getAvailableResolutions()
+vector<Vector2u> Controller::getAvailableResolutions()
 {
 	return m_s_Instance->availableResolutions;
 }
@@ -237,6 +239,40 @@ void Controller::loadVars()
 	m_s_Instance->resolutionID = stoi(m_s_Instance->iniReader->ReadVar("Display", "resolutionID", ""));
 	m_s_Instance->musicVolume = stoi(m_s_Instance->iniReader->ReadVar("Audio", "musicVolume", ""));
 	m_s_Instance->soundVolume = stoi(m_s_Instance->iniReader->ReadVar("Audio", "soundVolume", ""));
+	m_s_Instance->checkVars();
+}
+
+void Controller::checkVars() {
+	// Check for overflows in music and sound
+	if (musicVolume > 100) {
+		musicVolume = 100;
+	}
+	else if (musicVolume < 0) {
+		musicVolume = 0;
+	}
+
+	if (soundVolume > 100) {
+		soundVolume = 100;
+	}
+	else if (soundVolume < 0) {
+		soundVolume = 0;
+	}
+
+	// Check resolution ID. Must not surpass pc's resolution
+	if (resolutionID >= (int)availableResolutions.size()) {
+		resolutionID = (int)(availableResolutions.size()) - 1;
+	}
+	else if (resolutionID < 0) {
+		resolutionID = 0;
+	}
+
+	Vector2u desktopRes (VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height);
+	for (int i = resolutionID; i >= 0; i--) {
+		if (availableResolutions[i].x <= desktopRes.x && availableResolutions[i].y <= desktopRes.y) {
+			resolutionID = i;
+			break;
+		}
+	}
 }
 
 void Controller::saveVars()
