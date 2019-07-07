@@ -4,7 +4,7 @@
 void Engine::input(float dtAsSeconds) {
 	Event evt;
 	overrideKeyPressed += dtAsSeconds;
-	mouseTimePass += dtAsSeconds;
+	mousePosition = mouseControl();
 	while (m_window.pollEvent(evt)) {
 		if (Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU)) 
 		{
@@ -55,9 +55,7 @@ void Engine::input(float dtAsSeconds) {
 
 				
 				SelectHighlight();
-
-
-				mousePosition = mouseControl(mouseTimePass, animState);
+				mousePosition = mouseControl();
 
 				if (evt.type == Event::KeyReleased) {
 					keyPressed = false;

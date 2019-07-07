@@ -58,7 +58,8 @@ private:
 	void init();
 	void updateState();
 
-	sf::Vector2i mouseControl(float &totaltimepassed,int &animState);
+	sf::Vector2i mouseControl();
+	void mouseAnimation(float &totaltimepassed, int &animState, sf::Vector2i localPos);
 	vector<Vector3i> HighlightSpaces(CharacterObject *character);
 	void UnHiglightSpaces();
 	void SelectHighlight();
