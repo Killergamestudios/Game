@@ -4,6 +4,7 @@
 #include "../Core/textureHolder.h"
 #include "fstream"
 #include "GameMenu.h"
+#include "Theme/Background.h"
 
 class BootMenu:public GameMenu 
 {

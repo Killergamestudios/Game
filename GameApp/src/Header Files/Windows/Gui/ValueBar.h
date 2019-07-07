@@ -3,7 +3,7 @@
 class ValueBar : public GuiElement
 {
 public:
-	ValueBar(RenderWindow *window, Text label, Font font, Theme::Regions region, float currentValue, float max=100.0f, float min=0.0f, float step=5.0f);
+	ValueBar(RenderWindow *window, Text label, Font font, Theme * theme, float currentValue, float max=100.0f, float min=0.0f, float step=5.0f);
 	~ValueBar();
 
 	void init() override;

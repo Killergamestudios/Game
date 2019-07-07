@@ -28,7 +28,6 @@ private:
 	ObjectContainer objectcontainer;
 	Map *m_map;
 	GameMenu *mainmenu;
-	Theme *m_theme;
 	//map<string, string> controlUnit;
 
 	// camera variables

@@ -2,13 +2,13 @@
 #include "SFML/Graphics.hpp"
 #include "../../Core/textureHolder.h"
 #include "../../Core/Controller.h"
-#include "Theme.h"
+#include "../Theme/Theme.h"
 
 using namespace sf;
 class GuiElement : public Drawable
 {
 public:
-	GuiElement(RenderWindow *window , Text label, Font font, Theme::Regions region);
+	GuiElement(RenderWindow *window , Text label, Font font, Theme *theme);
 	~GuiElement();
 
 	virtual void init() = 0;
@@ -23,7 +23,7 @@ public:
 
 	Text label;
 	Vector2f padding;
-	Theme::Regions renderedRegion;
+	Theme *theme;
 	Font font;
 	Vector2f offset;
 	RenderWindow* m_window; // DONT DELETE

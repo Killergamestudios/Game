@@ -29,8 +29,7 @@ MainMenu::~MainMenu()
 void MainMenu::init() 
 {
 	tempLogo = new RectangleShape(Vector2f(m_window->getView().getSize().x, 0.25f*m_window->getView().getSize().y));
-	tempLogo->setPosition(Theme::renderRegion(Theme::Logo, vector<Vector2f>{tempLogo->getSize()}, 0)[0]);
-
+	tempLogo->setPosition((new Logo(false))->renderRegion(tempLogo->getSize()));
 	initLayer(); // Initialize everything. Fresh start
 	Controller::setInitialized(true);
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
@@ -122,31 +121,28 @@ void MainMenu::initLayer()
 {
 	clearTextures();
 	loadMenu = false;
-	Theme::clearRegion(Theme::MainMenu);
-	Theme::clearRegion(Theme::BackButton);
 
 	if (depth == 1) {
-		initFileNamesToLoad(mainMenu, Theme::MainMenu);
+		initFileNamesToLoad(mainMenu, new MainMenuWindow(true, false));
 	}
 	else if (optionSelected == 0 && depth == 2) {
 		Controller::setRunning(false);
 		Controller::setLoadFile(false);
-		Theme::clear();
 	}
 	else if (optionSelected == 1 && depth == 2) {
 		loadSaveFiles();
 		loadMenu = true;
 		backButton.push_back("Back");
-		loadTextGraphics(backButton, Theme::BackButton);
+		loadTextGraphics(backButton, new BackButton(true, false));
 	}
 	else if (optionSelected == 2 && depth == 2) {
-		initOptions(Theme::MainMenu, 0);
+		initOptions(new MainMenuWindow(true, false));
 		backButton.push_back("Back");
-		loadTextGraphics(backButton, Theme::BackButton);
+		loadTextGraphics(backButton, new BackButton(true, false));
 	}
 	else if (optionSelected == 3 && depth == 2) {
 		backButton.push_back("Back");
-		loadTextGraphics(backButton, Theme::BackButton);
+		loadTextGraphics(backButton, new BackButton(true, false));
 	}
 
 	optionSelected = 0;
@@ -183,17 +179,17 @@ void MainMenu::checkGuiChangeState()
 	}
 }
 
-void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme::Regions region)
+void MainMenu::initFileNamesToLoad(vector<string> fileNames, Theme* theme)
 {
 	fileNamesToLoad.clear();
 	for (unsigned int i = 0; i < fileNames.size(); i++) {
 		fileNamesToLoad.push_back(fileNames[i]);
 	} // populate array fileNameToLoad in order to load the sprites
 
-	setMenuSprites(Theme::MainMenu);
+	setMenuSprites(theme);
 }
 
-void MainMenu::setMenuSprites(Theme::Regions region)
+void MainMenu::setMenuSprites(Theme* theme)
 {
 	const unsigned int NUMBER_OF_SPRITES = fileNamesToLoad.size();
 	
@@ -213,7 +209,7 @@ void MainMenu::setMenuSprites(Theme::Regions region)
 		menuSprites.push_back(buffer); // add Sprites to the menuSprites
 	}
 
-	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions); // render elements in region. FloatRect is used as a wrapper
+	vector<Vector2f> newPositions = theme->renderRegion(dimensions); // render elements in region. FloatRect is used as a wrapper
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++) {
 		menuSprites[i]->setPosition(newPositions[i]);
 	}
@@ -221,7 +217,7 @@ void MainMenu::setMenuSprites(Theme::Regions region)
 }
 
 
-void MainMenu::loadTextGraphics(vector<string> textsArray, Theme::Regions region)
+void MainMenu::loadTextGraphics(vector<string> textsArray, Theme* theme)
 {
 	vector<Vector2f> dimensions;
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
@@ -232,7 +228,7 @@ void MainMenu::loadTextGraphics(vector<string> textsArray, Theme::Regions region
 		tabOrder[tabOrder.size()] = make_pair("TXT", buffer);
 		buffer->setFillColor(Color::White);
 	} 
-	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions);
+	vector<Vector2f> newPositions = theme->renderRegion(dimensions);
 	for (unsigned int i = 0; i < textsArray.size(); i++) {
 		menuTexts[menuTexts.size() - textsArray.size() + i]->setPosition(newPositions[i]);
 	}
@@ -296,30 +292,30 @@ void MainMenu::loadSaveFiles() {
 	}
 
 	saveFile.close();
-	loadTextGraphics(saveFilesArray, Theme::MainMenu);
+	loadTextGraphics(saveFilesArray, new MainMenuWindow(true,false));
 	saveFilesArray.clear();
 
 }
 
-void MainMenu::initOptions(Theme::Regions region, int pos)
+void MainMenu::initOptions(Theme* theme)
 {
 
-	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, region, (float)Controller::getMusicVolume());
+	ValueBar* buffer = new ValueBar(m_window, Text("Music Volume", font, 30), font, theme, (float)Controller::getMusicVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
 
-	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, region, (float)Controller::getSoundVolume());
+	buffer = new ValueBar(m_window, Text("Sound Volume", font, 30), font, theme, (float)Controller::getSoundVolume());
 	guiElements.push_back(buffer);
 	drawStack[2 + drawStack.size()] = buffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", buffer);
 	
 	vector<pair<string, string>> resolutions; 
-	for (Vector2i res : Controller::getAvailableResolutions()) 
+	for (Vector2u res : Controller::getAvailableResolutions()) 
 	{
 		resolutions.push_back(make_pair(to_string(res.x), to_string(res.y)));
 	}
-	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, region, Controller::getResolutionID(), resolutions);
+	OptionBox* opBuffer = new OptionBox(m_window, Text("Resolution", font, 30), font, theme, Controller::getResolutionID(), resolutions);
 	guiElements.push_back(opBuffer);
 	drawStack[2 + drawStack.size()] = opBuffer;
 	tabOrder[tabOrder.size()] = make_pair("GUI", opBuffer);
@@ -328,7 +324,7 @@ void MainMenu::initOptions(Theme::Regions region, int pos)
 	for (GuiElement * ge : guiElements) {
 		dimensions.push_back(ge->getDimensions());
 	}
-	vector<Vector2f> newPositions = Theme::renderRegion(region, dimensions, pos);
+	vector<Vector2f> newPositions = theme->renderRegion(dimensions);
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
 		guiElements[i]->setPosition(newPositions[i], Controller::getCameraOffset());
 	}

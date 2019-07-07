@@ -6,6 +6,9 @@
 #include "GameMenu.h"
 #include "Gui/ValueBar.h"
 #include "Gui/OptionBox.h"
+#include "Theme/Logo.h"
+#include "Theme/MainMenuWindow.h"
+#include "Theme/BackButton.h"
 
 using namespace sf;
 
@@ -23,12 +26,12 @@ public:
 
 protected:
 	void checkGuiChangeState();
-	void initFileNamesToLoad(vector<string> fileNames, Theme::Regions region); // get the files names for sprites
-	void setMenuSprites(Theme::Regions region); // set the sprites for main menu textures
-	void loadTextGraphics(vector<string> textsArray, Theme::Regions region); // load and set main menu texts
+	void initFileNamesToLoad(vector<string> fileNames, Theme* theme); // get the files names for sprites
+	void setMenuSprites(Theme* theme); // set the sprites for main menu textures
+	void loadTextGraphics(vector<string> textsArray, Theme* theme); // load and set main menu texts
 	void animate(); //Handles the animation of menu buttons
 	void loadSaveFiles(); // handles the loading of all save files
-	void initOptions(Theme::Regions region, int pos); // initializes options menu
+	void initOptions(Theme* theme); // initializes options menu
 	void changeSeletedOption(int direction); // changes selected option
 	void clearTextures();
 	void initLayer(); // initializes each menu layer

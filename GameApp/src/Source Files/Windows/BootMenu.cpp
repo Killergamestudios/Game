@@ -23,9 +23,9 @@ void BootMenu::init()
 	backgroundMusic->play(); // start playing intro music
 	backgroundMusic->setVolume((float)Controller::getMusicVolume()); // set volume of music
 	drawStack[0] = title;
-	vector<Vector2f> dimensions;
-	dimensions.push_back(Vector2f(title->getLocalBounds().width, title->getLocalBounds().height));
-	title->setPosition(Theme::renderRegion(Theme::Background, dimensions)[0]);
+	
+	Vector2f dimensions = Vector2f(title->getLocalBounds().width, title->getLocalBounds().height);
+	title->setPosition((new Background(true,false))->renderRegion(dimensions));
 	// set emblem in the center
 	Controller::setInitialized(true);
 	Controller::setRunning(true);
@@ -71,7 +71,6 @@ void BootMenu::input()
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
 		Controller::setRunning(false);
-		Theme::clear();
 	}
 }
 
