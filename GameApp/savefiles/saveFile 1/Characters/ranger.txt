@@ -2,16 +2,24 @@ Stats:
 Level = 1
 exp = 0
 MaxHealth = 20
-Agility = 20
+MaxEnergy = 20
+MaxActions = 4
+Agility = 10
 Precision = 25
-MaxEnergy = 10
-MagicResistance = 3
-Armor = 5
 Mastery = 1
-actions = 3
+MaxAgility = 20
+MaxPrecision = 100
+
 StatGain:
-MaxHealthGain = 2
-AgilityGain = 4
+MaxHealthGain = 3
+MaxEnergyGain = 2
+Max ActionsGain = 1 
+AgilityGain = 2
 PrecisionGain = 2
-MagicResistanceGain = 1
-ArmorGain = 2
+
+Abilities:
+whirlwind
+Charge
+rally
+
+Armor:

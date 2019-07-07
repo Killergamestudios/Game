@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "../../Header Files/Objects/object.h"
 #include "../../Header Files/Core/Engine.h"
+#include "../../Header Files//Objects/ObjectContainer.h"
 #include "fstream"
 #include <iostream>
 #include <sstream>
@@ -32,7 +33,7 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,stri
 	CharacterObject *Character = new CharacterObject(Name, *m_window, "friendly", "warrior", position, TextureHolder::GetTexture(texture));
 	string filename;
 	ifstream myfile;
-	filename = savefilename + "Characters/" + Name + ".txt";
+	filename = "savefiles/" + savefilename + "Characters/" + Class + ".txt";
 	myfile.open(filename);
 	
 	// read the stats and call the spawn func
@@ -94,6 +95,7 @@ CharacterObject* Map::SpawnCharacter(Vector2i position, string savefilename,stri
 void Map::loadParty(Map *map, string savefilename){
 	//get the position of every character.
     vector<Vector3i> pos;
+	vector<CharacterObject> party;
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			if (m_friendlyCharacters[i][j] != 0) {
@@ -123,12 +125,13 @@ void Map::loadParty(Map *map, string savefilename){
 			}
 		}
 	}
+	ObjectContainer::SetParty(party);
 
 }
 
-vector<CharacterObject> & Map::getparty() {
+/*vector<CharacterObject> & Map::getparty() {
 	return party;
-}
+}*/
 
 vector<CharacterObject>& Map::getenemys()
 {

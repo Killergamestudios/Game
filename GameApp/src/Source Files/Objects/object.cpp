@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "../../Header Files/Core/controller.h"
 
+#define MAX_AGILITY 20
 
 /****************************************************************************************************************************************/
 //                                                   The Object Class                                                                   //
@@ -468,7 +469,7 @@ int CharacterObject::getWeaponDamage()
 int CharacterObject::getMovementCost()
 {
 	int agility =int( m_stats.Agility * (100 - 25 * LegsTimeHit) / 100);
-	return 20 / m_stats.Agility;
+	return (MAX_AGILITY / m_stats.Agility) == 0? 1: (MAX_AGILITY / m_stats.Agility);
 }
 
 int CharacterObject::getWeaponRange()

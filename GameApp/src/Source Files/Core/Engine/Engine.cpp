@@ -11,7 +11,6 @@ Engine::Engine() {
 	windowWidth = (float)VideoMode::getDesktopMode().width;
 	windowHeight = (float)VideoMode::getDesktopMode().height;
 	m_window.create(VideoMode((unsigned int)windowWidth, (unsigned int)windowHeight), "Game Name", Style::Fullscreen);
-
 	camera.setViewport(FloatRect((windowWidth - viewWidth) / 2 / windowWidth, (windowHeight - viewHeight) / 2 / windowHeight,
 		viewWidth / windowWidth, viewHeight / windowHeight));
 	camera.setCenter(Vector2f(viewWidth / 2, viewHeight / 2));
@@ -25,17 +24,12 @@ Engine::Engine() {
 	mouseTimePass = 0; //For the mouse animation
 	animState = 0; //For the mouse animation
 
-	SelectingCharacter = false;
-	SelectedCharacter = nullptr;
-	HoveredCharacter = nullptr;
-	HoveringCharacter = false;
-	CharacterMoving = false;
+	
 }
 
 void Engine::run() {
 	Clock clock;
 	keyPressed = false;
-	party = Controller::getMap()->getparty();
 	while (m_window.isOpen()) {
 		Time dt = clock.restart();
 		GameTimeTotal = dt;

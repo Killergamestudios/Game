@@ -4,7 +4,6 @@
 void Engine::input(float dtAsSeconds) {
 	Event evt;
 	overrideKeyPressed += dtAsSeconds;
-	mousePosition = mouseControl();
 	while (m_window.pollEvent(evt)) {
 		if (Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU)) 
 		{
@@ -53,9 +52,8 @@ void Engine::input(float dtAsSeconds) {
 				break;
 			case Controller::PLAYING:
 
-				
-				SelectHighlight();
-				mousePosition = mouseControl();
+				InputController::getmousePosition(mouseControl());
+				InputController::SelectHighlight();
 
 				if (evt.type == Event::KeyReleased) {
 					keyPressed = false;
@@ -65,18 +63,7 @@ void Engine::input(float dtAsSeconds) {
 				}
 				if (!MousePressed) {
 					if (Mouse::isButtonPressed(Mouse::Left)) {
-						if (SelectedCharacter == nullptr) {
-							if(!CharacterMoving)
-								SelectedCharacter = HoveredCharacter;
-							if(SelectedCharacter)
-								SelectingCharacter = true;
-						}
-						else {
-							if (mousePosition.x >= 0 && mousePosition.y >= 0 && SelectedCharacter != nullptr) {
-								CharacterMoving = true;
-								SelectingCharacter = false;
-							}
-						}
+						InputController::setPlayerClicked();
 					}
 				}
 
@@ -113,7 +100,7 @@ void Engine::input(float dtAsSeconds) {
 				if (evt.type == Event::MouseButtonPressed) {
 					MousePressed = true;
 				}
-
+				InputController::HandlePlayerInput();
 				break;
 			case Controller::LOADING:
 				break;

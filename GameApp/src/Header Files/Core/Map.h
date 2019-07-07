@@ -29,12 +29,12 @@ public:
 
 
 	CharacterObject *getenemy(Vector2i);
-	CharacterObject *getAlly(Vector2i);
+	//CharacterObject *getAlly(Vector2i);
 	int getAllyVectorPosition(Vector2i);
 	CharacterObject *SpawnCharacter(Vector2i position,string savefilename, string Name, string Class);
 	void loadParty(Map *map,string savefilename);
 	
-	vector<CharacterObject> &getparty();
+	//vector<CharacterObject> &getparty();
 	vector<CharacterObject> &getenemys();
 
 private:
@@ -50,7 +50,7 @@ private:
 	int **m_misc;   //Stores data about position of misc objects around the map. 
 
 	std::vector<CharacterObject> m_enemys;
-	std::vector<CharacterObject> party;
+	//std::vector<CharacterObject> party;
 
 };
 

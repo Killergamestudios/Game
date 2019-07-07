@@ -8,6 +8,8 @@
 #include "../Objects/object.h"
 #include "Controller.h"
 #include "../Windows/Gui/Theme.h"
+#include "../../Header Files/Core/InputCotroller.h"
+#include "../../Header Files/Objects/ObjectContainer.h"
 
 using namespace sf;
 //enum State{Booting,Playing, Loading, InMenu, Incutscene};
@@ -22,6 +24,8 @@ private:
 	//State m_state;
 	TextureHolder m_textureHolder;
 	Controller m_controller;
+	InputController m_InputController;
+	ObjectContainer objectcontainer;
 	Map *m_map;
 	GameMenu *mainmenu;
 	Theme *m_theme;
@@ -72,17 +76,9 @@ private:
 	//vector<CharacterObject*> *loadParty(Map *map, string savefilename, vector<Vector3i> pos);
 	//CharacterObject *Warrior;//temp
 	//CharacterObject *mage;
-	vector<CharacterObject> party;
+
 	Sprite tile_sprite;
-	Vector2i mousePosition;
-	CharacterObject *HoveredCharacter;
-	CharacterObject *SelectedCharacter;
-	bool HoveringCharacter;
-	bool SelectingCharacter;
-	bool CharacterMoving;
-	vector<Vector3i> availableSpaces; // a vector with all the positions the selected Character can go and the cost
-	void MoveCharacter();
-	bool CanMoveThere();
+
 
 
 	vector <Sprite> Highlighted_Tyles;// the tyles that get HighLighted when we select a character
