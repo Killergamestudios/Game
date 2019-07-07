@@ -4,6 +4,7 @@
 void Engine::input(float dtAsSeconds) {
 	Event evt;
 	overrideKeyPressed += dtAsSeconds;
+	mouseTimePass += dtAsSeconds;
 	while (m_window.pollEvent(evt)) {
 		if (Controller::isExecuteSecondary(Controller::IN_GAME_MAIN_MENU)) 
 		{

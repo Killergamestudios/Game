@@ -14,7 +14,7 @@ void Engine::update(float dtAsSeconds) {
 	case Controller::PLAYING:
 
 		InputController::MovingCharacterUpdate();
-		
+		mouseAnimation(mouseTimePass, animState, mouseControl());
 		
 		//InputController::UpdateParty(dtAsSeconds);
 		ObjectContainer::UpdateParty(dtAsSeconds);

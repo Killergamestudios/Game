@@ -63,10 +63,7 @@ private:
 
 	sf::Vector2i mouseControl();
 	void mouseAnimation(float &totaltimepassed, int &animState, sf::Vector2i localPos);
-	vector<Vector3i> HighlightSpaces(CharacterObject *character);
-	void UnHiglightSpaces();
-	void SelectHighlight();
-	void CharacterDiraction();
+	
 
 	void cameraUpdate(int direction); // handles movement of camera
 	void cameraReset(); // resets camera. Useful for state transitions
