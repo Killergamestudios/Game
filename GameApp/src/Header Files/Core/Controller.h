@@ -36,11 +36,11 @@ private:
 	int soundVolume;
 	IniReader* iniReader;
 	IniWriter* iniWriter;
+	unsigned int restrictResolutions;
 	vector<Vector2u> availableResolutions =
 	{
 		Vector2u(800,600),
 		Vector2u(1024,768),
-		Vector2u(1280,1024),
 		Vector2u(1366,768),
 		Vector2u(1600,900),
 		Vector2u(1600,1200),

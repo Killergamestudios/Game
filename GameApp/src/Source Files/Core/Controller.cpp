@@ -224,8 +224,12 @@ int Controller::getSoundVolume()
 }
 
 vector<Vector2u> Controller::getAvailableResolutions()
-{
-	return m_s_Instance->availableResolutions;
+{	
+	vector<Vector2u> resolutions;
+	for (unsigned int i = 0; i < m_s_Instance->restrictResolutions; i++) {
+		resolutions.push_back(m_s_Instance->availableResolutions[i]);
+	}
+	return resolutions;
 }
 
 void Controller::quit()
@@ -270,6 +274,13 @@ void Controller::checkVars() {
 	for (int i = resolutionID; i >= 0; i--) {
 		if (availableResolutions[i].x <= desktopRes.x && availableResolutions[i].y <= desktopRes.y) {
 			resolutionID = i;
+			break;
+		}
+	}
+
+	for (unsigned int i = 0; i < availableResolutions.size(); i++) {
+		if (availableResolutions[i].x > desktopRes.x || availableResolutions[i].y > desktopRes.y) {
+			restrictResolutions = i;
 			break;
 		}
 	}
