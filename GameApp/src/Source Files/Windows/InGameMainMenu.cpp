@@ -190,14 +190,13 @@ void InGameMainMenu::initOptions(Theme *theme)
 	
 	dimensions.push_back(Vector2f(menuTexts[0]->getLocalBounds().width, menuTexts[0]->getLocalBounds().height));
 	vector<Vector2f> newPositions = theme -> renderRegion(dimensions);
-	Vector2f camOffset = Controller::getCameraOffset();
 
-	backgroundFillColor->setPosition(Vector2f(newPositions[0].x +camOffset.x , newPositions[0].y + camOffset.y - CONTENT_PADDING));
+	backgroundFillColor->setPosition(Vector2f(newPositions[0].x , newPositions[0].y - CONTENT_PADDING));
 
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(newPositions[i + 1],camOffset);
+		guiElements[i]->setPosition(newPositions[i + 1]);
 	}
-	menuTexts[0]->setPosition(newPositions[newPositions.size() - 1] + camOffset);
+	menuTexts[0]->setPosition(newPositions[newPositions.size() - 1]);
 
 	optionSelected = 0;
 	guiElements[0]->setSelected();
@@ -213,11 +212,6 @@ void InGameMainMenu::initMenu()
 	}
 	// Render Window region
 	vector<Vector2f> newPositions = (new NewWindow(1, true))->renderRegion(dimensions);
-	Vector2f camOffset = Controller::getCameraOffset();
-
-	for (unsigned int i = 0; i < newPositions.size(); i++) {
-		newPositions[i] = Vector2f(newPositions[i].x + camOffset.x, newPositions[i].y + camOffset.y);
-	}
 
 	// set position of background
 	backgroundFillColor->setPosition(Vector2f(newPositions[0].x, newPositions[0].y));

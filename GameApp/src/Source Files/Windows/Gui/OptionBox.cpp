@@ -39,17 +39,17 @@ void OptionBox::update(int direction)
 		currentValue = (float) currentValue + direction;
 		selected.setString(options[(int)currentValue].first + " x " + options[(int)currentValue].second);
 		float width = selected.getLocalBounds().width;
-		selected.setPosition(Vector2f(VIEW_WIDTH - offset.x - width, offset.y));
+		selected.setPosition(Vector2f(VIEW_WIDTH + offset.x - width, offset.y));
 	}
 }
 
-void OptionBox::setPosition(Vector2f newPositions, Vector2f camOffset)
+void OptionBox::setPosition(Vector2f newPositions)
 {
 	offset = newPositions;
 
-	label.setPosition(Vector2f(offset.x + camOffset.x, offset.y + camOffset.y));
+	label.setPosition(Vector2f(offset.x, offset.y));
 	float width = selected.getLocalBounds().width;
-	selected.setPosition(Vector2f(VIEW_WIDTH - offset.x - width + camOffset.x, offset.y + camOffset.y));
+	selected.setPosition(Vector2f(VIEW_WIDTH + offset.x - width, offset.y));
 }
 
 Vector2f OptionBox::getDimensions()

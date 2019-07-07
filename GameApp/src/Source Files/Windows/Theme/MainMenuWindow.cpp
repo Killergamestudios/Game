@@ -20,7 +20,7 @@ void MainMenuWindow::clear()
 
 vector<Vector2f> MainMenuWindow::renderRegion(vector<Vector2f> elements)
 {
-	Vector2f container = Vector2f(viewSize.x, viewSize.y*0.7f); // Set Region Container.
+	Vector2f container = Vector2f(viewSize.x, viewSize.y*0.6f); // Set Region Container.
 
 	float elementSeperation = (container.y - elements.size() * elements[0].y) / (elements.size() - 1); // calculate element sepearation
 	
@@ -32,13 +32,18 @@ vector<Vector2f> MainMenuWindow::renderRegion(vector<Vector2f> elements)
 	regionDimension.x = elements[0].x; 
 	regionDimension.y = elements[0].y;
 	elements.erase(elements.begin());
+	float totalElemHeight = 0.f;
+	for (Vector2f& element: elements) {
+		totalElemHeight += element.y;
+	}
+	float marginBetween = ceil((container.y - regionDimension.y - totalElemHeight) / elements.size());
 	for (Vector2f& element : elements) {
 		if (alignment)
-			renderedElements.push_back(Vector2f(ceil((container.x - element.x) / 2), ceil(viewSize.y * 0.3f + regionDimension.y)));
+			renderedElements.push_back(Vector2f(ceil((container.x - element.x) / 2), ceil(viewSize.y * 0.3f + regionDimension.y + marginBetween)));
 		else
 			renderedElements.push_back(Vector2f(ceil((viewSize.x - container.x) / 2), ceil(elementSeperation + regionDimension.y)));
 		regionDimension.x = max(elements[0].x, regionDimension.x);
-		regionDimension.y += elements[0].y;
+		regionDimension.y += elements[0].y + marginBetween;
 	}
 
 	if (relative) {

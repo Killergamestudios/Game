@@ -34,12 +34,13 @@ vector<Vector2f> NewWindow::renderRegion(vector<Vector2f> elements)
 	renderedElements.push_back(origin);
 	viewSize.x = elements[0].x; // save dimenstion of container
 	viewSize.y = elements[0].y; // 
+	regionDimension.x = elements[0].x;
 	elements.erase(elements.begin()); // erase the background from the list in order to have only elements to process
 	float elementSeperation = (viewSize.y - elements.size() * elements[0].y) / (elements.size() + 1); // calculate element sepearation
 	for (Vector2f element : elements) {
 		renderedElements.push_back(Vector2f(ceil((origin.x + viewSize.x - element.x) / 2), 
 			ceil(origin.y + elementSeperation + regionDimension.y)));
-		regionDimension.x = viewSize.x;
+		
 		regionDimension.y += element.y + elementSeperation;
 	}
 

@@ -36,7 +36,7 @@ protected:
 	void clearTextures();
 	void initLayer(); // initializes each menu layer
 
-	int optionSelected; // show the currently selected menu item
+	unsigned int optionSelected; // show the currently selected menu item
 	int depth; // the depth in the main menu that you are currently
 	float totalTimePassed; // needed for animation
 

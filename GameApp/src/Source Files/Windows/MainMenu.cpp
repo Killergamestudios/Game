@@ -107,11 +107,11 @@ void MainMenu::input() {
 	{
 		actions();
 	}
-	else if (guiElements.size()!=0 && (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))) 
+	else if (guiElements.size()!=0 && optionSelected < guiElements.size() && (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))) 
 	{
 		guiElements[optionSelected]->update(1);
 	}
-	else if (guiElements.size() != 0 && (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)))
+	else if (guiElements.size() != 0 && optionSelected < guiElements.size() && (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)))
 	{
 		guiElements[optionSelected]->update(-1);
 	}
@@ -202,7 +202,7 @@ void MainMenu::setMenuSprites(Theme* theme)
 	vector<Vector2f> dimensions;
 	for (unsigned int i = 0; i < NUMBER_OF_SPRITES; i++)
 	{
-		Sprite* buffer = new Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 128));
+		Sprite* buffer = new Sprite(TextureHolder::GetTexture(fileNamesToLoad[i]), IntRect(0, 0, 256, 64));
 		dimensions.push_back(Vector2f(buffer->getLocalBounds().width, buffer->getLocalBounds().height));  // get dimensions of Sprites needed by the region
 		drawStack[drawStack.size() + 2] = buffer;  // add items to the draw stack (details for ordering in GameMenu.h)
 		tabOrder[tabOrder.size()] = make_pair("SP",buffer); // add items to the tabOrder
@@ -245,7 +245,7 @@ void MainMenu::animate() {
 			totalTimePassed -= ANIMATION_SPEED;
 			int left = menuSprites[optionSelected]->getTextureRect().left; // get left position of previous selected texture
 			left = left == 256 ? 512 : 256;
-			menuSprites[optionSelected]->setTextureRect(IntRect(left, 0, 256, 128));
+			menuSprites[optionSelected]->setTextureRect(IntRect(left, 0, 256, 64));
 		}
 	}
 
@@ -258,7 +258,7 @@ void MainMenu::changeSeletedOption(int direction)
 		((Text*)tabOrder[optionSelected].second)->setFillColor(Color::White);
 	}
 	else if (tabOrder[optionSelected].first == "SP") {
-		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(0, 0, 256, 128));
+		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(0, 0, 256, 64));
 	} 
 	else if (tabOrder[optionSelected].first == "GUI") {
 		((GuiElement*)tabOrder[optionSelected].second)->unSelect();
@@ -270,7 +270,7 @@ void MainMenu::changeSeletedOption(int direction)
 		((Text*)tabOrder[optionSelected].second)->setFillColor(Color::Red);
 	} 
 	else if (tabOrder[optionSelected].first == "SP") {
-		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(256, 0, 256, 128));
+		((Sprite*)tabOrder[optionSelected].second)->setTextureRect(IntRect(256, 0, 256, 64));
 	} 
 	else if (tabOrder[optionSelected].first == "GUI") {
 		((GuiElement*)tabOrder[optionSelected].second)->setSelected();
@@ -326,7 +326,7 @@ void MainMenu::initOptions(Theme* theme)
 	}
 	vector<Vector2f> newPositions = theme->renderRegion(dimensions);
 	for (unsigned int i = 0; i < guiElements.size(); i++) {
-		guiElements[i]->setPosition(newPositions[i], Controller::getCameraOffset());
+		guiElements[i]->setPosition(newPositions[i]);
 	}
 
 	optionSelected = 0;
