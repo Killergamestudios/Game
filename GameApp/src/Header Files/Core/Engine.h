@@ -7,7 +7,7 @@
 #include "../Windows/InGameMainMenu.h"
 #include "../Objects/object.h"
 #include "Controller.h"
-#include "../Windows/Gui/Theme.h"
+#include "../Windows/Theme/Theme.h"
 #include "../../Header Files/Core/InputCotroller.h"
 #include "../../Header Files/Objects/ObjectContainer.h"
 
