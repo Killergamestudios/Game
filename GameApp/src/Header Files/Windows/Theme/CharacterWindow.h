@@ -19,8 +19,8 @@ public:
 
 private:
 	int windowAlignmemnt;
-	bool buttonsCenter, descriptionCenter, rendered, background, relative;
-	Vector2f viewSize, container, padding, origin, regionDimension, offset;
+	bool buttonsCenter, descriptionCenter, rendered, background;
+	Vector2f viewSize, container, padding, origin, regionDimension, offset, backgroundPos;
 	vector<Vector2f> buttons, descriptions;
 	vector<Vector2f> buttonsPos, descriptionsPos;
 };

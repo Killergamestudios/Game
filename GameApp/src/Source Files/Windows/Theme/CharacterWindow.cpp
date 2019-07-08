@@ -12,7 +12,7 @@ CharacterWindow::CharacterWindow(int windowPosition, bool buttonsCenter, bool de
 	rendered = false;
 	background = false;
 	offset = Vector2f(0.f, 0.f);
-	if (relative)
+	if (relativeToCamera)
 		offset = Controller::getCameraOffset();
 }
 
@@ -40,12 +40,11 @@ void CharacterWindow::renderRegion()
 {
 	rendered = true;
 	const float SEPERATOR = 0.4f;
-	Vector2f backgroundPos(((viewSize.x - container.x) * origin) + padding);
+	regionDimension.x = SEPERATOR * container.x;
 	float elementSeperation = (container.y - buttons.size() * buttons[0].y) / (buttons.size() + 1); // calculate buttons sepearation
 	for (Vector2f& button : buttons) {
 		buttonsPos.push_back((Vector2f(ceil(backgroundPos.x + (container.x*SEPERATOR - button.x) / 2),
 			ceil(backgroundPos.y + elementSeperation + regionDimension.y))) + offset);
-		regionDimension.x = max(button.x, regionDimension.x);
 		regionDimension.y += button.y + elementSeperation;
 	}
 
@@ -65,7 +64,8 @@ Vector2f CharacterWindow::setBackground(Vector2f background, Vector2f padding)
 	}
 	this->padding = padding;
 	container = background - (2.f * padding);
-	return Vector2f(((viewSize.x - container.x) * origin) + offset);
+	backgroundPos = Vector2f((viewSize.x - container.x) * origin.x, (viewSize.y - container.y) * origin.y) + offset;
+	return backgroundPos;
 }
 
 void CharacterWindow::add(Vector2f &button, Vector2f &description)
