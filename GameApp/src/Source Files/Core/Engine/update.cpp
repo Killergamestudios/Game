@@ -12,12 +12,18 @@ void Engine::update(float dtAsSeconds) {
 		mainmenu->update(dtAsSeconds);
 		break;
 	case Controller::PLAYING:
-
-		InputController::MovingCharacterUpdate();
-		mouseAnimation(mouseTimePass, animState, mouseControl());
+		if (Controller::isSecondaryInitialized(Controller::IN_GAME_MAIN_MENU))
+		{
+			mainmenu->update(dtAsSeconds);
+		}
+		else 
+		{
+			InputController::MovingCharacterUpdate();
+			mouseAnimation(mouseTimePass, animState, mouseControl());
 		
-		//InputController::UpdateParty(dtAsSeconds);
-		ObjectContainer::UpdateParty(dtAsSeconds);
+			//InputController::UpdateParty(dtAsSeconds);
+			ObjectContainer::UpdateParty(dtAsSeconds);
+		}
 
 		break;
 	case Controller::LOADING:
@@ -26,10 +32,7 @@ void Engine::update(float dtAsSeconds) {
 		break;
 	}
 
-	if (Controller::isSecondaryInitialized(Controller::IN_GAME_MAIN_MENU))
-	{
-		mainmenu->update(dtAsSeconds);
-	}
+	
 }
 
 

@@ -55,7 +55,6 @@ void Engine::input(float dtAsSeconds) {
 
 				InputController::getmousePosition(mouseControl());
 				InputController::SelectHighlight();
-
 				if (evt.type == Event::KeyReleased) {
 					keyPressed = false;
 				}
@@ -68,7 +67,7 @@ void Engine::input(float dtAsSeconds) {
 					}
 				}
 
-				if (!keyPressed || overrideKeyPressed > CAMERA_UPDATE_SPEED)
+				if ((evt.type == Event::KeyPressed) && (!keyPressed || overrideKeyPressed > CAMERA_UPDATE_SPEED))
 				{
 					overrideKeyPressed = 0;
 					if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
