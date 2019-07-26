@@ -1,11 +1,12 @@
 #pragma once
 #include "GameMenu.h"
-#include "../Objects/object.h"
 #include "Theme/CharacterWindow.h"
+#include "../../Header Files/Core/InputCotroller.h"
+#include "../Objects/ObjectContainer.h"
 class CharacterMenu : public GameMenu
 {
 public:
-	CharacterMenu(RenderWindow& window, CharacterObject& selectedCharacter);//, CharacterObject& selectedCharacter);
+	CharacterMenu(RenderWindow& window, CharacterObject* selectedCharacter);//, CharacterObject& selectedCharacter);
 	~CharacterMenu();
 	void init() override;
 	void update(float&) override;
@@ -18,6 +19,7 @@ private:
 	void clearTextures();
 	void loadTextGraphics(vector<string> btns, vector<string> descriptions);
 	void changeSeletedOption(int direction);
+	void initMoveLayout();
 
 	int depth, descriptionIndex;
 	float totalTimePassed;

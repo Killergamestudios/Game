@@ -106,35 +106,31 @@ void InputController::SelectHighlight()
 
 }
 
-void InputController::CharacterDiraction()
+void InputController::CharacterDiraction(CharacterObject * SelectedCharacter)
 {
-	if (!m_s_Instance->SelectedCharacter) return;
-	Vector2i pos = m_s_Instance->SelectedCharacter->getMyPosition();
-	int dx = pos.x - m_s_Instance->mousePosition.x;
-	int dy = pos.y - m_s_Instance->mousePosition.y;
-	if (dx < 0 && dy > 0) { 
-		if (abs(dx) > abs(dy))
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fright);
-		else
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::back);
+	Vector2i pos = SelectedCharacter->getMyPosition();
+	int dx = m_s_Instance->mousePosition.x - pos.x;
+	int dy = m_s_Instance->mousePosition.y - pos.y;
+	if (abs(dy) < abs(dx)) {
+		if (dx < 0)
+		{
+			SelectedCharacter->SetDirection(FacingDirection::fleft);
+		}
+		else if (dx >= 0)
+		{
+			SelectedCharacter->SetDirection(FacingDirection::fright);
+		}
 	}
-	else if (dx < 0 && dy < 0) {
-		if (abs(dx) > abs(dy))
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fright);
-		else
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::front);
-	}
-	else if (dx > 0 && dy < 0) {
-		if (abs(dx) > abs(dy))
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fleft);
-		else
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::front);
-	}
-	else if (dx > 0 && dy > 0) {
-		if (abs(dx) > abs(dy))
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::fleft);
-		else
-			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::back);
+	else if (abs(dx) < abs(dy))
+	{
+		if (dy < 0)
+		{
+			SelectedCharacter->SetDirection(FacingDirection::back);
+		}
+		else if (dy >= 0)
+		{
+			SelectedCharacter->SetDirection(FacingDirection::front);
+		}
 	}
 }
 

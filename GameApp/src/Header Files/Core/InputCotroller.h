@@ -13,7 +13,7 @@ public:
 	static vector<Vector3i> HighlightSpaces(CharacterObject *character);
 	static void UnHiglightSpaces();
 	static void SelectHighlight();
-	static void CharacterDiraction();
+	static void CharacterDiraction(CharacterObject *);
 	static void MoveCharacter();
 	static bool CanMoveThere();
 	static void setMapDementions(Vector2f dim);
@@ -22,7 +22,7 @@ public:
 	static bool setCharacter();
 	static CharacterObject* getCharacter();
 
-	static void MovingCharacterUpdate();
+	static void MovingCharacterUpdate(CharacterObject *);
 	static void Init();
 	//static void SetParty();
 	static void setPlayerClicked();

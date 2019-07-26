@@ -1,10 +1,10 @@
 #include "../../Header Files/Windows/CharacterMenu.h"
 
-CharacterMenu::CharacterMenu(RenderWindow& window, CharacterObject& selectedCharacter):
+CharacterMenu::CharacterMenu(RenderWindow& window, CharacterObject* selectedCharacter):
 	GameMenu(window)
 {
 	depth = 1;
-	this->selectedCharacter = &selectedCharacter;
+	this->selectedCharacter = selectedCharacter;
 }
 
 
@@ -34,28 +34,44 @@ void CharacterMenu::update(float &dtAsSeconds)
 		return;
 	}
 	totalTimePassed += dtAsSeconds;
+	if (depth == 2) {
+		ObjectContainer::UpdateParty(dtAsSeconds);
+		InputController::CharacterDiraction(selectedCharacter);
+	}
 }
 
 void CharacterMenu::draw()
 {
-	m_window->draw(*backgroundFillColor);
-	for (pair<int, Drawable*> dr : drawStack)
-		m_window->draw(*dr.second);
-	m_window->draw(*menuTexts[descriptionIndex + optionSelected]);
+	if (depth == 1 || depth == 3) {
+		m_window->draw(*backgroundFillColor);
+		for (pair<int, Drawable*> dr : drawStack)
+			m_window->draw(*dr.second);
+		m_window->draw(*menuTexts[descriptionIndex + optionSelected]);
+	}
+	else {
+		vector<Sprite> highlighted_tiles = InputController::getHighlighted_tyles();
+		if (highlighted_tiles.size() != 0) {
+			for (unsigned int i = 0; i < highlighted_tiles.size(); i++) {
+				m_window->draw(highlighted_tiles[i]);
+			}
+		}
+	}
 }
 
 void CharacterMenu::input() {
-	if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
-	{
-		changeSeletedOption(-1);
-	}
-	else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
-	{
-		changeSeletedOption(1);
-	}
-	else if (Keyboard::isKeyPressed(Keyboard::Enter))
-	{
-		actions();
+	if (depth != 2) {
+		if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
+		{
+			changeSeletedOption(-1);
+		}
+		else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
+		{
+			changeSeletedOption(1);
+		}
+		else if (Keyboard::isKeyPressed(Keyboard::Enter))
+		{
+			actions();
+		}
 	}
 }
 
@@ -72,7 +88,8 @@ void CharacterMenu::actions()
 	}
 	else if (depth == 1 && optionSelected == 0) 
 	{
-			// move
+ 		depth = 2;
+		initLayer();
 	} 
 	else if (depth == 1 && optionSelected == 1)
 	{	// Stay at current position
@@ -97,9 +114,16 @@ void CharacterMenu::initLayer()
 	if (depth == 1) {
 		loadTextGraphics(textLayer1, descLayer1);
 	}
+	else if (depth == 2) {
+		initMoveLayout();
+	}
 	else if (depth == 3) {
 		loadTextGraphics(textLayer2, descLayer2);
 	}
+}
+
+void CharacterMenu::initMoveLayout() {
+	vector<Vector3i> availableTiles = InputController::HighlightSpaces(selectedCharacter);
 }
 
 void CharacterMenu::loadTextGraphics(vector<string> btns, vector<string> descriptions)

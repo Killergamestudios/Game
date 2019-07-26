@@ -59,10 +59,10 @@ void InputController::getmousePosition(Vector2i pos)
 	m_s_Instance->mousePosition = pos;
 }
 
-void InputController::MovingCharacterUpdate()
+void InputController::MovingCharacterUpdate(CharacterObject * selectedCharacter)
 {
 	if (m_s_Instance->SelectingCharacter) {
-		m_s_Instance->CharacterDiraction();
+		m_s_Instance->CharacterDiraction(selectedCharacter);
 	}
 	if (m_s_Instance->CharacterMoving) {
 		m_s_Instance->MoveCharacter();

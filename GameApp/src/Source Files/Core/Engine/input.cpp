@@ -30,11 +30,11 @@ void Engine::input(float dtAsSeconds) {
 		}
 		else if (Controller::isExecuteSecondary(Controller::CHARACTER_MENU))
 		{
+			InputController::getmousePosition(mouseControl());
 			if (evt.type == Event::KeyReleased)
 			{
 				keyPressed = false;
 			}
-
 			if (evt.type == Event::MouseButtonReleased) {
 				MousePressed = false;
 			}
@@ -48,10 +48,19 @@ void Engine::input(float dtAsSeconds) {
 					Controller::setExecuteSecondary(Controller::CHARACTER_MENU, false);
 				}
 			}
+			if (!MousePressed) {
+				if (Mouse::isButtonPressed(Mouse::Left)) {
+
+				}
+			}
 
 			if (evt.type == Event::KeyPressed)
 			{
 				keyPressed = true;
+			}
+			if (evt.type == Event::MouseButtonPressed) 
+			{
+				MousePressed = true;
 			}
 		}
 		else 

@@ -24,10 +24,7 @@ void Engine::update(float dtAsSeconds) {
 		}
 		else 
 		{
-			InputController::MovingCharacterUpdate();
 			mouseAnimation(mouseTimePass, animState, mouseControl());
-		
-			//InputController::UpdateParty(dtAsSeconds);
 			ObjectContainer::UpdateParty(dtAsSeconds);
 		}
 
