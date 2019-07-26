@@ -5,6 +5,7 @@
 #include "../Windows/MainMenu.h"
 #include "../Windows/BootMenu.h"
 #include "../Windows/InGameMainMenu.h"
+#include "../Windows/CharacterMenu.h"
 #include "../Objects/object.h"
 #include "Controller.h"
 #include "../Windows/Theme/Theme.h"
@@ -28,6 +29,7 @@ private:
 	ObjectContainer objectcontainer;
 	Map *m_map;
 	GameMenu *mainmenu;
+	GameMenu *characterMenu;
 	//map<string, string> controlUnit;
 
 	// camera variables

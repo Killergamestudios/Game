@@ -33,6 +33,10 @@ void Engine::draw() {
 	{
 		mainmenu->draw();
 	}
+	if (Controller::isSecondaryInitialized(Controller::CHARACTER_MENU))
+	{
+		characterMenu->draw();
+	}
 
 	m_window.setView(camera);
 	m_window.display();

@@ -13,20 +13,20 @@ class Controller
 {
 private:
 	enum State { Booting, InMenu, Playing, Loading, Incutscene };
-	enum SecondaryState { InGameMainMenu, None };
+	enum SecondaryState { InGameMainMenu, CharacterMenu, None };
 	static Controller* m_s_Instance;
 
 	
 	// Primary Variables
-	const int numberOfSecondaryStates = 1;
+	const int numberOfSecondaryStates = 2;
 	State currentState, tmpCurrentState;
 	bool initialized, tmpInitialized;
 	bool running, tmpRunning;
 	bool loadFile, tmpLoadFile; // TODO: change them to secondary
 	string saveFileDirectory, tmpSaveFileDirectory; // TODO: change them to secondary
 
-	bool executeSecondary[1], tmpExecuteSecondary[1];
-	bool secondaryInitialized[1], tmpSecondaryInitialized[1];
+	bool executeSecondary[2], tmpExecuteSecondary[2];
+	bool secondaryInitialized[2], tmpSecondaryInitialized[2];
 	// --------------
 	// Secondary Variables
 	RenderWindow * window;
@@ -97,6 +97,7 @@ public:
 	static const State PLAYING = State::Playing;
 	static const State IN_CUT_SCENE = State::Incutscene;
 	static const SecondaryState IN_GAME_MAIN_MENU = SecondaryState::InGameMainMenu;
+	static const SecondaryState CHARACTER_MENU = SecondaryState::CharacterMenu;
 	static const SecondaryState NONE = SecondaryState::None;
 
 private:

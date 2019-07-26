@@ -54,4 +54,9 @@ void Engine::init() {
 		mainmenu->init();
 		Controller::setSecondaryInitialized(Controller::IN_GAME_MAIN_MENU, true);
 	}
+	if (!Controller::isSecondaryInitialized(Controller::CHARACTER_MENU) && Controller::isExecuteSecondary(Controller::CHARACTER_MENU)) {
+		characterMenu = new CharacterMenu(m_window);
+		characterMenu->init();
+		Controller::setSecondaryInitialized(Controller::CHARACTER_MENU, true);
+	}
 }

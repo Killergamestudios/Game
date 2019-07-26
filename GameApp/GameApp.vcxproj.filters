@@ -93,6 +93,9 @@
     <ClInclude Include="src\Header Files\Windows\BootMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="src\Header Files\Windows\CharacterMenu.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\Header Files\Windows\GameMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
@@ -204,6 +207,9 @@
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="src\Source Files\Windows\BootMenu.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Source Files\Windows\CharacterMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Source Files\Windows\GameMenu.cpp">

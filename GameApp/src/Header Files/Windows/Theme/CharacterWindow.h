@@ -16,6 +16,8 @@ public:
 	vector<Vector2f> getButtonsPositions();
 	vector<Vector2f> getDiscriptionPositions();
 	Vector2f getDiscriptionPositions(int index);
+	Vector2f getRegionDimension();
+
 
 private:
 	int windowAlignmemnt;

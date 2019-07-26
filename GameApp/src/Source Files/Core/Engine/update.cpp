@@ -16,6 +16,12 @@ void Engine::update(float dtAsSeconds) {
 		{
 			mainmenu->update(dtAsSeconds);
 		}
+		else if (Controller::isSecondaryInitialized(Controller::CHARACTER_MENU))
+		{
+			characterMenu->update(dtAsSeconds);
+			if (!Controller::isSecondaryInitialized(Controller::CHARACTER_MENU))
+				delete characterMenu;
+		}
 		else 
 		{
 			InputController::MovingCharacterUpdate();

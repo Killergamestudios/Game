@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "../../Header Files/Objects/object.h"
+#include "../Objects/object.h"
 
 using namespace sf;
 using namespace std;

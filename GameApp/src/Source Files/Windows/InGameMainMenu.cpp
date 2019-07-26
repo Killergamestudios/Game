@@ -20,7 +20,6 @@ InGameMainMenu::~InGameMainMenu()
 
 void InGameMainMenu::init()
 {
-	clearTextures();
 	initLayer(); // Initialize everything. Fresh start
 	optionSelected = 0; // 0 for New Game , 1 for Load game ,2 for Options,  3 for Credits
 	totalTimePassed = 0;

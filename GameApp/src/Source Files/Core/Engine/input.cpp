@@ -13,7 +13,7 @@ void Engine::input(float dtAsSeconds) {
 				keyPressed = false;
 			}
 
-			if (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED)
+			if ((evt.type == Event::KeyPressed) && (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED))
 			{
 				overrideKeyPressed = 0;
 				mainmenu->input();
@@ -24,6 +24,28 @@ void Engine::input(float dtAsSeconds) {
 			}
 
 			if (evt.type == Event::KeyPressed) 
+			{
+				keyPressed = true;
+			}
+		}
+		else if (Controller::isExecuteSecondary(Controller::CHARACTER_MENU))
+		{
+			if (evt.type == Event::KeyReleased)
+			{
+				keyPressed = false;
+			}
+
+			if ((evt.type == Event::KeyPressed) && (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED))
+			{
+				overrideKeyPressed = 0;
+				characterMenu->input();
+				if (Keyboard::isKeyPressed(Keyboard::M))
+				{
+					Controller::setExecuteSecondary(Controller::CHARACTER_MENU, false);
+				}
+			}
+
+			if (evt.type == Event::KeyPressed)
 			{
 				keyPressed = true;
 			}
@@ -41,7 +63,7 @@ void Engine::input(float dtAsSeconds) {
 					keyPressed = false;
 				}
 
-				if (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED)
+				if ((evt.type == Event::KeyPressed) && (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED))
 				{
 					overrideKeyPressed = 0;
 					mainmenu->input();
@@ -89,6 +111,10 @@ void Engine::input(float dtAsSeconds) {
 					else if (Keyboard::isKeyPressed(Keyboard::Escape))
 					{
 						Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, true);
+					}
+					else if (Keyboard::isKeyPressed(Keyboard::M))
+					{
+						Controller::setExecuteSecondary(Controller::CHARACTER_MENU, true);
 					}
 				}
 

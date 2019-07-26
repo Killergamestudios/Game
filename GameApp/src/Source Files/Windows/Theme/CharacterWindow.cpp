@@ -44,7 +44,7 @@ void CharacterWindow::renderRegion()
 	float elementSeperation = (container.y - buttons.size() * buttons[0].y) / (buttons.size() + 1); // calculate buttons sepearation
 	for (Vector2f& button : buttons) {
 		buttonsPos.push_back((Vector2f(ceil(backgroundPos.x + (container.x*SEPERATOR - button.x) / 2),
-			ceil(backgroundPos.y + elementSeperation + regionDimension.y))) + offset);
+			ceil(backgroundPos.y + elementSeperation + regionDimension.y))));
 		regionDimension.y += button.y + elementSeperation;
 	}
 
@@ -63,9 +63,9 @@ Vector2f CharacterWindow::setBackground(Vector2f background, Vector2f padding)
 		origin.y = (float)(windowAlignmemnt % 2); // 
 	}
 	this->padding = padding;
-	container = background - (2.f * padding);
+	container = background - padding;
 	backgroundPos = Vector2f((viewSize.x - container.x) * origin.x, (viewSize.y - container.y) * origin.y) + offset;
-	return backgroundPos;
+	return Vector2f((viewSize.x - background.x) * origin.x, (viewSize.y - background.y) * origin.y) + offset;
 }
 
 void CharacterWindow::add(Vector2f &button, Vector2f &description)
@@ -77,7 +77,7 @@ void CharacterWindow::add(Vector2f &button, Vector2f &description)
 void CharacterWindow::add(vector<Vector2f> btns, vector<Vector2f> descrs)
 {
 	buttons.insert(buttons.end(), btns.begin(), btns.end());
-	descriptions.insert(buttons.end(), descrs.begin(), descrs.end());
+	descriptions.insert(descriptions.end(), descrs.begin(), descrs.end());
 }
 
 vector<Vector2f> CharacterWindow::getButtonsPositions()
@@ -105,4 +105,9 @@ Vector2f CharacterWindow::getDiscriptionPositions(int index)
 		return Vector2f();
 	}
 	return descriptionsPos[index];
+}
+
+Vector2f CharacterWindow::getRegionDimension()
+{
+	return regionDimension;
 }
