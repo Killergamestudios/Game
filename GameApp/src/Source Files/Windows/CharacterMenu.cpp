@@ -1,10 +1,10 @@
 #include "../../Header Files/Windows/CharacterMenu.h"
 
-CharacterMenu::CharacterMenu(RenderWindow& window)://, CharacterObject& selectedCharacter):
+CharacterMenu::CharacterMenu(RenderWindow& window, CharacterObject& selectedCharacter):
 	GameMenu(window)
 {
 	depth = 1;
-	//this->selectedCharacter = &selectedCharacter;
+	this->selectedCharacter = &selectedCharacter;
 }
 
 
@@ -72,7 +72,6 @@ void CharacterMenu::actions()
 	}
 	else if (depth == 1 && optionSelected == 0) 
 	{
-		moveCharacter();
 			// move
 	} 
 	else if (depth == 1 && optionSelected == 1)
@@ -83,6 +82,9 @@ void CharacterMenu::actions()
 	else if (depth == 2 && optionSelected == 2)
 	{	// End turn
 		Controller::setExecuteSecondary(Controller::CHARACTER_MENU, false);
+	}
+	else {
+		// attack & ability
 	}
 
 }

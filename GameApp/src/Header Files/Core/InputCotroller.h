@@ -19,6 +19,9 @@ public:
 	static void setMapDementions(Vector2f dim);
 	static void getmousePosition(Vector2i pos);
 
+	static bool setCharacter();
+	static CharacterObject* getCharacter();
+
 	static void MovingCharacterUpdate();
 	static void Init();
 	//static void SetParty();
@@ -36,6 +39,7 @@ private:
 	float mapHeight;
 	//vector<CharacterObject> party;
 
+	CharacterObject *Character;
 
 	Vector2i mousePosition;
 	CharacterObject *HoveredCharacter;

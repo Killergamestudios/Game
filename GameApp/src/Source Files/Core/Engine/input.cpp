@@ -35,6 +35,10 @@ void Engine::input(float dtAsSeconds) {
 				keyPressed = false;
 			}
 
+			if (evt.type == Event::MouseButtonReleased) {
+				MousePressed = false;
+			}
+
 			if ((evt.type == Event::KeyPressed) && (!keyPressed || overrideKeyPressed > CHANGE_SELECTION_SPEED))
 			{
 				overrideKeyPressed = 0;
@@ -76,7 +80,7 @@ void Engine::input(float dtAsSeconds) {
 			case Controller::PLAYING:
 
 				InputController::getmousePosition(mouseControl());
-				InputController::SelectHighlight();
+				//InputController::SelectHighlight();
 				if (evt.type == Event::KeyReleased) {
 					keyPressed = false;
 				}
@@ -85,7 +89,9 @@ void Engine::input(float dtAsSeconds) {
 				}
 				if (!MousePressed) {
 					if (Mouse::isButtonPressed(Mouse::Left)) {
-						InputController::setPlayerClicked();
+						if (InputController::setCharacter()) {
+							Controller::setExecuteSecondary(Controller::CHARACTER_MENU, true);
+						}
 					}
 				}
 
@@ -112,21 +118,15 @@ void Engine::input(float dtAsSeconds) {
 					{
 						Controller::setExecuteSecondary(Controller::IN_GAME_MAIN_MENU, true);
 					}
-					else if (Keyboard::isKeyPressed(Keyboard::M))
-					{
-						Controller::setExecuteSecondary(Controller::CHARACTER_MENU, true);
-					}
 				}
 
 				if (evt.type == Event::KeyPressed) {
-
 					keyPressed = true;
-					
 				}
 				if (evt.type == Event::MouseButtonPressed) {
 					MousePressed = true;
 				}
-				InputController::HandlePlayerInput();
+				//InputController::HandlePlayerInput();
 				break;
 			case Controller::LOADING:
 				break;

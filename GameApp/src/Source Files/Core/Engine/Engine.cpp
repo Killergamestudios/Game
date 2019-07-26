@@ -8,9 +8,9 @@ Engine::Engine() {
 	// get resolution from ini file. Need casting to int
 	viewWidth = (float)Controller::getResolutionWidth();
 	viewHeight = (float)Controller::getResolitionHeight();
-	windowWidth = (float)VideoMode::getDesktopMode().width;
-	windowHeight =(float)VideoMode::getDesktopMode().height;
-	m_window.create(VideoMode((unsigned int)windowWidth, (unsigned int)windowHeight), "Game Name", Style::Fullscreen);
+	windowWidth = 800;//(float)VideoMode::getDesktopMode().width;
+	windowHeight = 600;//(float)VideoMode::getDesktopMode().height;
+	m_window.create(VideoMode((unsigned int)windowWidth, (unsigned int)windowHeight), "Game Name", Style::Default);
 	camera.setViewport(FloatRect((windowWidth - viewWidth) / 2 / windowWidth, (windowHeight - viewHeight) / 2 / windowHeight,
 		viewWidth / windowWidth, viewHeight / windowHeight));
 	camera.setCenter(Vector2f(viewWidth / 2, viewHeight / 2));

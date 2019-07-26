@@ -137,3 +137,20 @@ void InputController::CharacterDiraction()
 			m_s_Instance->SelectedCharacter->SetDirection(FacingDirection::back);
 	}
 }
+
+bool InputController::setCharacter() {
+	int playerID = ObjectContainer::getAllyVectorInPosition(m_s_Instance->mousePosition);
+	if (playerID != -1) {
+		m_s_Instance->Character = m_s_Instance->HoveredCharacter = ObjectContainer::GetPartyMember(playerID);
+		return true;
+	}
+	else {
+		m_s_Instance->Character = nullptr;
+		cout << "No character found" << endl;
+		return false;
+	}
+}
+
+CharacterObject* InputController::getCharacter() {
+	return m_s_Instance->Character;
+}

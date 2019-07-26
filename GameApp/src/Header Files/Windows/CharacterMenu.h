@@ -5,7 +5,7 @@
 class CharacterMenu : public GameMenu
 {
 public:
-	CharacterMenu(RenderWindow& window);//, CharacterObject& selectedCharacter);
+	CharacterMenu(RenderWindow& window, CharacterObject& selectedCharacter);//, CharacterObject& selectedCharacter);
 	~CharacterMenu();
 	void init() override;
 	void update(float&) override;

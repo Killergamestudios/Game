@@ -77,6 +77,7 @@ void InputController::Init()
 	m_s_Instance->HoveredCharacter = nullptr;
 	m_s_Instance->HoveringCharacter = false;
 	m_s_Instance->CharacterMoving = false;
+	m_s_Instance->Character = nullptr;
 }
 
 /*void InputController::SetParty()
