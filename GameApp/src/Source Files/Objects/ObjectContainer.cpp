@@ -52,3 +52,8 @@ void ObjectContainer::MovePartyMember(int index, vector<Vector2i> &path)
 {
 	m_s_Instance->party[index].MoveToPosition(path);
 }
+
+void ObjectContainer::MovePartyMember(CharacterObject * character, vector<Vector2i>& path)
+{
+	character->MoveToPosition(path);
+}

@@ -12,3 +12,8 @@ GameMenu::GameMenu(RenderWindow &window)
 GameMenu::~GameMenu()
 {
 }
+
+void GameMenu::mouseInput(Vector2i) 
+{
+
+}

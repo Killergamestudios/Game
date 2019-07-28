@@ -50,7 +50,7 @@ void Engine::input(float dtAsSeconds) {
 			}
 			if (!MousePressed) {
 				if (Mouse::isButtonPressed(Mouse::Left)) {
-
+					characterMenu->mouseInput(mouseControl());
 				}
 			}
 

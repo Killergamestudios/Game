@@ -15,37 +15,16 @@ InputController::InputController()
 
 
 
-void InputController::MoveCharacter()
+void InputController::MoveCharacter(CharacterObject* selectedCharacter)
 {
-	Vector2i pos = m_s_Instance->SelectedCharacter->getMyPosition();
+	Vector2i pos = selectedCharacter->getMyPosition();
 
-	if (!m_s_Instance->CanMoveThere()) {
-
-		m_s_Instance->CharacterMoving = false;
-		m_s_Instance->SelectingCharacter = true;
-		return;
-	}
 	int temp = 10000;
 	vector<Vector2i> path = getPath(pos.x, pos.y, m_s_Instance->mousePosition.x, m_s_Instance->mousePosition.y, temp, *Controller::getMap());
 	path.pop_back();
 	std::reverse(path.begin(), path.end());
 
-	ObjectContainer::MovePartyMember(m_s_Instance->CharacterIndex, path);
-	//m_s_Instance->SelectedCharacter->MoveToPosition(path);
-	m_s_Instance->SelectedCharacter = nullptr;
-	m_s_Instance->CharacterMoving = false;
-
-	//clear the vector
-	for (int i = m_s_Instance->availableSpaces.size() - 1; i >= 0; i--)
-		m_s_Instance->availableSpaces.pop_back();
-}
-
-bool InputController::CanMoveThere()
-{
-	for (unsigned int i = 0; i < m_s_Instance->availableSpaces.size(); i++) {
-		if (m_s_Instance->availableSpaces[i].x == m_s_Instance->mousePosition.x && m_s_Instance->availableSpaces[i].y == m_s_Instance->mousePosition.y) return true;
-	}
-	return false;
+	ObjectContainer::MovePartyMember(selectedCharacter, path);
 }
 
 void InputController::setMapDementions(Vector2f dim)
@@ -61,12 +40,12 @@ void InputController::getmousePosition(Vector2i pos)
 
 void InputController::MovingCharacterUpdate(CharacterObject * selectedCharacter)
 {
-	if (m_s_Instance->SelectingCharacter) {
-		m_s_Instance->CharacterDiraction(selectedCharacter);
-	}
-	if (m_s_Instance->CharacterMoving) {
-		m_s_Instance->MoveCharacter();
-	}
+//	if (m_s_Instance->SelectingCharacter) {
+//		m_s_Instance->CharacterDiraction(selectedCharacter);
+//	}
+//	if (m_s_Instance->CharacterMoving) {
+	//	m_s_Instance->MoveCharacter();
+	//}
 }
 
 void InputController::Init()

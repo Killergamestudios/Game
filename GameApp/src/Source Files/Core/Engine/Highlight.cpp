@@ -62,8 +62,7 @@ vector<Vector3i> InputController::HighlightSpaces(CharacterObject * character)
 
 void InputController::UnHiglightSpaces()
 {
-	for (int i = m_s_Instance->Highlighted_Tyles.size() - 1; i >= 0; i--)
-		m_s_Instance->Highlighted_Tyles.pop_back();
+	m_s_Instance->Highlighted_Tyles.clear();
 }
 
 void InputController::SelectHighlight()

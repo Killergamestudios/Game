@@ -22,11 +22,9 @@ void Engine::update(float dtAsSeconds) {
 			if (!Controller::isSecondaryInitialized(Controller::CHARACTER_MENU))
 				delete characterMenu;
 		}
-		else 
-		{
-			mouseAnimation(mouseTimePass, animState, mouseControl());
-			ObjectContainer::UpdateParty(dtAsSeconds);
-		}
+		
+		mouseAnimation(mouseTimePass, animState, mouseControl());
+		ObjectContainer::UpdateParty(dtAsSeconds);
 
 		break;
 	case Controller::LOADING:

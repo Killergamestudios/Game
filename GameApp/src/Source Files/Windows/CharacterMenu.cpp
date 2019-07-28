@@ -5,6 +5,7 @@ CharacterMenu::CharacterMenu(RenderWindow& window, CharacterObject* selectedChar
 {
 	depth = 1;
 	this->selectedCharacter = selectedCharacter;
+	moved = false;
 }
 
 
@@ -35,8 +36,13 @@ void CharacterMenu::update(float &dtAsSeconds)
 	}
 	totalTimePassed += dtAsSeconds;
 	if (depth == 2) {
-		ObjectContainer::UpdateParty(dtAsSeconds);
 		InputController::CharacterDiraction(selectedCharacter);
+	}
+
+	if (moved && selectedCharacter->isStading()) {
+		moved = false;
+		depth = 3;
+		initLayer();
 	}
 }
 
@@ -49,7 +55,6 @@ void CharacterMenu::draw()
 		m_window->draw(*menuTexts[descriptionIndex + optionSelected]);
 	}
 	else {
-		vector<Sprite> highlighted_tiles = InputController::getHighlighted_tyles();
 		if (highlighted_tiles.size() != 0) {
 			for (unsigned int i = 0; i < highlighted_tiles.size(); i++) {
 				m_window->draw(highlighted_tiles[i]);
@@ -75,6 +80,24 @@ void CharacterMenu::input() {
 	}
 }
 
+void CharacterMenu::mouseInput(Vector2i position) 
+{
+	if (!moved && depth == 2)
+	{
+		for (unsigned int i = 0; i < availableTiles.size(); i++) {
+			if (availableTiles[i].x == position.x && availableTiles[i].y == position.y)
+			{
+				InputController::MoveCharacter(selectedCharacter);
+				moved = true;
+				highlighted_tiles.clear();
+				InputController::UnHiglightSpaces();
+				return;
+			}
+		}
+		cout << "You cannot move there: " << position.x << " " << position.y << endl;
+	}
+}
+
 void CharacterMenu::actions()
 {
 	if (optionSelected == tabOrder.size() - 1) {
@@ -96,7 +119,7 @@ void CharacterMenu::actions()
 		depth+=2;
 		initLayer();
 	}
-	else if (depth == 2 && optionSelected == 2)
+	else if (depth == 3 && optionSelected == 2)
 	{	// End turn
 		Controller::setExecuteSecondary(Controller::CHARACTER_MENU, false);
 	}
@@ -123,7 +146,8 @@ void CharacterMenu::initLayer()
 }
 
 void CharacterMenu::initMoveLayout() {
-	vector<Vector3i> availableTiles = InputController::HighlightSpaces(selectedCharacter);
+	availableTiles = InputController::HighlightSpaces(selectedCharacter);
+	highlighted_tiles = InputController::getHighlighted_tyles();
 }
 
 void CharacterMenu::loadTextGraphics(vector<string> btns, vector<string> descriptions)
@@ -164,6 +188,7 @@ void CharacterMenu::clearTextures()
 	menuTexts.clear();
 	drawStack.clear();
 	tabOrder.clear();
+	availableTiles.clear();
 	delete theme;
 }
 

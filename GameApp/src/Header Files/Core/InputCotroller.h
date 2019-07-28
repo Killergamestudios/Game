@@ -10,12 +10,11 @@ class InputController
 {
 public:
 	InputController();
-	static vector<Vector3i> HighlightSpaces(CharacterObject *character);
+	static vector<Vector3i> HighlightSpaces(CharacterObject*);
 	static void UnHiglightSpaces();
 	static void SelectHighlight();
 	static void CharacterDiraction(CharacterObject *);
-	static void MoveCharacter();
-	static bool CanMoveThere();
+	static void MoveCharacter(CharacterObject*);
 	static void setMapDementions(Vector2f dim);
 	static void getmousePosition(Vector2i pos);
 

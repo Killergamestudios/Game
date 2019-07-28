@@ -13,6 +13,7 @@ public:
 	void draw() override;
 	void input() override;
 	void actions() override;
+	void mouseInput(Vector2i) override;
 
 private:
 	void initLayer();
@@ -23,8 +24,11 @@ private:
 
 	int depth, descriptionIndex;
 	float totalTimePassed;
+	bool moved;
 	unsigned int optionSelected;
 	CharacterObject* selectedCharacter;
+	vector<Vector3i> availableTiles;
+	vector<Sprite> highlighted_tiles;
 	RectangleShape* backgroundFillColor;
 	vector<string> textLayer1 = { "Move", "Stay", "Back" };
 	vector<string> descLayer1 = {

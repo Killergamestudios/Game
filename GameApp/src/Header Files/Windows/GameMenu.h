@@ -16,6 +16,7 @@ public:
 	virtual void draw() = 0;
 	virtual void input() = 0;
 	virtual void actions() = 0;
+	virtual void mouseInput(Vector2i);
 
 protected:
 	Font font; // Global font for main menu text

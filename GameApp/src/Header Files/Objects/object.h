@@ -110,7 +110,7 @@ public:
 	int getWeaponDamage();
 	int getMovementCost();
 	int getWeaponRange();
-
+	bool isStading();
 
 	//setters
 	void UpdateStats(int Agi, int Prec);

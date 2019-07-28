@@ -477,12 +477,15 @@ int CharacterObject::getWeaponRange()
 	return m_weapon->getRange();
 }
 
-
-
 const Stats & CharacterObject::getM_stats()
 {
 	return m_stats;
 }
+
+bool CharacterObject::isStading() {
+	return (move == Move::standing && m_path.size() == 0);
+}
+
 /****************************************************************************************************************************************/
 //                                                   The Setters                                                                        //
 /****************************************************************************************************************************************/

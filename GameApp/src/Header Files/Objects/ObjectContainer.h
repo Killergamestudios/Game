@@ -17,6 +17,7 @@ public:
 	static void UpdateParty(float dtasseconds);
 	static void drowParty();
 	static void MovePartyMember(int index, vector<Vector2i> &path);
+	static void MovePartyMember(CharacterObject*, vector<Vector2i> &path);
 private:
 	static ObjectContainer *m_s_Instance;
 
