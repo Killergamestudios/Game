@@ -110,6 +110,7 @@ public:
 	int getWeaponDamage();
 	int getMovementCost();
 	int getWeaponRange();
+	FacingDirection getDirection();
 	bool isStading();
 
 	//setters

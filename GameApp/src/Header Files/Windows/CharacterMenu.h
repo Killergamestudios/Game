@@ -41,10 +41,13 @@ private:
 		"Attack with weapon",
 		"Perform character's special attack",
 		"End your turn",
-		"Reset character movement"
+		undoMovement
 	};
 	vector<Text*> menuTexts;
 	CharacterWindow* theme;
-	vector<pair<int, int>> previousPositions;
+	Vector2i initialPosition;
+	FacingDirection initialDirection;
+
+	const string undoMovement = "Reset character movement";
 };
 

@@ -5,6 +5,8 @@ CharacterMenu::CharacterMenu(RenderWindow& window, CharacterObject* selectedChar
 {
 	depth = 1;
 	this->selectedCharacter = selectedCharacter;
+	initialPosition = this->selectedCharacter->getMyPosition();
+	initialDirection = this->selectedCharacter->getDirection();
 	moved = false;
 }
 
@@ -35,13 +37,13 @@ void CharacterMenu::update(float &dtAsSeconds)
 		return;
 	}
 	totalTimePassed += dtAsSeconds;
-	if (depth == 2) {
+	if (depth == 2 && !moved) {
 		InputController::CharacterDiraction(selectedCharacter);
 	}
 
 	if (moved && selectedCharacter->isStading()) {
 		moved = false;
-		depth = 3;
+		depth = 3; // temporary solution needs energy implementation
 		initLayer();
 	}
 }
@@ -89,6 +91,7 @@ void CharacterMenu::mouseInput(Vector2i position)
 			{
 				InputController::MoveCharacter(selectedCharacter);
 				moved = true;
+				
 				highlighted_tiles.clear();
 				InputController::UnHiglightSpaces();
 				return;
@@ -102,6 +105,8 @@ void CharacterMenu::actions()
 {
 	if (optionSelected == tabOrder.size() - 1) {
 		if (depth != 1) { // Time travel
+			selectedCharacter->SetPosition(initialPosition);
+			selectedCharacter->SetDirection(initialDirection);
 			depth-=2; // Temporary Change
 			initLayer();
 		}

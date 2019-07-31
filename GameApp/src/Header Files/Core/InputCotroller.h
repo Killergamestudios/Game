@@ -21,7 +21,6 @@ public:
 	static bool setCharacter();
 	static CharacterObject* getCharacter();
 
-	static void MovingCharacterUpdate(CharacterObject *);
 	static void Init();
 	//static void SetParty();
 	static void setPlayerClicked();

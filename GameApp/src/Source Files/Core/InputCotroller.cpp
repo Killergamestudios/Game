@@ -38,16 +38,6 @@ void InputController::getmousePosition(Vector2i pos)
 	m_s_Instance->mousePosition = pos;
 }
 
-void InputController::MovingCharacterUpdate(CharacterObject * selectedCharacter)
-{
-//	if (m_s_Instance->SelectingCharacter) {
-//		m_s_Instance->CharacterDiraction(selectedCharacter);
-//	}
-//	if (m_s_Instance->CharacterMoving) {
-	//	m_s_Instance->MoveCharacter();
-	//}
-}
-
 void InputController::Init()
 {
 	m_s_Instance->PlayerClicked = false;
@@ -59,11 +49,6 @@ void InputController::Init()
 	m_s_Instance->Character = nullptr;
 }
 
-/*void InputController::SetParty()
-{
-	m_s_Instance->party = Controller::getMap()->getparty();
-}
-*/
 void InputController::setPlayerClicked()
 {
 	if (!m_s_Instance->PlayerClicked) m_s_Instance->PlayerClicked = true;
@@ -92,18 +77,3 @@ vector<Sprite> InputController::getHighlighted_tyles()
 {
 	return m_s_Instance->Highlighted_Tyles;
 }
-
-/*void InputController::drowParty()
-{
-	for (unsigned int i = 0; i < m_s_Instance->party.size(); i++) {
-		m_s_Instance->party[i].Draw();
-	}
-}
-
-void InputController::UpdateParty(float dtasseconds)
-{
-	for (unsigned int i = 0; i < m_s_Instance->party.size(); i++) {
-		m_s_Instance->party[i].update(dtasseconds);
-	}
-}
-*/

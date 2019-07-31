@@ -486,6 +486,10 @@ bool CharacterObject::isStading() {
 	return (move == Move::standing && m_path.size() == 0);
 }
 
+FacingDirection CharacterObject::getDirection() {
+	return facingdir;
+}
+
 /****************************************************************************************************************************************/
 //                                                   The Setters                                                                        //
 /****************************************************************************************************************************************/
@@ -514,6 +518,7 @@ void CharacterObject::setPrecision(int prec)
 
 void CharacterObject::SetPosition(Vector2i newPos)
 {
+	Controller::getMap()->swapPosition(category, m_position, newPos);
 	m_position.x = newPos.x;
 	m_position.y = newPos.y;
 }
