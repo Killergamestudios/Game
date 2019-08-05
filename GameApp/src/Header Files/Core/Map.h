@@ -37,6 +37,9 @@ public:
 	//vector<CharacterObject> &getparty();
 	vector<CharacterObject> &getenemys();
 
+	void loadEnemys(Map *map, string savefilename);
+	CharacterObject *SpawnEnemy(Vector2i position, string savefilename, string Name, string Class);
+
 private:
 	int width, height; // Store map size (width and height)
 	 RenderWindow *m_window;

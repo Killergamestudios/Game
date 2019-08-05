@@ -802,3 +802,13 @@ void CharacterObject::UseAbility3(Vector2i & position, CharacterObject * target)
 	usedAction(m_ability3->getCost());
 }
 
+void CharacterObject::setHasMoved(bool m)
+{
+	hasMoved = m;
+}
+
+bool CharacterObject::getHasMoved()
+{
+	return hasMoved;
+}
+

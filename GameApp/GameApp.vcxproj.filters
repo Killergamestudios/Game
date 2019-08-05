@@ -203,6 +203,9 @@
     <ClCompile Include="src\Source Files\Objects\ObjectContainer.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source Files\Objects\TempObjects.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="src\Source Files\Windows\BootMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>

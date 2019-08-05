@@ -21,13 +21,14 @@ public:
 
 	static void MovingCharacterUpdate();
 	static void Init();
-	//static void SetParty();
+	
 	static void setPlayerClicked();
 	static void HandlePlayerInput();
 	static vector<Sprite> getHighlighted_tyles();
-
-	//static void drowParty();
-	//static void UpdateParty(float dtasseconds);
+	static void setPlayersTurn();
+	static bool getIsPlayersTurn();
+	static void updatePlayersTurn();
+	
 private:
 	static InputController *m_s_Instance;
 	
@@ -48,6 +49,7 @@ private:
 
 	vector<Sprite> Highlighted_Tyles;// the tyles that get HighLighted when we select a character
 
-
+	bool isPlayersTurn;
+	int playersPlayed;
 };
 

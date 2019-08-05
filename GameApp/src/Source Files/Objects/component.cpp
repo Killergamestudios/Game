@@ -72,7 +72,7 @@ bool WeaponComponent::canEquip(CharacterObject * Parent)
 	string Characterclass = Parent->getType();
 	int CharacterMastery = Parent->getMastery();
 	if (Parent->getCategory() == "enemy") return true;
-	if (Characterclass == ClassRequirment && CharacterMastery >= MasteryRequirment) return true;
+	if ((Characterclass == ClassRequirment || ClassRequirment == "any") && CharacterMastery >= MasteryRequirment) return true;
 	else return false;
 }
 
@@ -196,7 +196,7 @@ bool ArmorComponent::canEquip(CharacterObject * Parent)
 	string Characterclass = Parent->getType();
 	int CharacterMastery = Parent->getMastery();
 	if (Parent->getCategory() == "enemy") return true;
-	if (Characterclass == ClassRequirment && CharacterMastery >= MasteryRequirment) return true;
+	if ((Characterclass == ClassRequirment || ClassRequirment == "any" ) && CharacterMastery >= MasteryRequirment) return true;
 	else return false;
 }
 

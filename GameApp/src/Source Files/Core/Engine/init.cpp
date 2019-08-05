@@ -29,6 +29,7 @@ void Engine::init() {
 		cameraReset();
 		m_map->load(mapIndex);
 		m_map->loadParty(m_map, "saveFile 1/");
+		m_map->loadEnemys(m_map, "saveFile 1/");
 		//m_map->loadParty(m_map, Controller::getSaveFileDirectory());
 		//party = Controller::getMap()->getparty();
 		Controller::clearState();
@@ -38,6 +39,7 @@ void Engine::init() {
 		mapHeight = (float)m_map->getMapHeight();
 		InputController::Init();
 		InputController::setMapDementions(Vector2f(mapWidth, mapHeight));
+		InputController::setPlayersTurn();
 		//InputController::SetParty();
 		break;
 	case Controller::IN_CUT_SCENE:

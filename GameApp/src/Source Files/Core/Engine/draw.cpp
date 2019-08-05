@@ -22,6 +22,7 @@ void Engine::draw() {
 		}*/
 		//InputController::drowParty();
 		ObjectContainer::drowParty();
+		ObjectContainer::drowEnemys();
 		break;
 	case Controller::LOADING:
 		break;

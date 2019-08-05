@@ -101,7 +101,9 @@ void Engine::input(float dtAsSeconds) {
 				if (evt.type == Event::MouseButtonPressed) {
 					MousePressed = true;
 				}
+
 				InputController::HandlePlayerInput();
+
 				break;
 			case Controller::LOADING:
 				break;

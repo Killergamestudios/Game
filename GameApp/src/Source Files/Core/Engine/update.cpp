@@ -13,11 +13,20 @@ void Engine::update(float dtAsSeconds) {
 		break;
 	case Controller::PLAYING:
 
-		InputController::MovingCharacterUpdate();
-		mouseAnimation(mouseTimePass, animState, mouseControl());
 		
-		//InputController::UpdateParty(dtAsSeconds);
+		mouseAnimation(mouseTimePass, animState, mouseControl());
+		if (InputController::getIsPlayersTurn()) {
+			InputController::MovingCharacterUpdate();
+			InputController::updatePlayersTurn();
+		}
+		else {
+			//enemy code here
+			ObjectContainer::setPartyTurn();
+			InputController::setPlayersTurn();
+		}
+		
 		ObjectContainer::UpdateParty(dtAsSeconds);
+		ObjectContainer::updateEnemys(dtAsSeconds);
 
 		break;
 	case Controller::LOADING:

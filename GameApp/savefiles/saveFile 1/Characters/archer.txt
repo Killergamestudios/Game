@@ -22,4 +22,9 @@ whirlwind
 Charge
 rally
 
+weapon:
+standard sword
+
 Armor:
+standard armor
+

@@ -152,6 +152,8 @@ public:
 	void UseAbility2(Vector2i &position, CharacterObject *target);
 	void UseAbility3(Vector2i &position, CharacterObject *target);
 
+	void setHasMoved(bool m);
+	bool getHasMoved();
 
 private:
 	Move move;

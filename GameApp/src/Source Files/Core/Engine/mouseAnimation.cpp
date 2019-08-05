@@ -19,11 +19,11 @@ void Engine::mouseAnimation(float &totalTimePassed, int &animState, sf::Vector2i
 	}
 	else if (Controller::getMap()->getFriendlyinPosition(localPos) > 0)
 	{
-		tile_sprite.setTextureRect(sf::IntRect(animState, TILE_SIZE, TILE_SIZE, TILE_SIZE)); // If friendly is on a tile, set the color of the target selector to yellow.
+		tile_sprite.setTextureRect(sf::IntRect(animState, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE)); // If friendly is on a tile, set the color of the target selector to yellow.
 	}
 	else if (Controller::getMap()->getEnemyinPosition(localPos) > 0)
 	{
-		tile_sprite.setTextureRect(sf::IntRect(animState, 2 * TILE_SIZE, TILE_SIZE, TILE_SIZE)); //If enemy is on a tile, set the color of the target selector to red.
+		tile_sprite.setTextureRect(sf::IntRect(animState,  TILE_SIZE, TILE_SIZE, TILE_SIZE)); //If enemy is on a tile, set the color of the target selector to red.
 	}
 	else
 	{

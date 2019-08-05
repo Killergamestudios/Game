@@ -68,10 +68,7 @@ private:
 	void cameraUpdate(int direction); // handles movement of camera
 	void cameraReset(); // resets camera. Useful for state transitions
 
-	//CharacterObject *SpawnCharacter(Vector2i position, Map *map,string savefilename,string Name,string Class);
-	//vector<CharacterObject*> *loadParty(Map *map, string savefilename, vector<Vector3i> pos);
-	//CharacterObject *Warrior;//temp
-	//CharacterObject *mage;
+	
 
 	Sprite tile_sprite;
 
@@ -81,6 +78,7 @@ private:
 
 	float mouseTimePass;
 	int animState;
+	
 
 public:
 	Engine();

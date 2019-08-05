@@ -31,13 +31,15 @@ void InputController::MoveCharacter()
 	std::reverse(path.begin(), path.end());
 
 	ObjectContainer::MovePartyMember(m_s_Instance->CharacterIndex, path);
-	//m_s_Instance->SelectedCharacter->MoveToPosition(path);
+	ObjectContainer::setPartyMemberPlayed(m_s_Instance->CharacterIndex);
+	m_s_Instance->playersPlayed++;
 	m_s_Instance->SelectedCharacter = nullptr;
 	m_s_Instance->CharacterMoving = false;
 
 	//clear the vector
 	for (int i = m_s_Instance->availableSpaces.size() - 1; i >= 0; i--)
 		m_s_Instance->availableSpaces.pop_back();
+
 }
 
 bool InputController::CanMoveThere()
@@ -93,8 +95,11 @@ void InputController::HandlePlayerInput()
 {
 	if (m_s_Instance->PlayerClicked) {
 		if (m_s_Instance->SelectedCharacter == nullptr) {
-			if (!m_s_Instance->CharacterMoving)
-				m_s_Instance->SelectedCharacter = m_s_Instance->HoveredCharacter;
+			if (!m_s_Instance->CharacterMoving) {
+				if(m_s_Instance->CharacterIndex >= 0 && !ObjectContainer::getPartyMemberPlayed(m_s_Instance->CharacterIndex))
+					m_s_Instance->SelectedCharacter = m_s_Instance->HoveredCharacter;
+
+			}
 			if (m_s_Instance->SelectedCharacter)
 				m_s_Instance->SelectingCharacter = true;
 		}
@@ -111,6 +116,25 @@ void InputController::HandlePlayerInput()
 vector<Sprite> InputController::getHighlighted_tyles()
 {
 	return m_s_Instance->Highlighted_Tyles;
+}
+
+void InputController::setPlayersTurn()
+{
+	m_s_Instance->isPlayersTurn = true;
+	m_s_Instance->playersPlayed = 0;
+	std::cout << "players turn" << endl;
+}
+
+bool InputController::getIsPlayersTurn()
+{
+	return m_s_Instance->isPlayersTurn;
+}
+
+void InputController::updatePlayersTurn()
+{
+	if (m_s_Instance->playersPlayed == ObjectContainer::getPartySize()) {
+		m_s_Instance->isPlayersTurn = false;
+	}
 }
 
 /*void InputController::drowParty()
